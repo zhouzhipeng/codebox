@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP="Example.app"
+APP="gogo.app"
 mkdir -p $APP/Contents/{MacOS,Resources}
 go build -o $APP/Contents/MacOS/lorca-example
 cat > $APP/Contents/Info.plist << EOF
@@ -18,4 +18,4 @@ cat > $APP/Contents/Info.plist << EOF
 </plist>
 EOF
 cp icons/icon.icns $APP/Contents/Resources/icon.icns
-find $APP
+mv $APP dist/$APP

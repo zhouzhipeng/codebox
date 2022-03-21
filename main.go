@@ -47,7 +47,7 @@ func main() {
 					<title>GoGo!</title>
 				</head>
 				<body>
-					<h2 style="text-align:center;vertical-align:middle">Loading...</h2>
+					<h1 style="text-align:center;vertical-align:middle">Loading...</h1>
 				</body>
 			</html>`,
 		"", 480, 320, args...)
