@@ -48,6 +48,15 @@ func main() {
 				</head>
 				<body>
 					<h1 style="text-align:center;vertical-align:middle">Loading...</h1>
+					<script type="text/javascript">
+					//window.location.href="http://127.0.0.1:59989/www"
+window.addEventListener('beforeunload',async function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+	console.log("browser close...");
+	await fetch("http://127.0.0.1:8000/window-close")
+});
+					</script>
 				</body>
 			</html>`,
 		"", 480, 320, args...)
@@ -56,34 +65,29 @@ func main() {
 	}
 	defer ui.Close()
 
-	// A simple way to know when UI is ready (uses body.onload event in JS)
-	ui.Bind("start", func() {
-		log.Println("UI is ready")
-	})
+	//bind browser window close event;
 
-	// Create and bind Go object to the UI
-	c := &counter{}
-	ui.Bind("counterAdd", c.Add)
-	ui.Bind("counterValue", c.Value)
+	ln_http, err_http := net.Listen("tcp", "127.0.0.1:8000")
+	if err_http != nil {
+		log.Fatal(err_http)
+	}
+	defer ln_http.Close()
+	go http.Serve(ln_http, nil)
+	http.HandleFunc("/window-close", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "hello world")
+		ui.Close()
+	})
 
 	// Load HTML.
 	// You may also use `data:text/html,<base64>` approach to load initial HTML,
 	// e.g: ui.Load("data:text/html," + url.PathEscape(html))
 
-	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	ln, err := net.Listen("tcp", "127.0.0.1:59989")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer ln.Close()
 	go http.Serve(ln, http.FileServer(http.FS(fs)))
-	ui.Load(fmt.Sprintf("http://%s/www", ln.Addr()))
-
-	// You may use console.log to debug your JS code, it will be printed via
-	// log.Println(). Also exceptions are printed in a similar manner.
-	ui.Eval(`
-		console.log("Hello, world!");
-		console.log('Multiple values:', [1, false, {"x":5}]);
-	`)
 
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
