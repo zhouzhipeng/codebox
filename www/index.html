@@ -3,15 +3,20 @@
 	<title>GoGo!</title>
 </head>
 <body>
-<h1 style="text-align:center;vertical-align:middle">Loading...</h1>
+<iframe style="border: 0" src="dd-upload.html" title="iframe example 1" width="400" height="300">
+	<p>Your browser does not support iframes.</p>
+</iframe>
+
 <script type="text/javascript">
 	//window.location.href="http://127.0.0.1:59989/www"
-	window.addEventListener('beforeunload',async function (e) {
-		e.preventDefault();
-		e.returnValue = '';
-		console.log("browser close...");
-		await fetch("http://127.0.0.1:8000/api/window-close")
-	});
+	if(location.href.indexOf("islocal=1")!==-1){
+		window.addEventListener('beforeunload',async function (e) {
+			e.preventDefault();
+			e.returnValue = '';
+			console.log("browser close...");
+			await fetch("http://127.0.0.1:8000/api/window-close")
+		});
+	}
 </script>
 </body>
 </html>

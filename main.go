@@ -15,15 +15,17 @@ import (
 //go:embed www
 var www embed.FS
 
-//go:embed www/index.html
-var indexHtml string
+//go:embed www/shell.html
+var shellHtml string
 
 func main() {
+
+	// open ui window
 	args := []string{}
 	if runtime.GOOS == "linux" {
 		args = append(args, "--class=gogo")
 	}
-	ui, err := lorca.New("data:text/html,"+indexHtml, "", 480, 320, args...)
+	ui, err := lorca.New("data:text/html,"+shellHtml, "", 480, 320, args...)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,18 +33,19 @@ func main() {
 
 	//http & file server
 	http.Handle("/", http.FileServer(http.FS(www)))
-	http.HandleFunc("/api/window-close", func(w http.ResponseWriter, r *http.Request) {
-		//bind browser window close event;
-		fmt.Fprintf(w, "ok.")
-		ui.Close()
-	})
-
-	ln, err := net.Listen("tcp", "127.0.0.1:8000")
+	ln, err := net.Listen("tcp", "0.0.0.0:8000")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer ln.Close()
 	go http.Serve(ln, nil)
+
+	//bind api
+	http.HandleFunc("/api/window-close", func(w http.ResponseWriter, r *http.Request) {
+		//bind browser window close event;
+		fmt.Fprintf(w, "ok.")
+		ui.Close()
+	})
 
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
