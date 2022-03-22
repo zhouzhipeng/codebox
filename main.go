@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"gogo/lorca"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -47,6 +48,9 @@ func main() {
 		ui.Close()
 	})
 
+	//处理文件上传
+	http.HandleFunc("/api/upload-file", fileUpload)
+
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
 	signal.Notify(sigc, os.Interrupt)
@@ -56,4 +60,35 @@ func main() {
 	}
 
 	log.Println("exiting...")
+}
+
+func fileUpload(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(32 << 20) //maxMemory
+
+	file, handler, err := r.FormFile("upfile")
+
+	if err != nil {
+
+		fmt.Println(err)
+
+		return
+
+	}
+
+	defer file.Close()
+
+	fmt.Fprintf(w, "%v", handler.Header)
+
+	f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+
+	if err != nil {
+
+		fmt.Println(err)
+
+		return
+
+	}
+
+	io.Copy(f, file)
+
 }
