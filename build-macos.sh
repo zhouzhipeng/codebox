@@ -1,6 +1,8 @@
 #!/bin/sh
+set -eux
 
 APP="gogo.app"
+
 mkdir -p $APP/Contents/{MacOS,Resources}
 go build -o $APP/Contents/MacOS/gogo
 cat > $APP/Contents/Info.plist << EOF
@@ -18,4 +20,5 @@ cat > $APP/Contents/Info.plist << EOF
 </plist>
 EOF
 cp icons/icon.icns $APP/Contents/Resources/icon.icns
+rm -rf dist/$APP
 mv $APP dist/$APP
