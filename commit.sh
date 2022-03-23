@@ -1,7 +1,7 @@
 
 set -eux
 
-./build-linux.sh
+#./build-linux.sh
 
 git add .
 git commit -am "$1"

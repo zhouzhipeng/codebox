@@ -1,4 +1,19 @@
+FROM golang:1.18-stretch AS BuildImage
+WORKDIR /app
+
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+
+COPY . .
+RUN ./build-linux.sh
+
 FROM scratch
 
-COPY linux/gogo /bin/gogo
+EXPOSE 9999
+
+ENV DISABLE_UI=1
+
+COPY --from=BuildImage /app/linux/gogo /bin/gogo
 ENTRYPOINT ["/bin/gogo"]
