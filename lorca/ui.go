@@ -19,6 +19,7 @@ type ui struct {
 	tmpDir string
 }
 
+//https://peter.sh/experiments/chromium-command-line-switches/
 var defaultChromeArgs = []string{
 	"--disable-background-networking",
 	"--disable-background-timer-throttling",

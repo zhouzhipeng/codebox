@@ -4,7 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"gogo/lorca"
-	"io"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -26,20 +26,15 @@ func main() {
 	if runtime.GOOS == "linux" {
 		args = append(args, "--class=gogo")
 	}
-	ui, err := lorca.New("data:text/html,"+shellHtml, "", 480, 320, args...)
+	ui, err := lorca.New("data:text/html,"+shellHtml, "", 800, 600, args...)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer ui.Close()
 
 	//http & file server
-	http.Handle("/", http.FileServer(http.FS(www)))
-	ln, err := net.Listen("tcp", "0.0.0.0:8000")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer ln.Close()
-	go http.Serve(ln, nil)
+	fsys, _ := fs.Sub(www, "www")
+	http.Handle("/", http.FileServer(http.FS(fsys)))
 
 	//bind api
 	http.HandleFunc("/api/window-close", func(w http.ResponseWriter, r *http.Request) {
@@ -51,6 +46,19 @@ func main() {
 	//处理文件上传
 	http.HandleFunc("/api/upload-file", fileUpload)
 
+	//处理文件下载
+	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir("./files"))))
+
+	ln, err := net.Listen("tcp", "0.0.0.0:61234")
+	if err != nil {
+		log.Fatal(err)
+	}
+	//get port
+	fmt.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
+
+	defer ln.Close()
+	go http.Serve(ln, nil)
+
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
 	signal.Notify(sigc, os.Interrupt)
@@ -60,35 +68,4 @@ func main() {
 	}
 
 	log.Println("exiting...")
-}
-
-func fileUpload(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(32 << 20) //maxMemory
-
-	file, handler, err := r.FormFile("upfile")
-
-	if err != nil {
-
-		fmt.Println(err)
-
-		return
-
-	}
-
-	defer file.Close()
-
-	fmt.Fprintf(w, "%v", handler.Header)
-
-	f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-
-	if err != nil {
-
-		fmt.Println(err)
-
-		return
-
-	}
-
-	io.Copy(f, file)
-
 }
