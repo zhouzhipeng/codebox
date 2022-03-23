@@ -22,4 +22,5 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [ ] js端vue做数据绑定渲染
 - [ ] go端简单通用的crud
 - [ ] tool.zhouzhipeng.com gogo server 导航
+- 
 
