@@ -60,7 +60,7 @@ func New(url, dir string, width, height int, customArgs ...string) (UI, error) {
 	}
 	tmpDir := ""
 	if dir == "" {
-		name, err := ioutil.TempDir("", "lorca")
+		name, err := ioutil.TempDir("", "gogo")
 		if err != nil {
 			return nil, err
 		}
@@ -99,6 +99,9 @@ func (u *ui) Close() error {
 		if err := os.RemoveAll(u.tmpDir); err != nil {
 			return err
 		}
+
+		log.Println("ui tmpDir removed : ", u.tmpDir)
+
 	}
 
 	<-u.done

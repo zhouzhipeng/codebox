@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func fileUpload(w http.ResponseWriter, r *http.Request) {
@@ -22,8 +23,8 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	os.Mkdir("./files/", 0777)
-	f, err := os.OpenFile("./files/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	//os.Mkdir("./files/", 0777)
+	f, err := os.OpenFile(filepath.Join(TEMP_FILES_DIR, handler.Filename), os.O_WRONLY|os.O_CREATE, 0666)
 
 	if err != nil {
 
