@@ -68,11 +68,13 @@ func main() {
 	genTmpUploadFilesDir()
 	//处理文件上传
 	http.HandleFunc("/api/upload-file", fileUpload)
-
 	//处理文件下载
 	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR))))
 
-	ln, err := net.Listen("tcp", "0.0.0.0:61234")
+	//剪贴板
+	http.HandleFunc("/api/get-clipboard-data", getClipboardData)
+
+	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 	if err != nil {
 		log.Fatal(err)
 		ui.Close()

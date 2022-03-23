@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clipboard</title>
+</head>
+<body>
+
+<ul>
+    <li id="testli"></li>
+</ul>
+
+
+
+<script type="text/javascript">
+    async function getClipboardData() {
+        let data=await (await fetch("/api/get-clipboard-data")).text();
+        console.log(data)
+        testli.innerText=data;
+    }
+
+    setInterval(getClipboardData, 1);
+
+
+
+</script>
+</body>
+</html>
