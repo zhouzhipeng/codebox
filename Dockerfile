@@ -14,7 +14,6 @@ FROM scratch
 EXPOSE 9999
 
 ENV DISABLE_UI=1
-RUN mkdir /tmp
 
 COPY --from=BuildImage /app/linux/gogo /bin/gogo
 ENTRYPOINT ["/bin/gogo"]

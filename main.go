@@ -23,13 +23,19 @@ var shellHtml string
 var TEMP_FILES_DIR = ""
 
 func genTmpUploadFilesDir() {
+	if os.Getenv("DISABLE_UI") == "" {
+		tmp, err := os.MkdirTemp("", "gogo_files")
+		if err != nil {
+			log.Println("getTmpUploadFilesDir error", err)
+			return
+		}
+		TEMP_FILES_DIR = tmp
+	} else {
+		//run in docker or linux , use /tmp
+		TEMP_FILES_DIR = "/tmp"
+		os.Mkdir(TEMP_FILES_DIR, 0777)
 
-	tmp, err := os.MkdirTemp("", "gogo_files")
-	if err != nil {
-		log.Println("getTmpUploadFilesDir error", err)
-		return
 	}
-	TEMP_FILES_DIR = tmp
 	log.Println("temp files dir :", TEMP_FILES_DIR)
 
 }
