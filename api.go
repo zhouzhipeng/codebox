@@ -6,6 +6,7 @@ import (
 	"github.com/atotto/clipboard"
 	"html/template"
 	"io"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -19,7 +20,7 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 
-		fmt.Println(err)
+		log.Println(err)
 
 		return
 
@@ -32,7 +33,7 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 
-		fmt.Println(err)
+		log.Println(err)
 
 		return
 
@@ -94,7 +95,7 @@ func getLocalIP(w http.ResponseWriter, r *http.Request) {
 	addrs, err := net.InterfaceAddrs()
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		fmt.Fprintf(w, "127.0.0.1")
 	}
 	for _, address := range addrs {
@@ -102,7 +103,7 @@ func getLocalIP(w http.ResponseWriter, r *http.Request) {
 		// 检查ip地址判断是否回环地址
 		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
-				fmt.Println(ipnet.IP.String())
+				log.Println(ipnet.IP.String())
 				fmt.Fprintf(w, ipnet.IP.String())
 				break
 			}

@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"runtime"
 )
 
@@ -36,6 +37,17 @@ func genTmpUploadFilesDir() {
 		os.Mkdir(TEMP_FILES_DIR, 0777)
 
 	}
+
+	//设置log输出到文件
+	file := filepath.Join(TEMP_FILES_DIR, "message.txt")
+	logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0766)
+	if err != nil {
+		panic(err)
+	}
+	log.SetOutput(logFile) // 将文件设置为log输出的文件
+	log.SetPrefix("[gogo]")
+	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
+
 	log.Println("temp files dir :", TEMP_FILES_DIR)
 
 }
@@ -74,7 +86,9 @@ func main() {
 		})
 	}
 
+	//创建临时文件目录
 	genTmpUploadFilesDir()
+
 	//处理文件上传
 	http.HandleFunc("/api/upload-file", fileUpload)
 	//处理文件下载
@@ -90,7 +104,7 @@ func main() {
 		ui.Close()
 	}
 	//get port
-	fmt.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
+	log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
 
 	go http.Serve(ln, nil)
 
