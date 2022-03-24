@@ -40,7 +40,7 @@ func genTmpUploadFilesDir() {
 
 	//设置log输出到文件
 	file := filepath.Join(TEMP_FILES_DIR, "message.txt")
-	logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0766)
+	logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
 		panic(err)
 	}

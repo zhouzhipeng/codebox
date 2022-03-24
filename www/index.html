@@ -27,8 +27,7 @@
 
 <script type="text/javascript">
     (async ()=>{
-        let time=await (await fetch("/static/time.txt")).text()
-        document.querySelector("#timeSpan").innerHTML=time;
+        document.querySelector("#timeSpan").innerHTML=await (await fetch("/static/time.txt")).text();
     })();
 
 
