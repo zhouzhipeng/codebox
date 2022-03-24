@@ -6,20 +6,42 @@
 </head>
 <body>
 
-<ul>
-    <li id="testli"></li>
+<ul id="itemlist">
 </ul>
 
 
+<script src="https://unpkg.com/vue@3"></script>
+<div id="app">{{ message }}</div>
 
+<script>
+    Vue.createApp({
+        data() {
+            return {
+                message: 'Hello Vue!'
+            }
+        }
+    }).mount('#app')
+</script>
 <script type="text/javascript">
+    let strs = new Set()
+    let container=document.querySelector("#itemlist");
     async function getClipboardData() {
         let data=await (await fetch("/api/get-clipboard-data")).text();
-        console.log(data)
-        testli.innerText=data;
+
+        let oldLen=strs.size;
+        strs.add(data);
+        if(oldLen!==strs.size){
+            container.innerHTML="";
+            [...strs].map(s=>{
+                let li = document.createElement('li');
+                li.textContent = s;
+                container.prepend(li);
+            })
+        }
+
     }
 
-    setInterval(getClipboardData, 1);
+    setInterval(getClipboardData, 3000);
 
 
 

@@ -60,6 +60,9 @@ func main() {
 	fsys, _ := fs.Sub(www, "www")
 	http.Handle("/", http.FileServer(http.FS(fsys)))
 
+	//绑定视图模板
+	http.HandleFunc("/views/test", handleTemplate)
+
 	//bind window close api
 	if ui != nil {
 		http.HandleFunc("/api/window-close", func(w http.ResponseWriter, r *http.Request) {
@@ -79,6 +82,7 @@ func main() {
 
 	//剪贴板
 	http.HandleFunc("/api/get-clipboard-data", getClipboardData)
+	http.HandleFunc("/api/get-local-ip", getLocalIP)
 
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 	if err != nil {
