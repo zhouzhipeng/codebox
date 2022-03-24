@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"gogo/lorca"
 	"io/fs"
 	"log"
@@ -12,6 +11,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"time"
 )
 
 //go:embed www
@@ -38,22 +38,28 @@ func genTmpUploadFilesDir() {
 
 	}
 
-	//设置log输出到文件
-	file := filepath.Join(TEMP_FILES_DIR, "message.txt")
-	logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
-	if err != nil {
-		panic(err)
+	if os.Getenv("NO_LOG_FILE") == "" {
+		//设置log输出到文件
+		file := filepath.Join(TEMP_FILES_DIR, "message.txt")
+		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+		if err != nil {
+			panic(err)
+		}
+		log.SetOutput(logFile) // 将文件设置为log输出的文件
+		log.SetPrefix("[gogo]")
+		log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
+
 	}
-	log.SetOutput(logFile) // 将文件设置为log输出的文件
-	log.SetPrefix("[gogo]")
-	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
 
 	log.Println("temp files dir :", TEMP_FILES_DIR)
 
 }
 
+var ui lorca.UI
+
 func main() {
-	var ui lorca.UI
+
+	//open browser window.
 	if os.Getenv("DISABLE_UI") == "" {
 		// open ui window
 		args := []string{}
@@ -68,35 +74,21 @@ func main() {
 		ui = tmpui
 	}
 
-	//http & file server
-	fsys, _ := fs.Sub(www, "www")
-	http.Handle("/", http.FileServer(http.FS(fsys)))
-
-	//绑定视图模板
-	http.HandleFunc("/views/test", handleTemplate)
-
-	//bind window close api
-	if ui != nil {
-		http.HandleFunc("/api/window-close", func(w http.ResponseWriter, r *http.Request) {
-			//bind browser window close event;
-			fmt.Fprintf(w, "ok.")
-
-			ui.Close()
-
-		})
-	}
-
 	//创建临时文件目录
 	genTmpUploadFilesDir()
 
-	//处理文件上传
-	http.HandleFunc("/api/upload-file", fileUpload)
-	//处理文件下载
-	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR))))
+	//http & file server
+	fsys, _ := fs.Sub(www, "www")
+	http.Handle("/", NoCache(http.FileServer(http.FS(fsys))))
 
-	//剪贴板
-	http.HandleFunc("/api/get-clipboard-data", getClipboardData)
-	http.HandleFunc("/api/get-local-ip", getLocalIP)
+	//绑定视图模板
+	http.HandleFunc("/views/", handleTemplates)
+
+	//处理api请求
+	http.HandleFunc("/api/", handleAPI)
+
+	//处理文件下载
+	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 	if err != nil {
@@ -138,4 +130,42 @@ func main() {
 	os.RemoveAll(TEMP_FILES_DIR)
 	log.Println("removed TEMP_FILES_DIR: ", TEMP_FILES_DIR)
 
+}
+
+var epoch = time.Unix(0, 0).Format(time.RFC1123)
+
+var noCacheHeaders = map[string]string{
+	"Expires":         epoch,
+	"Cache-Control":   "no-cache, private, max-age=0",
+	"Pragma":          "no-cache",
+	"X-Accel-Expires": "0",
+}
+
+var etagHeaders = []string{
+	"ETag",
+	"If-Modified-Since",
+	"If-Match",
+	"If-None-Match",
+	"If-Range",
+	"If-Unmodified-Since",
+}
+
+func NoCache(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		// Delete any ETag headers that may have been set
+		for _, v := range etagHeaders {
+			if r.Header.Get(v) != "" {
+				r.Header.Del(v)
+			}
+		}
+
+		// Set our NoCache headers
+		for k, v := range noCacheHeaders {
+			w.Header().Set(k, v)
+		}
+
+		h.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
 }

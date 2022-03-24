@@ -1,10 +1,8 @@
 package main
 
 import (
-	"embed"
 	"fmt"
 	"github.com/atotto/clipboard"
-	"html/template"
 	"io"
 	"log"
 	"net"
@@ -21,6 +19,8 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		log.Println(err)
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "SERVER ERROR!"+err.Error())
 
 		return
 
@@ -34,6 +34,8 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		log.Println(err)
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "SERVER ERROR!"+err.Error())
 
 		return
 
@@ -62,33 +64,6 @@ func getClipboardData(w http.ResponseWriter, r *http.Request) {
 	*/
 }
 
-type Todo struct {
-	Title string
-	Done  bool
-}
-
-type TodoPageData struct {
-	PageTitle string
-	Todos     []Todo
-}
-
-//go:embed www/views
-var views embed.FS
-
-func handleTemplate(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFS(views, "www/views/test_template.html"))
-
-	data := TodoPageData{
-		PageTitle: "My TODO list",
-		Todos: []Todo{
-			{Title: "Task 1", Done: false},
-			{Title: "Task 2", Done: true},
-			{Title: "Task 3", Done: true},
-		},
-	}
-	tmpl.Execute(w, data)
-}
-
 func getLocalIP(w http.ResponseWriter, r *http.Request) {
 
 	//获取ip
@@ -111,4 +86,23 @@ func getLocalIP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+}
+
+func handleAPI(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL.Path)
+
+	switch r.URL.Path {
+	case "/api/upload-file":
+		fileUpload(w, r)
+	case "/api/get-clipboard-data":
+		getClipboardData(w, r)
+	case "/api/get-local-ip":
+		getLocalIP(w, r)
+	case "/api/window-close":
+		//bind browser window close event;
+		fmt.Fprintf(w, "ok.")
+		ui.Close()
+	default:
+		w.WriteHeader(404)
+	}
 }
