@@ -23,10 +23,13 @@
 <!--    <p>Your browser does not support iframes.</p>-->
 <!--</iframe>-->
 
-<span>v0.0.2</span>
+<span id="timeSpan"></span>
 
 <script type="text/javascript">
-
+    (async ()=>{
+        let time=await (await fetch("/static/time.txt")).text()
+        document.querySelector("#timeSpan").innerHTML=time;
+    })();
 
 
 
