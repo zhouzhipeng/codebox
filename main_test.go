@@ -1,16 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
-//import "golang.design/x/clipboard"
-import "github.com/atotto/clipboard"
-
 func TestClipboard2(t *testing.T) {
-	os.Setenv("CGO_ENABLED", "0")
-	print(clipboard.ReadAll())
+	//os.Setenv("CGO_ENABLED", "0")
+	//print(clipboard.ReadAll())
+
+	filepath.Walk("/", func(name string, info os.FileInfo, err error) error {
+		fmt.Println(name)
+		return nil
+	})
 }
 
 //func TestClipboard(t *testing.T) {
