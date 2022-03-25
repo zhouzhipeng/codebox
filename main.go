@@ -43,7 +43,8 @@ func genTmpUploadFilesDir() {
 		file := filepath.Join(TEMP_FILES_DIR, "message.txt")
 		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 		if err != nil {
-			panic(err)
+			log.Println(err)
+			return
 		}
 		log.SetOutput(logFile) // 将文件设置为log输出的文件
 		log.SetPrefix("[gogo]")

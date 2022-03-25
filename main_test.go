@@ -17,6 +17,9 @@ func TestClipboard2(t *testing.T) {
 	})
 }
 
+
+
+
 //func TestClipboard(t *testing.T) {
 //	// Init returns an error if the package is not ready for use.
 //	err := clipboard.Init()
