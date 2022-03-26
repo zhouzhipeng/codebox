@@ -1,6 +1,6 @@
 import sqlite3
 
-db_name = 'test.db'
+db_name = '/tmp/test.db'
 
 SHOW_SQL = True
 
