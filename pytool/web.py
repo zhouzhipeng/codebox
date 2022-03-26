@@ -21,6 +21,7 @@ def notes():
 
 @get('/str-joiner/format-text')
 def str_joiner_format():
+    response.content_type = 'text/text; charset=UTF8'
     s = request.query['s']
     print(s)
     return template(s+'\n') # 加上 \n 防止被识别为html模板文件名
