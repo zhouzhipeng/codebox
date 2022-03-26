@@ -29,18 +29,7 @@ COPY --from=jrottenberg/ffmpeg:5.0-scratch / /
 # install python dependencies (put to the end of current file)
 COPY requirements.txt .
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-      gcc \
-      libev-dev \
-      ; \
-    pip install -r requirements.txt; \
-    apt-get remove -y --auto-remove \
-        gcc \
-#        libev-dev \ bjoern needs it
-        ; \
-    apt-get -qq clean ; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    pip install -r requirements.txt;
 
 
 

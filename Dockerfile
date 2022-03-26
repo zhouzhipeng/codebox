@@ -15,7 +15,7 @@ RUN ./build-linux.sh && ./build-macos.sh && ./build-windows.sh
 
 
 
-FROM zhouzhipeng/pytool-base:6e52
+FROM zhouzhipeng/pytool-base:e970
 
 EXPOSE 9999
 
