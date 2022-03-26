@@ -119,9 +119,11 @@ func main() {
 			}
 
 			proxy.ModifyResponse = func(response *http.Response) error {
-				location := response.Header.Get("location")
-				log.Println("location header is : " + location)
-				response.Header.Set("location", strings.Replace(location, "http:", "https:", 1))
+				if response.StatusCode == 301 || response.StatusCode == 302 {
+					location := response.Header.Get("location")
+					log.Println("location header is : " + location)
+					response.Header.Set("location", strings.Replace(location, "http:", "https:", 1))
+				}
 
 				return nil
 			}
