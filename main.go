@@ -119,8 +119,9 @@ func main() {
 			}
 
 			proxy.ServeHTTP(writer, request)
-			location := writer.Header().Get("Location")
-			writer.Header().Set("Location", strings.Replace(location, "http:", "https:", 1))
+			location := writer.Header().Get("location")
+			log.Println("location header is : " + location)
+			writer.Header().Set("location", strings.Replace(location, "http:", "https:", 1))
 		})
 
 	//处理文件下载
