@@ -27,6 +27,9 @@
 
 <span id="timeSpan"></span>
 
+<a  href="/files/message.txt" target="_blank">Logs</a>
+
+
 <script type="text/javascript">
     (async ()=>{
         document.querySelector("#timeSpan").innerHTML=await (await fetch("/static/time.txt")).text();
