@@ -13,6 +13,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -118,6 +119,8 @@ func main() {
 			}
 
 			proxy.ServeHTTP(writer, request)
+			location := writer.Header().Get("Location")
+			writer.Header().Set("Location", strings.Replace(location, "http:", "https:", 1))
 		})
 
 	//处理文件下载
@@ -143,7 +146,7 @@ func main() {
 		go cmd.Run()
 
 		//start sqlite_web server
-		cmd2 := exec.Command("sqlite_web", "--ad-hoc", "--port", "8087", "--url-prefix", "/sqlite-web", "/tmp/test.db")
+		cmd2 := exec.Command("sqlite_web", "--port", "8087", "--url-prefix", "/sqlite-web", "/tmp/test.db")
 		cmd2.Stdout = log.Writer()
 		cmd2.Stderr = log.Writer()
 
