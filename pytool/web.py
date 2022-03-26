@@ -18,13 +18,13 @@ def index():
 def notes():
     return template("notes.html")
 
-
+from html import unescape
 @get('/str-joiner/format-text')
 def str_joiner_format():
     response.content_type = 'text/text; charset=UTF8'
     s = request.query['s']
     print(s)
-    return template(s+'\n') # 加上 \n 防止被识别为html模板文件名
+    return unescape(template(s+'\n')) # 加上 \n 防止被识别为html模板文件名
 
 
 
