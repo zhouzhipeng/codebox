@@ -118,10 +118,16 @@ func main() {
 				},
 			}
 
+			proxy.ModifyResponse = func(response *http.Response) error {
+				location := response.Header.Get("location")
+				log.Println("location header is : " + location)
+				response.Header.Set("location", strings.Replace(location, "http:", "https:", 1))
+
+				return nil
+			}
+
 			proxy.ServeHTTP(writer, request)
-			location := writer.Header().Get("location")
-			log.Println("location header is : " + location)
-			writer.Header().Set("location", strings.Replace(location, "http:", "https:", 1))
+
 		})
 
 	//处理文件下载
