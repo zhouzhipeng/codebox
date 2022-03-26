@@ -120,8 +120,12 @@ func main() {
 
 	//startup python web server
 	if os.Getenv("START_PYTHON_SERVER") == "1" {
-		go exec.Command("python", "/app/web.py").Run()
-		log.Println("python web server started.")
+		cmd := exec.Command("python", "/app/web.py")
+		cmd.Stdout = log.Writer()
+		cmd.Stderr = log.Writer()
+
+		log.Println("python web server started")
+		go cmd.Run()
 	}
 
 	// Wait until the interrupt signal arrives or browser window is closed
