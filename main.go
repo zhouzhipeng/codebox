@@ -7,7 +7,9 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"os"
+	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"runtime"
@@ -88,6 +90,21 @@ func main() {
 	//处理api请求
 	http.HandleFunc("/api/", handleAPI)
 
+	//反向代理请求到python服务器
+	http.HandleFunc("/py/",
+		func(writer http.ResponseWriter, request *http.Request) {
+			proxy := httputil.ReverseProxy{
+				Director: func(request *http.Request) {
+					//rewrite url
+					request.URL.Scheme = "http"
+					request.URL.Host = "127.0.0.1:8086"
+					request.URL.Path = request.URL.Path[len("/py"):]
+				},
+			}
+
+			proxy.ServeHTTP(writer, request)
+		})
+
 	//处理文件下载
 	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
@@ -100,6 +117,12 @@ func main() {
 	log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
 
 	go http.Serve(ln, nil)
+
+	//startup python web server
+	if os.Getenv("START_PYTHON_SERVER") == "1" {
+		go exec.Command("python", "/app/web.py").Run()
+		log.Println("python web server started.")
+	}
 
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)

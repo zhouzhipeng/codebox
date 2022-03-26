@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字符串拼接器</title>
+    <style>
+        .tool{
+            cursor: pointer;
+            display: none;
+            background-color: white;
+            color: blue;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+
+</head>
+<body>
+<h2>字符串拼接器</h2>
+<a href="javascript:;"  onclick="showExample1()">示例1</a>
+<div class="wenku" id="wenku">
+    <textarea class="art" id="art" style="width:90%; height:300px" placeholder="输入字符串模板"></textarea>
+    <p>
+    <input type="button" onclick="formatText(art.value.trim())" value="拼接">
+    </p>
+    <textarea class="art" id="resultArea" style="width:90%; height:150px" placeholder="点击拼接按钮，展示结果"></textarea>
+
+    <div class="tool" id="toolDiv">
+        <span>【+新建】</span><span>【复制】</span><span>【共享】</span>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function  showExample1(){
+        art.value=`
+#python inline code
+% import time
+
+% name = 'zhouzhipeng'
+
+
+hello, my name is  {{name}}, time is {{int(time.time()*1000)}}
+
+
+<%
+#python code block
+a=1
+b=2
+c=a+b
+
+%>
+
+a+b = {{c}}
+
+
+
+Todo List
+
+% todos = [{"name": "task1", "isDone": True},{"name": "task2", "isDone": False}]
+
+<ul>
+
+% for todo in todos:
+
+% if todo['isDone']:
+<li> {{todo['name']}} Finished </li>
+% else:
+<li> {{todo['name']}} </li>
+%end
+
+%end
+</ul>
+        `.trim();
+    }
+    async function  formatText(text){
+        let result = await (await fetch("/py/str-joiner/format-text?s="+encodeURIComponent(text))).text()
+        resultArea.value= result.trim()
+    }
+</script>
+</body>
+</html>

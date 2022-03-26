@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Example: Create Sticky note effect with CSS3 and HTML5</title>
+<base href="https://www.ajaxshake.com/" />
+<meta name="Description" content="Demo: This tutorial shows you how to create a sticky notes effects in only five easy steps using Css3 and html5" />
+<link rel="stylesheet" href="/static/css/stickynotes/screen.min.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="/static/css/stickynotes/style.css" type="text/css" media="screen, projection" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+        body{background-image: none;background-color:#cfdbec;}
+        #container{background-image: none;background-color:white;border-bottom: 2px solid #333333}
+        #header{background-image: none;background-color:#cfdbec;height:126px;}
+        #links a{
+			color: #C90012;
+			display: block;
+			font-family: arial;
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 10px;
+			margin-right: 2px;
+			text-decoration: none;
+            text-shadow: 1px 1px white;
+		}
+        #links{
+            float: left;
+            width: 200px;
+			margin-left:-210px;
+			margin-top:10px;
+        }
+
+        #ads{
+            float: left;
+			margin-right: 5px;
+        }
+        #buysellads{
+            float: left;
+			margin-right: -260px;
+			width: 780px;
+		}
+        .adsense1,.adsense2,.adsense3,.adsense4
+        {
+            float:left;
+            width:125px;
+            margin-right: 4px;
+        }
+
+    </style>
+</head>
+<body>
+<a id="close" href="javascript:void(0);" onClick="closeBanner();" style="float:left;"></a>
+<div class="container">
+<div id="header" class="span-24 last">
+<div id="links">
+</div>
+
+<div id="bsap_1272111" class="bsarocks bsap_95111c43e0348a419d1a20d834c0b28f"></div>
+
+<div id="buysellads">
+<div id="bsap_1258716" class="bsarocks bsap_95111c43e0348a419d1a20d834c0b28f"></div>
+</div>
+</div>
+<div style="clear:both"></div>
+</div>
+
+
+<div style="background-color:white;height:100vh !important;">
+<iframe id="demo" frameborder="0" onload="" scrolling="auto" name="" class="" src="https://www.ajaxshake.com/getLink.php?link=1051&linkType=E&hash=9ece104f0cea2a589139ed860f50380a&lan=EN" width="100%" height="100%"></iframe>
+</div>
+<script type="text/javascript" src="//s3.buysellads.com/ac/bsa.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+			topbar_height =0;
+            $(function(){
+				topbar_height = $(".container").outerHeight()+6;
+                resize();
+                setInterval(resize,1000);
+            });
+			
+            var body_height=0
+			var resize=function(){
+				if (body_height !=$(document).height())
+					{
+						body_height = $(document).height();
+						$("#demo").attr("height",(body_height-topbar_height)+"px");
+					}
+			}
+			
+			function closeBanner(){
+				$(".container").hide();
+				$("#close").hide();
+				$(".container").css('height','0px');
+				body_height = $(document).height();
+				topbar_height = 6;
+				$("#demo").attr("height",(body_height-topbar_height)+"px");
+			}
+			
+    </script>
+<script type="text/javascript">
+        window.google_analytics_uacct = "UA-16213975-1";
+    </script>
+<script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+<script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16213975-1");
+            pageTracker._setDomainName(".ajaxshake.com");
+            pageTracker._trackPageview();
+        } catch(err) {}
+    </script>
+</body>
+</html>
