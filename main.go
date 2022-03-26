@@ -105,7 +105,26 @@ func main() {
 					request.URL.Scheme = "http"
 					request.URL.Host = "127.0.0.1:8086"
 					request.URL.Path = request.URL.Path[len("/py"):]
+
+					// Delete any ETag headers that may have been set
+					for _, v := range etagHeaders {
+						if request.Header.Get(v) != "" {
+							request.Header.Del(v)
+						}
+					}
 				},
+			}
+			
+			proxy.ModifyResponse= func(r *http.Response) error {
+		
+
+				// Set our NoCache headers
+				for k, v := range noCacheHeaders {
+					r.Header.Set(k, v)
+				}
+				
+				return nil
+				
 			}
 
 			proxy.ServeHTTP(writer, request)
