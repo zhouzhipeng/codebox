@@ -17,17 +17,17 @@ import (
 	"time"
 )
 
-//go:embed www
-var www embed.FS
+//go:embed static
+var static embed.FS
 
-//go:embed www/shell.html
+//go:embed static/shell.html
 var shellHtml string
 
 //存放临时上传的文件(窗口关闭后删除）
 var TEMP_FILES_DIR = ""
 
 func genTmpUploadFilesDir() {
-	if os.Getenv("DISABLE_UI") == "" {
+	if os.Getenv("IN_DOCKER") == "" {
 		tmp, err := os.MkdirTemp("", "gogo_files")
 		if err != nil {
 			log.Println("getTmpUploadFilesDir error", err)
@@ -41,7 +41,7 @@ func genTmpUploadFilesDir() {
 
 	}
 
-	if os.Getenv("NO_LOG_FILE") == "" {
+	if os.Getenv("ENABLE_LOG_FILE") == "1" {
 		//设置log输出到文件
 		file := filepath.Join(TEMP_FILES_DIR, "message.txt")
 		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
@@ -64,7 +64,7 @@ var ui lorca.UI
 func main() {
 
 	//open browser window.
-	if os.Getenv("DISABLE_UI") == "" {
+	if os.Getenv("IN_DOCKER") == "" {
 		// open ui window
 		args := []string{}
 		if runtime.GOOS == "linux" {
@@ -80,10 +80,15 @@ func main() {
 
 	//创建临时文件目录
 	genTmpUploadFilesDir()
+	
+	
+	//首页
+	http.HandleFunc("/", indexPage)
+
 
 	//http & file server
-	fsys, _ := fs.Sub(www, "www")
-	http.Handle("/", NoCache(http.FileServer(http.FS(fsys))))
+	fsys, _ := fs.Sub(static, "static") 
+	http.Handle("/static/", NoCache(http.StripPrefix("/static/", http.FileServer(http.FS(fsys)))))
 
 	//绑定视图模板
 	http.HandleFunc("/views/", handleTemplates)

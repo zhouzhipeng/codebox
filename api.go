@@ -102,6 +102,14 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		//bind browser window close event;
 		fmt.Fprintf(w, "ok.")
 		ui.Close()
+	case "/api/get-available-pages":
+		if os.Getenv("IN_DOCKER") == ""{
+			//local
+			fmt.Println(w,"")
+		}else{
+			//remote server
+			
+		}
 	default:
 		w.WriteHeader(404)
 	}
