@@ -105,6 +105,21 @@ func main() {
 			proxy.ServeHTTP(writer, request)
 		})
 
+	//反向代理请求到python sqlite_web服务器
+	http.HandleFunc("/sqlite-web/",
+		func(writer http.ResponseWriter, request *http.Request) {
+			proxy := httputil.ReverseProxy{
+				Director: func(request *http.Request) {
+					//rewrite url
+					request.URL.Scheme = "http"
+					request.URL.Host = "127.0.0.1:8087"
+					//request.URL.Path = request.URL.Path[len("/sqlite-web"):]
+				},
+			}
+
+			proxy.ServeHTTP(writer, request)
+		})
+
 	//处理文件下载
 	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
@@ -126,6 +141,15 @@ func main() {
 
 		log.Println("python web server started")
 		go cmd.Run()
+
+		//start sqlite_web server
+		cmd2 := exec.Command("sqlite_web", "--port", "8087", "--url-prefix", "/sqlite-web", "/tmp/test.db")
+		cmd2.Stdout = log.Writer()
+		cmd2.Stderr = log.Writer()
+
+		log.Println("sqlite_web server started")
+		go cmd2.Run()
+
 	}
 
 	// Wait until the interrupt signal arrives or browser window is closed

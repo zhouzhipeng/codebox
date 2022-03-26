@@ -16,8 +16,7 @@
     <option value="clipboard.html">剪贴板</option>
     <option value="/views/media_open">开放多媒体</option>
     <option value="/py/static/str-joiner.html">字符串拼接器</option>
-
-
+    <option value="/sqlite-web/">sqlite-web</option>
 </select>
 
 <a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>
@@ -26,6 +25,7 @@
 <!--</iframe>-->
 
 <span id="timeSpan"></span>
+<a  href="/files/" target="_blank">Files</a>
 
 <a  href="/files/message.txt" target="_blank">Logs</a>
 
@@ -51,7 +51,7 @@
 		document.body.appendChild(iframe);
     }
 
-    switchIFrame("dd-upload.html");
+    switchIFrame("/py/static/str-joiner.html");
 
     //window.location.href="http://127.0.0.1:59989/www"
     if (location.href.indexOf("islocal=1") !== -1) {

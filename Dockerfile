@@ -15,7 +15,7 @@ RUN ./build-linux.sh && ./build-macos.sh && ./build-windows.sh
 
 
 
-FROM zhouzhipeng/pytool-base:709c
+FROM zhouzhipeng/pytool-base:6e52
 
 EXPOSE 9999
 
@@ -33,7 +33,5 @@ COPY pytool /app
 
 # install dependencies (most should already  be installed in base.Dockerfile)
 RUN pip install -r requirements.txt
-
-CMD python web.py
 
 ENTRYPOINT ["/tmp/gogo"]
