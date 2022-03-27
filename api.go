@@ -65,13 +65,16 @@ func getClipboardData(w http.ResponseWriter, r *http.Request) {
 }
 
 func getLocalIP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, getLocalIPInternal())
+}
 
+func getLocalIPInternal() string {
 	//获取ip
 	addrs, err := net.InterfaceAddrs()
 
 	if err != nil {
 		log.Println(err)
-		fmt.Fprintf(w, "127.0.0.1")
+		return "127.0.0.1"
 	}
 	for _, address := range addrs {
 
@@ -79,13 +82,12 @@ func getLocalIP(w http.ResponseWriter, r *http.Request) {
 		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
 				log.Println(ipnet.IP.String())
-				fmt.Fprintf(w, ipnet.IP.String())
-				break
+				return ipnet.IP.String()
 			}
 
 		}
 	}
-
+	return "127.0.0.1"
 }
 
 func handleAPI(w http.ResponseWriter, r *http.Request) {
@@ -103,12 +105,40 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "ok.")
 		ui.Close()
 	case "/api/get-available-pages":
-		if os.Getenv("IN_DOCKER") == ""{
+		if os.Getenv("IN_DOCKER") == "" {
 			//local
-			fmt.Println(w,"")
-		}else{
+			fmt.Println(w, "")
+		} else {
 			//remote server
-			
+
+		}
+
+	case "/api/search-ffmpeg":
+		var files []string
+
+		root := "/Users/zhouzhipeng"
+
+		err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+
+			if err != nil {
+
+				fmt.Println(err)
+				return nil
+			}
+
+			if !info.IsDir() && filepath.Ext(path) == ".txt" {
+				files = append(files, path)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range files {
+			fmt.Println(file)
 		}
 	default:
 		w.WriteHeader(404)

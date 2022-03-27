@@ -29,4 +29,10 @@ go template: http://books.studygolang.com/gowebexamples/templates/
 go ffmpeg: https://gist.github.com/aperture147/ad0f5b965912537d03b0e851bb95bd38
 
 
+## ffmpeg
+```bash
+# 获取视频缩略图
+# eg. 如下命令用于截取视频第20秒的一帧,并生成图片
+ffmpeg -i input.mp4 -ss 00:00:20.000 -vframes 1 generated.jpg
 
+```

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 )
 
 // UI interface allows talking to the HTML5 UI from Go.
@@ -73,6 +72,8 @@ func New(url, dir string, width, height int, customArgs ...string) (UI, error) {
 	args = append(args, customArgs...)
 	//args = append(args, "--remote-debugging-port=0")
 
+	log.Println(args)
+
 	chrome, err := newChromeWithArgs(ChromeExecutable(), args...)
 	done := make(chan struct{})
 	if err != nil {
@@ -96,14 +97,14 @@ func (u *ui) Close() error {
 	// ignore err, as the chrome process might be already dead, when user close the window.
 	u.chrome.kill()
 
-	if u.tmpDir != "" {
-		if err := os.RemoveAll(u.tmpDir); err != nil {
-			return err
-		}
-
-		log.Println("ui tmpDir removed : ", u.tmpDir)
-
-	}
+	//if u.tmpDir != "" {
+	//	if err := os.RemoveAll(u.tmpDir); err != nil {
+	//		return err
+	//	}
+	//
+	//	log.Println("ui tmpDir removed : ", u.tmpDir)
+	//
+	//}
 
 	<-u.done
 	return nil

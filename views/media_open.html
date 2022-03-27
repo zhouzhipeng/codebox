@@ -7,15 +7,15 @@
 <body>
 开放多媒体
 <form action="/views/media_open" method="post">
-    <input type="text" name="path" placeholder="input a absolute path"/>
+    <input type="text" value="{{.path}}" name="path" placeholder="input a absolute path"/>
     <input type="submit" value="Set">
 </form>
 
 {{.msg}}
 
-{{ if .showlink}}
 <a href="{{.link}}" target="_blank">Open Media</a>
-{{end}}
+<hr/>
+<img src="{{.qrcode}}"/>
 
 </body>
 </html>

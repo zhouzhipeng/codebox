@@ -7,6 +7,7 @@ from lib.shell_util import *
 from user_dao import *
 
 UPLOAD_PATH = "/static/upload/"
+BASE_PATH = "/py"
 
 
 @route('/')
@@ -18,18 +19,19 @@ def index():
 def notes():
     return template("notes.html")
 
+
 from html import unescape
-@post('/py/str-joiner/format-text')
+
+
+@post(BASE_PATH + '/str-joiner/format-text')
 def str_joiner_format():
     response.content_type = 'text/text; charset=UTF8'
     s = request.forms['s']
     print(s)
-    return unescape(template(s+'\n')) # 加上 \n 防止被识别为html模板文件名
+    return unescape(template(s + '\n'))  # 加上 \n 防止被识别为html模板文件名
 
 
-
-
-@post('/upload-file')
+@post(BASE_PATH + '/upload-file')
 def upload_file():
     # category = request.forms.get('category')
     upload = request.files.get('upfile')
@@ -65,7 +67,7 @@ def upload_file():
     return final_path
 
 
-@route('/py/static/<filename:path>')
+@route(BASE_PATH + '/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='./static')
 

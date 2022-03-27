@@ -19,7 +19,9 @@ def parse_thumbnail(video_path:str, filename:str, output_dir:str, capture_second
 def get_thumbnail_from_video(video_path, filename, output_dir):
     thumbnail_path = output_dir + filename.replace(".mp4", ".jpg")
     ff = ffmpy.FFmpeg(
-        executable='C:\\Program Files\\ffmpeg-2022-03-07-git-e645a1ddb9-full_build\\bin\\ffmpeg.exe',
+        # executable='C:\\Program Files\\ffmpeg-2022-03-07-git-e645a1ddb9-full_build\\bin\\ffmpeg.exe',
+        executable='/Users/zhouzhipeng/Downloads/ffmpeg',
+
         inputs={video_path: None},
         outputs={thumbnail_path: ['-ss', '00:00:20.000', '-vframes', '1']}
     )
@@ -59,4 +61,4 @@ def gen_thumbnails():
             print("error file: "+ file)
 
 if __name__ == '__main__':
-    gen_html()
+    get_thumbnail_from_video("/Users/zhouzhipeng/Downloads/xvideos/xvideos.com_d23eadd916ba84491c618961f07b98aa.mp4","test1.mp4", "/Users/zhouzhipeng/Downloads/")

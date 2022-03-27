@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视频缩略图</title>
+</head>
+<body>
+<h2>视频缩略图</h2>
+
+<form  action="/views/video_thumbnail" method="post">
+  <p>
+  <input id="ExecPathInput" style="width:300px" name="ExecPath" value="{{.ExecPath}}" type="text" placeholder="指定ffmpeg文件完整路径"/>
+  </p>
+  <p>
+  <input id="VideoPathInput"   style="width:300px"  name="VideoPath"  value="{{.VideoPath}}" type="text" placeholder="视频所在目录"/>
+  </p>
+
+  <input type="submit" value="生成视频缩略图"/>
+</form>
+
+{{.Msg}}
+
+
+<hr/>
+没有ffmpeg?
+<a href="https://www.ffmpeg.org/download.html" target="_blank">下载ffmpeg</a>
+
+
+<script type="text/javascript">
+    let KEY_EXEC_PATH= "video_thumbnail.ExecPathInput"
+    let KEY_VIDEO_PATH = "video_thumbnail.VideoPathInput"
+    if(ExecPathInput.value){
+        localStorage.setItem(KEY_EXEC_PATH,ExecPathInput.value )
+    }
+
+    if(VideoPathInput.value){
+        localStorage.setItem(KEY_VIDEO_PATH,VideoPathInput.value )
+    }
+    
+    if(localStorage.getItem(KEY_EXEC_PATH)){
+        ExecPathInput.value=localStorage.getItem(KEY_EXEC_PATH)
+    }
+
+
+    if(localStorage.getItem(KEY_VIDEO_PATH)){
+        VideoPathInput.value=localStorage.getItem(KEY_VIDEO_PATH)
+    }
+</script>
+
+</body>
+</html>

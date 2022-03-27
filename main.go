@@ -70,7 +70,7 @@ func main() {
 		if runtime.GOOS == "linux" {
 			args = append(args, "--class=gogo")
 		}
-		tmpui, err := lorca.New("data:text/html,"+shellHtml, "", 800, 600, args...)
+		tmpui, err := lorca.New("data:text/html,"+shellHtml, filepath.Join(os.TempDir(), "gogo"), 800, 600, args...)
 		if err != nil {
 			log.Fatal(err)
 			return
