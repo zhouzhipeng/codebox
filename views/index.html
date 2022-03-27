@@ -13,6 +13,7 @@
 </head>
 <body>
 <select onchange="switchIFrame(this.value)">
+    <option value="/static/notes.html">sticky notes</option>
     <option value="/static/dd-upload.html">文件上传</option>
 
     {{if .IsLocal}}
@@ -22,7 +23,6 @@
     <option value="/py/static/str-joiner.html">字符串拼接器</option>
     <option value="/sqlite-web/">sqlite-web</option>
     {{end}}
-    <option value="/static/notes.html">sticky notes</option>
 </select>
 {{if .IsLocal}}
 <a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>
@@ -58,7 +58,7 @@
 		document.body.appendChild(iframe);
     }
 
-    switchIFrame("/static/dd-upload.html");
+    switchIFrame("/static/notes.html");
 
     //window.location.href="http://127.0.0.1:59989/www"
     if (location.href.indexOf("islocal=1") !== -1) {
