@@ -12,7 +12,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"sync"
 )
 
 type Todo struct {
@@ -90,47 +89,39 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {
 			ExecPath := r.FormValue("ExecPath")
 			VideoPath := r.FormValue("VideoPath")
+			SecondsInput := r.FormValue("SecondsInput")
 
 			//回显数据
 			data["ExecPath"] = ExecPath
 			data["VideoPath"] = VideoPath
+			data["SecondsInput"] = SecondsInput
 
 			go func() {
 				os.Mkdir(filepath.Join(VideoPath, "images"), 0777)
 				files, _ := ioutil.ReadDir(VideoPath)
 
-				var wg sync.WaitGroup //wait till the loop has executed fully (used for async)
-
 				for _, fi := range files {
-					wg.Add(1) //increment on each section
 
-					fi := fi
-					go func() {
-						defer wg.Done() //will be called at the end of the loop iteration
+					if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".mp4") {
 
-						if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".mp4") {
+						outputFile := filepath.Join(VideoPath, "images", fi.Name()+".jpg")
 
-							outputFile := filepath.Join(VideoPath, "images", fi.Name()+".jpg")
-
-							if FileExist(outputFile) {
-								log.Println("file " + fi.Name() + "  has already generated thumbnails. skipped!")
-								return
-							}
-							cmd := exec.Command(ExecPath,
-								"-i", filepath.Join(VideoPath, fi.Name()),
-								"-ss", "00:00:20.000",
-								"-vframes", "1",
-								outputFile,
-							)
-							cmd.Stdout = log.Writer()
-							cmd.Stderr = log.Writer()
-							cmd.Run()
-
+						if FileExist(outputFile) {
+							log.Println("file " + fi.Name() + "  has already generated thumbnails. skipped!")
+							return
 						}
-					}()
-				}
+						cmd := exec.Command(ExecPath,
+							"-i", filepath.Join(VideoPath, fi.Name()),
+							"-ss", "00:"+SecondsInput+".000",
+							"-vframes", "1",
+							outputFile,
+						)
+						cmd.Stdout = log.Writer()
+						cmd.Stderr = log.Writer()
+						cmd.Run()
 
-				wg.Wait()
+					}
+				}
 
 				//生成html
 				ghtml := ""
@@ -144,6 +135,8 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 				}
 
 				os.WriteFile(filepath.Join(VideoPath, "index.html"), []byte(ghtml), 0777)
+
+				log.Println("=========== completed generating video thumbnails =============")
 			}()
 
 			data["Msg"] = "处理中，请通过日志观察进度!"
