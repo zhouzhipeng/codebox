@@ -41,7 +41,7 @@ func genTmpUploadFilesDir() {
 
 	}
 
-	if os.Getenv("ENABLE_LOG_FILE") == "1" {
+	if os.Getenv("DISABLE_LOG_FILE") == "" {
 		//设置log输出到文件
 		file := filepath.Join(TEMP_FILES_DIR, "message.txt")
 		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
@@ -80,14 +80,12 @@ func main() {
 
 	//创建临时文件目录
 	genTmpUploadFilesDir()
-	
-	
+
 	//首页
 	http.HandleFunc("/", indexPage)
 
-
 	//http & file server
-	fsys, _ := fs.Sub(static, "static") 
+	fsys, _ := fs.Sub(static, "static")
 	http.Handle("/static/", NoCache(http.StripPrefix("/static/", http.FileServer(http.FS(fsys)))))
 
 	//绑定视图模板
@@ -114,17 +112,16 @@ func main() {
 					}
 				},
 			}
-			
-			proxy.ModifyResponse= func(r *http.Response) error {
-		
+
+			proxy.ModifyResponse = func(r *http.Response) error {
 
 				// Set our NoCache headers
 				for k, v := range noCacheHeaders {
 					r.Header.Set(k, v)
 				}
-				
+
 				return nil
-				
+
 			}
 
 			proxy.ServeHTTP(writer, request)
