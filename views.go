@@ -72,11 +72,15 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func indexPage(w http.ResponseWriter, r *http.Request)  {
-	data := map[string]interface{}{
-		"IsLocal" : os.Getenv("IN_DOCKER") == "",
-	}
+func indexPage(w http.ResponseWriter, r *http.Request) {
+	if r.RequestURI == "/" {
+		data := map[string]interface{}{
+			"IsLocal": os.Getenv("IN_DOCKER") == "",
+		}
 
-	tmpl := template.Must(template.ParseFS(views, "views/index.html"))
-	tmpl.Execute(w, data)
+		tmpl := template.Must(template.ParseFS(views, "views/index.html"))
+		tmpl.Execute(w, data)
+	} else {
+		w.WriteHeader(404)
+	}
 }
