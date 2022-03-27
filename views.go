@@ -73,7 +73,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexPage(w http.ResponseWriter, r *http.Request) {
-	if r.RequestURI == "/" {
+	if r.URL.Path == "/" {
 		data := map[string]interface{}{
 			"IsLocal": os.Getenv("IN_DOCKER") == "",
 		}
