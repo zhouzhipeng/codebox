@@ -102,7 +102,7 @@ func main() {
 					//rewrite url
 					request.URL.Scheme = "http"
 					request.URL.Host = "127.0.0.1:8086"
-					request.URL.Path = request.URL.Path[len("/py"):]
+					//request.URL.Path = request.URL.Path[len("/py"):]
 
 					// Delete any ETag headers that may have been set
 					for _, v := range etagHeaders {

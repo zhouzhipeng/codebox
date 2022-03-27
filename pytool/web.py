@@ -19,10 +19,10 @@ def notes():
     return template("notes.html")
 
 from html import unescape
-@get('/str-joiner/format-text')
+@post('/py/str-joiner/format-text')
 def str_joiner_format():
     response.content_type = 'text/text; charset=UTF8'
-    s = request.query['s']
+    s = request.forms['s']
     print(s)
     return unescape(template(s+'\n')) # 加上 \n 防止被识别为html模板文件名
 
@@ -65,7 +65,7 @@ def upload_file():
     return final_path
 
 
-@route('/static/<filename:path>')
+@route('/py/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='./static')
 

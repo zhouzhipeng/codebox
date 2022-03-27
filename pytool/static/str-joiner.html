@@ -94,7 +94,15 @@ Todo List
         `.trim();
     }
     async function  formatText(text){
-        let result = await (await fetch("/py/str-joiner/format-text?s="+encodeURIComponent(text))).text()
+
+        let data = new FormData();
+        data.append( "s", text);
+
+        let result = await (await fetch("/py/str-joiner/format-text",
+            {
+                method: "POST",
+                body: data
+            })).text()
         resultArea.value= result.trim()
     }
 </script>

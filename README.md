@@ -26,5 +26,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 ## else
 go template: http://books.studygolang.com/gowebexamples/templates/ 
 
+go ffmpeg: https://gist.github.com/aperture147/ad0f5b965912537d03b0e851bb95bd38
+
 
 
