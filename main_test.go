@@ -29,7 +29,7 @@ func TestGrabDownload(t *testing.T) {
 func TestGenStringTemplate(t *testing.T) {
 
 	src := "/Volumes/UNTITLED/VR/watch4beauty"
-	output := "/Volumes/UNTITLED/VR/photos"
+	output := "/Volumes/UNTITLED/VR/photo-gallery"
 	ghtml := `<?xml version="1.0" encoding="UTF-8"?>
 						<juiceboxgallery
 							galleryTitle="Juicebox Lite Gallery"
