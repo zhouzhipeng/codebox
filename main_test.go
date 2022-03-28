@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -24,9 +26,59 @@ func TestGrabDownload(t *testing.T) {
 	io.Copy(out, resp.Body)
 
 }
-func TestTest2(t *testing.T) {
+func TestGenStringTemplate(t *testing.T) {
 
-	testDownload()
+	src := "/Volumes/UNTITLED/VR/watch4beauty"
+	output := "/Volumes/UNTITLED/VR/photos"
+	ghtml := `<?xml version="1.0" encoding="UTF-8"?>
+						<juiceboxgallery
+							galleryTitle="Juicebox Lite Gallery"
+						>`
+
+	count := 0
+	filepath.Walk(src, func(path string, info fs.FileInfo, err error) error {
+		if strings.HasSuffix(info.Name(), ".jpg") || strings.HasSuffix(info.Name(), ".png") {
+			count++
+			ghtml += fmt.Sprintf(strings.ReplaceAll(`  
+						
+						  <image imageURL="$link"
+							thumbURL="$link"
+							linkURL="$link"
+							linkTarget="_blank">
+							<title>Welcome to Juicebox!</title>
+						  </image>
+						
+						`, "$link", "/media/"+path[len("/Volumes/UNTITLED/VR")+1:]))
+
+			//tmpl, _ := template.New("").Parse(`
+			//
+			//			  <image imageURL="images/wide.jpeg"
+			//				thumbURL="thumbs/wide.jpeg"
+			//				linkURL="images/wide.jpeg"
+			//				linkTarget="_blank">
+			//				<title>Welcome to Juicebox!</title>
+			//			  </image>
+			//
+			//			`)
+			//
+			//b := new(strings.Builder)
+			//
+			//data := map[string]interface{}{
+			//	"IsLocal": os.Getenv("IN_DOCKER") == "",
+			//}
+			//
+			//tmpl.Execute(b, data)
+
+		}
+
+		return nil
+	})
+
+	fmt.Printf("count: %d", count)
+	ghtml += `</juiceboxgallery>`
+
+	os.WriteFile(filepath.Join(output, "config.xml"), []byte(ghtml), 0777)
+
 }
 func TestTest(t *testing.T) {
 	var files []string

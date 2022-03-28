@@ -102,7 +102,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 
 				for _, fi := range files {
 
-					if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".mp4") {
+					if !fi.IsDir() && !strings.HasPrefix(fi.Name(), ".") && strings.HasSuffix(fi.Name(), ".mp4") {
 
 						outputFile := filepath.Join(VideoPath, "images", fi.Name()+".jpg")
 
@@ -126,7 +126,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 				//生成html
 				ghtml := ""
 				for _, fi := range files {
-					if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".mp4") {
+					if !fi.IsDir() && !strings.HasPrefix(fi.Name(), ".") && strings.HasSuffix(fi.Name(), ".mp4") {
 						ghtml += fmt.Sprintf(`  
 						<a href="%s" >
 						<img src="%s" style="width: 600px" />
