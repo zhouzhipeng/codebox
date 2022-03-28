@@ -145,21 +145,6 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 
 		tmpl := template.Must(template.ParseFS(views, "views/video_thumbnail.html"))
 		tmpl.Execute(w, data)
-	case "/views/sql_runner":
-		data := map[string]interface{}{}
-
-		if r.Method == "POST" {
-			SqlInput := r.FormValue("SqlInput")
-
-			//回显数据
-			data["SqlInput"] = SqlInput
-
-			data["Msg"] = querySql(SqlInput, "root:123456@tcp(127.0.0.1:3306)/mysql")
-
-		}
-
-		tmpl := template.Must(template.ParseFS(views, "views/sql_runner.html"))
-		tmpl.Execute(w, data)
 
 	default:
 		w.WriteHeader(404)

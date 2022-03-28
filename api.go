@@ -140,6 +140,13 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		for _, file := range files {
 			fmt.Println(file)
 		}
+	case "/api/run-sql":
+		sql := r.FormValue("sql")
+		log.Println(sql)
+
+		result := querySql(sql, "root:123456@tcp(192.168.0.109:3306)/mysql")
+		fmt.Fprintf(w, result)
+
 	default:
 		w.WriteHeader(404)
 	}

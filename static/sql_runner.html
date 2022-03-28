@@ -7,51 +7,58 @@
 		.tool{
 			cursor: pointer;
 			display: none;
-			background-color: #807d7d;
-			color: blue;
+			background-color: #f0c878;
+			color: #27bb37;
 			position: absolute;
 			left: 0px;
 			top: 0px;
 		}
 	</style>
-	<script>
-		function $(id){
-			return document.getElementById(id);
-		}
-		window.onload = function (){
-			$('art').onmouseup = function(event){ //onmouseup松开鼠标按钮时执行
-				var event = event || window.event;
-				var x = event.clientX+30 ;
-				var y = event.clientY+30;
-				var txt; //getSelection()方法可以返回一个Selection对象，用于表示用户选择的文本范围或插入符的当前位置。
-				txt = window.getSelection ? window.getSelection().toString() : document.selection.creatRange().text;
-				if(txt){ 
-				$('toolDiv').style.display = "block";
-				$('toolDiv').style.left = x + 'px';
-				$('toolDiv').style.top = y + 'px';
-				}
 
-			}
-			//点击其他地方让盒子消失不能用onclick
-			document.onmousedown = function (event){ //鼠标按下时发生
-				var event = event || window.event;
-				var id = event.target ? event.target.id : event.srcElement.id; //
-				if(id !="toolDiv"){
-					$('toolDiv').style.display = 'none';
-				}
-				//取消选中内容
-				window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
-			}
-		}
-	</script>
 </head>
 <body>
-	<div class="wenku" id="wenku">
-		<textarea  class="art" id="art" style="width:100%; height: 300px" name="SqlInput" placeholder="输入sql语句">{{.SqlInput}}</textarea>
 
-		<div class="tool" id="toolDiv">
-			<span>[Run]</span>
-		</div>
-	</div>
+	<textarea id="sqlInput" style="width: 100%; height: 300px;    font-size: 18px;"></textarea>
+
+	<input type="button" onclick="runSql(this)" value="Run Selected"/>
+
+	<hr/>
+	<pre id="resultBlock"></pre>
+
+	<script>
+		let KEY_EXEC_PATH= "sql_runner.sql"
+
+		if(localStorage.getItem(KEY_EXEC_PATH)){
+			sqlInput.value=localStorage.getItem(KEY_EXEC_PATH)
+		}
+
+
+		async function runSql(btn){
+			let txt = window.getSelection ? window.getSelection().toString() : document.selection.creatRange().text;
+
+			if(!txt)return;
+
+			btn.setAttribute("disabled","disabled")
+			btn.value="Running..."
+
+
+			localStorage.setItem(KEY_EXEC_PATH,txt)
+
+			let data = new FormData();
+			data.append( "sql", txt);
+
+			let result = await (await fetch("/api/run-sql",
+					{
+						method: "POST",
+						body: data
+					})).text()
+			resultBlock.innerText= result.trim()
+
+			sqlInput.focus()
+
+			btn.removeAttribute("disabled")
+			btn.value="Run Selected"
+		}
+	</script>
 </body>
 </html>

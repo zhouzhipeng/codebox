@@ -36,3 +36,17 @@ go ffmpeg: https://gist.github.com/aperture147/ad0f5b965912537d03b0e851bb95bd38
 ffmpeg -i input.mp4 -ss 00:00:20.000 -vframes 1 generated.jpg
 
 ```
+
+
+## sql runner example
+```sql
+
+
+-- sss
+-- @ds=root:123456@tcp(192.168.0.109:3306)/mysql
+select *
+from
+
+
+    p
+```

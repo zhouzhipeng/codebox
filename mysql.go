@@ -11,16 +11,19 @@ func querySql(sqlString string, ds string) string {
 	db, err := sql.Open("mysql", ds)
 	if err != nil {
 		log.Println(err)
+		return err.Error()
 	}
 
 	rows, err := db.Query(sqlString)
 	if err != nil {
-		return ""
+		log.Println(err)
+		return err.Error()
 	}
 	defer rows.Close()
 	columns, err := rows.Columns()
 	if err != nil {
-		return ""
+		log.Println(err)
+		return err.Error()
 	}
 	count := len(columns)
 	tableData := make([]map[string]interface{}, 0)
@@ -47,7 +50,8 @@ func querySql(sqlString string, ds string) string {
 	}
 	jsonData, err := json.Marshal(tableData)
 	if err != nil {
-		return ""
+		log.Println(err)
+		return err.Error()
 	}
 	//fmt.Println(string(jsonData))
 	return string(jsonData)
