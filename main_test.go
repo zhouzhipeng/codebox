@@ -12,6 +12,13 @@ import (
 	"testing"
 )
 
+func TestMysql(t *testing.T) {
+	println(writeSql("create table p(name varchar(255),age integer)", "root:123456@tcp(127.0.0.1:3306)/mysql"))
+	println(writeSql("insert into p(name,age) values('zz',1)", "root:123456@tcp(127.0.0.1:3306)/mysql"))
+
+	println(querySql("select * from p", "root:123456@tcp(127.0.0.1:3306)/mysql"))
+
+}
 func TestGrabDownload(t *testing.T) {
 	//resp, err := grab.Get(".", "https://evermeet.cx/ffmpeg/ffmpeg-5.0.zip")
 	//if err != nil {

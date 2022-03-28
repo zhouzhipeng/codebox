@@ -97,5 +97,7 @@ print("is_dev : " + str(is_dev))
 
 run(host='0.0.0.0', port=8086, reloader=is_dev, debug=is_dev,
     server="wsgiref")
-# run(host='0.0.0.0', port=os.environ.get('PORT', 8080)
-#     ,server='bjoern')
+
+# from  sqlite_web import  sqlite_web
+# sqlite_web.initialize_app("test.db")
+# sqlite_web.app.run(host="127.0.0.1", port=8087)
