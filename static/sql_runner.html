@@ -52,7 +52,10 @@ show tables
 		async function runSql(btn){
 			let txt = window.getSelection ? window.getSelection().toString() : document.selection.creatRange().text;
 
-			if(!txt)return;
+			if(!txt){
+				GenerateTable("Error : Please select some SQL and @ds text firstly!")
+				return;
+			}
 
 			btn.setAttribute("disabled","disabled")
 			btn.value="Running..."
