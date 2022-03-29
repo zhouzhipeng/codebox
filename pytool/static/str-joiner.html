@@ -118,7 +118,19 @@ Todo List
     }
 
 
+    let mirror=CodeMirror.fromTextArea(document.getElementById("art"), {
+        mode: {name: "python",
+            version: 3,
+            singleLineStringErrors: false},
+        lineNumbers: true,
+        indentUnit: 4,
+        matchBrackets: true
+    });
+
+
+
     function initCode(){
+        // mirror.toTextArea()
         CodeMirror.fromTextArea(document.getElementById("art"), {
             mode: {name: "python",
                 version: 3,
@@ -127,9 +139,9 @@ Todo List
             indentUnit: 4,
             matchBrackets: true
         });
+
     }
 
-    initCode();
 
 </script>
 </body>
