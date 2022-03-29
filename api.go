@@ -170,9 +170,15 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 			} else {
 				//sql
 				//connect with whitespace
-				rawSql += strings.TrimSpace(l) + " "
+				trimedSql := strings.TrimSpace(l)
+				if !strings.HasPrefix(trimedSql, "--") {
+					rawSql += trimedSql + " "
+				}
+
 			}
 		}
+
+		rawSql = strings.TrimSpace(rawSql)
 
 		//last
 		if rawSql != "" && ds != "" {
