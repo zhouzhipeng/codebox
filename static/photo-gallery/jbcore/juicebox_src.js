@@ -8189,7 +8189,7 @@ var juicebox_config_manager = function(c, x) {
         showsmallbackbutton: false,
         backbuttonuseicon: false,
         backbuttontext: "< Back",
-        backbuttonurl: "",
+        backbuttonurl: "/media/index",
         backbuttonposition: "NONE",
         backbuttonhalign: "LEFT",
         usefixedlayout: false,
@@ -16730,7 +16730,7 @@ juicebox_registered_components.backbutton = function() {
         var o = a.config.backbuttonuseicon ? " title='" + a.config.languagelistall.gobk + "'" : "";
         var p = (e.browser.msie && e.browser.version < 8) ? "padding-top:" + parseInt(a.utils.get_button_bar_button_size(a.config).buttonWidth / 4) + "px;" : "";
         if (a.config.backbuttonurl) {
-            s = "<a href='" + a.config.backbuttonurl + "'" + (a.config.showsmallbackbutton ? " class='jb-classifier-show-on-over " + q + "'" : "class='" + q + "'") + " style='" + p + (a.config.backbuttonuseicon ? a.utils.get_button_bar_icon_style(a.config, true) : "") + "'" + o + ">" + r + "</a>"
+            s = "<a href='/media/index'" + (a.config.showsmallbackbutton ? " class='jb-classifier-show-on-over " + q + "'" : "class='" + q + "'") + " style='" + p + (a.config.backbuttonuseicon ? a.utils.get_button_bar_icon_style(a.config, true) : "") + "'" + o + ">" + r + "</a>"
         } else {
             s = "<a href='#' onclick='history.back(); return false;'" + (a.config.showsmallbackbutton ? " class='jb-classifier-show-on-over " + q + "'" : "class='" + q + "'") + " style='" + p + (a.config.backbuttonuseicon ? a.utils.get_button_bar_icon_style(a.config, true) : "") + "'" + o + ">" + r + "</a>"
         }
