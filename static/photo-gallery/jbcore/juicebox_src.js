@@ -8088,7 +8088,7 @@ var juicebox_config_manager = function(c, x) {
         randomizeimages: false,
         showpreloader: true,
         screenmode: "AUTO",
-        languagelistall: 'Previous|Next|Start AutoPlay|Stop AutoPlay|Play Audio|Pause Audio|Show Thumbnails|Expand Gallery|Close Gallery|Open Image in New Window|Download Image|About|AutoPlay ON|AutoPlay OFF|Show Thumbnails|Hide Thumbnails|Show Information|Next Image|Previous Image|Hide Information|Juicebox can not display locally in this browser. <a href="http://www.juicebox.net/support/faq/#local">More Info.</a>|Juicebox Error: Config file not found.|Juicebox Error: Cannot find div with id: "|"|Juicebox Error: Theme CSS file not found|Buy this Image|Share on Facebook|Share on Twitter|Share on Google+|Share on Pinterest|To use Fotomoto please set the Fotomoto Store Id|Share on Tumblr|Go Back|of|Images|Send Email|Download|Password|Incorrect Password.|Regarding image|in gallery',
+        languagelistall: 'Previous|Next|Start AutoPlay|Stop AutoPlay|Play Audio|Pause Audio|Show Thumbnails|Expand Gallery|Close Gallery|Open Image in New Window|Download Image|About|AutoPlay ON|AutoPlay OFF|Show Thumbnails|Hide Thumbnails|Show Information|Next Image|Previous Image|Hide Information|Juicebox can not display locally in this browser. <a href="http://www.juicebox.net/support/faq/#local">More Info.</a>|Juicebox Error: Config file not found.|Juicebox Error: Cannot find div with id: "|"|Juicebox Error: Theme CSS file not found|Buy this Image|Share on Facebook|Share on Twitter|Share on Google+|Share on Pinterest|To use Fotomoto please set the Fotomoto Store Id|Share on Tumblr|Go Back|of|Images|Refresh|Download|Password|Incorrect Password.|Regarding image|in gallery',
         languagelist: "",
         splashbuttontext: "View Gallery",
         imagelocking: false,
@@ -18690,14 +18690,15 @@ juicebox_registered_components.email = function() {
         c(".jb-bb-btn-email").click(b)
     };
     var b = function() {
-        if (a.config.emailaddress) {
-            var h = a.getGalleryInfo();
-            var i = e.trim(decodeURI(h.title));
-            var j = e.trim(decodeURI(a.config.gallerytitle));
-            var g = a.config.languagelistall.rgdimg + " %23" + (h.imagePosition + 1) + (i ? "%3A %22" + encodeURIComponent(i) + "%22" : "") + (a.config.gallerytitle ? " " + a.config.languagelistall.ingrly + " %22" + j + "%22" : "") + " (" + h.shareUrl + ").";
-            window.location = "mailto:" + a.config.emailaddress + "?subject=" + encodeURIComponent(a.config.emailsubject) + "&body=" + g
-        } else {}
-        return false
+        location.reload();
+        // if (a.config.emailaddress) {
+        //     var h = a.getGalleryInfo();
+        //     var i = e.trim(decodeURI(h.title));
+        //     var j = e.trim(decodeURI(a.config.gallerytitle));
+        //     var g = a.config.languagelistall.rgdimg + " %23" + (h.imagePosition + 1) + (i ? "%3A %22" + encodeURIComponent(i) + "%22" : "") + (a.config.gallerytitle ? " " + a.config.languagelistall.ingrly + " %22" + j + "%22" : "") + " (" + h.shareUrl + ").";
+        //     window.location = "mailto:" + a.config.emailaddress + "?subject=" + encodeURIComponent(a.config.emailsubject) + "&body=" + g
+        // } else {}
+        // return false
     };
     return {
         setContext: d,
