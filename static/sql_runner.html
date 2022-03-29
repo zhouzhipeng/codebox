@@ -31,7 +31,7 @@
 
 	<textarea id="sqlInput" style="width: 100%; height: 300px;    font-size: 18px; word-break: break-all">
 -- @ds=root:123456@tcp(127.0.0.1:3306)/mysql
-select * from p
+show tables
 	</textarea>
 
 	<input type="button" onclick="runSql(this)" value="Run Selected"/>
@@ -82,6 +82,11 @@ select * from p
 
 	<script type="text/javascript">
 		function GenerateTable(arrayData) {
+
+			if(!arrayData.trim()){
+				console.log("ignored empty records.")
+				return;
+			}
 
 			//Create a HTML Table element.
 			let  table = document.createElement("TABLE");
