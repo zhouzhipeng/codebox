@@ -86,9 +86,16 @@ select * from p
 			//Create a HTML Table element.
 			let  table = document.createElement("TABLE");
 			table.border = "1";
+			let array = []
+			try {
+				//convert json array to below array
+				array = typeof arrayData != 'object' ? JSON.parse(arrayData) : arrayData;
+			}catch (e){
+				console.log(e)
 
-			//convert json array to below array
-			let  array = typeof arrayData != 'object' ? JSON.parse(arrayData) : arrayData;
+				//parse error, display msg colum in table
+				array = [{"msg": arrayData}]
+			}
 
 			//Add the header row.
 			let row = table.insertRow(-1);
