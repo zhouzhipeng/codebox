@@ -8,6 +8,7 @@ import (
 )
 
 func querySql(sqlString string, ds string) string {
+	log.Printf("querySql >> %s  , ds = %s ", sqlString, ds)
 	db, err := sql.Open("mysql", ds)
 	if err != nil {
 		log.Println(err)

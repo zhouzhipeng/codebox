@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func fileUpload(w http.ResponseWriter, r *http.Request) {
@@ -144,7 +145,43 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		sql := r.FormValue("sql")
 		log.Println(sql)
 
-		result := querySql(sql, "root:123456@tcp(192.168.0.109:3306)/mysql")
+		lines := strings.Split(strings.ReplaceAll(sql, "\r", ""), "\n")
+		log.Println(lines)
+		ds := ""
+		rawSql := ""
+		result := ""
+		for _, l := range lines {
+			if strings.Contains(l, "@ds") {
+				if ds == "" {
+					//first ds
+					ds = strings.TrimSpace(strings.Split(l, "=")[1])
+					rawSql = ""
+					log.Println("ds >>>  " + ds)
+				} else { //another ds
+
+					//execute last sql
+					result += querySql(rawSql, ds) + "<br/>"
+
+					ds = strings.TrimSpace(strings.Split(l, "=")[1])
+					rawSql = ""
+					log.Println("ds >>>  " + ds)
+					//then begin a new ds recording
+				}
+			} else {
+				//sql
+				//connect with whitespace
+				rawSql += strings.TrimSpace(l) + " "
+			}
+		}
+
+		//last
+		if rawSql != "" && ds != "" {
+			//execute last sql
+			result += querySql(rawSql, ds) + "<br/>"
+		} else {
+			result += " Error: No @ds specified."
+		}
+
 		fmt.Fprintf(w, result)
 
 	default:
