@@ -20,7 +20,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [x] [废弃]vue 绑定剪贴板数据
 - [x] js端封装通用ajax请求方法。 js--> go
 - [x] [废弃]js端vue做数据绑定渲染
-- [x] [废弃]tool.zhouzhipeng.com gogo server 导航
+- [x] [废弃]www.zhouzhipeng.com gogo server 导航
 - [ ] go+python best practice
 
 ## else

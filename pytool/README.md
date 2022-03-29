@@ -25,7 +25,7 @@ pip install -r requirements.txt
 ```
 
 ## 生产地址
-[https://tool.zhouzhipeng.com](tool.zhouzhipeng.com)
+[https://www.zhouzhipeng.com](www.zhouzhipeng.com)
 
 ## python本地开发最佳实践
 1. 下载最新pycharm pro版
