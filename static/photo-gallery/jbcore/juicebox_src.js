@@ -12644,7 +12644,7 @@ var juicebox_gallery_detail_panel = function(ad) {
                 aE = "text-align:right;"
             }
         }
-        var aJ = ai.trim(aL) ? '<div class="jb-cap-content jb-caption-title" style="' + aE + aK + '">' + aL + "&nbsp</div>" : "";
+        var aJ = ai.trim(aL) ? "" : "";
         var aF = ai.trim(aH) ? '<div class="jb-caption-desc" style="' + aE + (Y.showimagenumber ? "" : "margin-right:0;") + (aL ? "margin-top:10px;" : "margin-top:0;") + aK + '">' + aH + "</div>" : "";
         var aG = Y.showimagenumber ? '<div class="jbac-number jb-classifier-layer" data-layer="2000" style="z-index:2000;' + ((E.ship || !al) ? "" : "padding-bottom:20px;") + P() + an() + aK + '">' + (aD.position + 1) + " / " + S.length() + "</div>" : "";
         return aG + aJ + aF + aI
@@ -14605,12 +14605,12 @@ if (!gallery_defined) {
         };
         var get_gallery_frame_html = function() {
             var badge = "";
-            if (!context.utils.ship) {
-                badge = "<div " + get_badge_style_str() + ($.browser.msie ? "" : " !important") + ";background: " + get_badge_image_url() + " no-repeat 0 0 !important;cursor:pointer;margin:0 !important;padding:0 !important;bottom:0 !important;right:0 !important' " + get_badge_link() + "></div>"
-            }
-            if (context.utils.is_adobe_air()) {
-                badge = badge.replace("<div style=", "<div class='" + ["j", "b", "-", "b", "a", "d", "g", "e"].join("") + "' style=").replace(";background: " + get_badge_image_url() + " no-repeat 0 0 !important;", ";")
-            }
+            // if (!context.utils.ship) {
+            //     badge = "<div " + get_badge_style_str() + ($.browser.msie ? "" : " !important") + ";background: " + get_badge_image_url() + " no-repeat 0 0 !important;cursor:pointer;margin:0 !important;padding:0 !important;bottom:0 !important;right:0 !important' " + get_badge_link() + "></div>"
+            // }
+            // if (context.utils.is_adobe_air()) {
+            //     badge = badge.replace("<div style=", "<div class='" + ["j", "b", "-", "b", "a", "d", "g", "e"].join("") + "' style=").replace(";background: " + get_badge_image_url() + " no-repeat 0 0 !important;", ";")
+            // }
             var capposition = context.config.captionposition.toUpperCase();
             return "<div class='" + theme_cls + "' style='" + get_background_style() + "'>" + context.features.backgroundimage.getHtml() + context.features.toppanel.getHtml() + "<div class='jb-panel-index jb-classifier-thumb-area' data-layer='300' style='display:none;position:absolute !important;z-index:300;'><div class='jb-idx-thumbnail-container' style='height:100% !important;width:100% !important;margin:0;padding:0;position:relative;'></div><div class='jb-navigation index-navigation jb-classifier-thumb-area'><div class='jbn-nav-button jbn-left-button jbn-nav-button-icon jb-classifier-layer' data-layer='1000' style='z-index:1000;display:none;" + context.utils.get_nav_icon_style(context.config) + "'>" + context.utils.add_font_icon_4_ie8(context.config, "&#xe000;") + "</div><div class='jbn-nav-button jbn-right-button jbn-nav-button-icon jb-classifier-layer' data-layer='1000' style='z-index:1000;display:none;" + context.utils.get_nav_icon_style(context.config) + "'>" + context.utils.add_font_icon_4_ie8(context.config, "&#xe001;") + "</div></div><div class='jb-idx-thumbnail-show-more' style='left:3px;bottom:5px;height:30px;width:100%;position:absolute;display:none;'><a href='#'>more...</a></div></div>" + context.features.backbutton.getHtml() + context.features.buttonbar.getHtml4IndexPage() + "<div class='jb-panel-detail jb-classifier-detail-area jb-classifier-layer' data-layer='50' style='position:absolute !important'></div>" + context.features.grytitle.getHtml() + context.features.buttonbar.getHtml() + badge + ((capposition != "NONE" && capposition != "BELOW_THUMBS") ? context.features.caption.getHtml() : "") + "<div class='jb-navigation jb-classifier-detail-area jb-classifier-layer' data-layer='500' style='height:100%;z-index:500;'>" + get_autoplay_status_html() + "<div class='jbn-nav-touch-area jbn-nav-left-touch-area'>" + context.features.imagenav.getHtml(true) + "</div><div class='jbn-nav-touch-area jbn-nav-right-touch-area'>" + context.features.imagenav.getHtml() + "</div></div></div>"
         };
