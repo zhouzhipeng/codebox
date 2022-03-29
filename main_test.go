@@ -35,8 +35,8 @@ func TestGrabDownload(t *testing.T) {
 }
 func TestGenStringTemplate(t *testing.T) {
 
-	src := "/Volumes/UNTITLED/VR/watch4beauty"
-	output := "/Volumes/UNTITLED/VR/photo-gallery"
+	src := "/Volumes/UNTITLED/VR/所有照片"
+	output := "/Volumes/UNTITLED/VR/所有照片"
 	ghtml := `<?xml version="1.0" encoding="UTF-8"?>
 						<juiceboxgallery
 							galleryTitle="Juicebox Lite Gallery"
@@ -44,7 +44,7 @@ func TestGenStringTemplate(t *testing.T) {
 
 	count := 0
 	filepath.Walk(src, func(path string, info fs.FileInfo, err error) error {
-		if strings.HasSuffix(info.Name(), ".jpg") || strings.HasSuffix(info.Name(), ".png") {
+		if strings.HasSuffix(info.Name(), ".HEIC") || strings.HasSuffix(info.Name(), ".jpg") || strings.HasSuffix(info.Name(), ".png") {
 			count++
 			ghtml += fmt.Sprintf(strings.ReplaceAll(`  
 						
@@ -55,7 +55,7 @@ func TestGenStringTemplate(t *testing.T) {
 							<title>Welcome to Juicebox!</title>
 						  </image>
 						
-						`, "$link", "/media/"+path[len("/Volumes/UNTITLED/VR")+1:]))
+						`, "$link", strings.TrimLeft(path, "/Volumes/UNTITLED/VR/所有照片/")))
 
 			//tmpl, _ := template.New("").Parse(`
 			//
