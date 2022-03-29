@@ -3,12 +3,21 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"strings"
 )
 
 func querySql(sqlString string, ds string) string {
 	log.Printf("querySql >> %s  , ds = %s ", sqlString, ds)
+
+	//judge if contains insert, update, delete
+	tsql := strings.ToLower(sqlString)
+	if strings.HasPrefix(tsql, "insert") || strings.HasPrefix(tsql, "update") || strings.HasPrefix(tsql, "delete") {
+		return writeSql(sqlString, ds)
+	}
+
 	db, err := sql.Open("mysql", ds)
 	if err != nil {
 		log.Println(err)
@@ -74,24 +83,26 @@ func querySql(sqlString string, ds string) string {
 	return string(jsonData)
 }
 
-func writeSql(sqlString string, ds string) int64 {
+func writeSql(sqlString string, ds string) string {
+	log.Printf("writeSql >> %s  , ds = %s ", sqlString, ds)
+
 	db, err := sql.Open("mysql", ds)
 	defer db.Close()
 	if err != nil {
 		log.Println(err)
-		return -1
+		return err.Error()
 	}
 
 	r, e := db.Exec(sqlString)
 	if e != nil {
 		log.Println(e)
-		return -1
+		return err.Error()
 	}
 	c, ee := r.RowsAffected()
 	if ee != nil {
 		log.Println(ee)
-		return -1
+		return err.Error()
 	}
 
-	return c
+	return fmt.Sprintf("Affected Rows: %d", c)
 }
