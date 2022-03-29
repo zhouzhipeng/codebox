@@ -15,6 +15,13 @@
         }
     </style>
 
+    <link rel=stylesheet href="/static/codemirror/doc/docs.css">
+
+    <link rel="stylesheet" href="/static/codemirror/lib/codemirror.css" />
+    <script src="/static/codemirror/lib/codemirror.js"></script>
+    <script src="/static/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="/static/codemirror/mode/python/python.js"></script>
+
 </head>
 <body>
 <h2>字符串拼接器</h2>
@@ -25,9 +32,9 @@
 <div class="wenku" id="wenku">
     <textarea class="art" id="art" style="width:90%; height:300px" placeholder="输入字符串模板"></textarea>
     <p>
-    <input type="button" onclick="formatText(art.value.trim())" value="拼接">
+    <input type="button" style="    margin-top: 15px; margin-left: 30px;" onclick="formatText(art.value.trim())" value="拼接">
     </p>
-    <textarea class="art" id="resultArea" style="width:90%; height:150px" placeholder="点击拼接按钮，展示结果"></textarea>
+    <textarea class="art" id="resultArea" style="width:90%; height:150px; margin-left: 30px;" placeholder="点击拼接按钮，展示结果"></textarea>
 
     <div class="tool" id="toolDiv">
         <span>【+新建】</span><span>【复制】</span><span>【共享】</span>
@@ -75,6 +82,8 @@ Todo List
 %end
 </ul>
         `.trim();
+
+        initCode();
     }
     function  showExample2(){
         art.value=`
@@ -92,6 +101,8 @@ Todo List
 {{dataList}}
 
         `.trim();
+
+        initCode();
     }
     async function  formatText(text){
 
@@ -105,6 +116,21 @@ Todo List
             })).text()
         resultArea.value= result.trim()
     }
+
+
+    function initCode(){
+        CodeMirror.fromTextArea(document.getElementById("art"), {
+            mode: {name: "python",
+                version: 3,
+                singleLineStringErrors: false},
+            lineNumbers: true,
+            indentUnit: 4,
+            matchBrackets: true
+        });
+    }
+
+    initCode();
+
 </script>
 </body>
 </html>
