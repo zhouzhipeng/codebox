@@ -48,20 +48,50 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 		data := map[string]interface{}{}
 
 		if r.Method == "POST" {
-			r.ParseForm()
-			MEDIA_PATH = r.FormValue("path")
-			log.Println("media path is " + MEDIA_PATH)
+			if MEDIA_PATH == "" {
 
-			if _, err := os.Stat(MEDIA_PATH); os.IsNotExist(err) {
-				// path/to/whatever does not exist
-				data["showlink"] = false
-				data["msg"] = "invalid path!"
+				r.ParseForm()
+				MEDIA_PATH = r.FormValue("path")
+				log.Println("media path is " + MEDIA_PATH)
+
+				if _, err := os.Stat(MEDIA_PATH); os.IsNotExist(err) {
+					// path/to/whatever does not exist
+					data["showlink"] = false
+					data["msg"] = "invalid path!"
+				} else {
+
+					http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir(MEDIA_PATH))))
+					http.HandleFunc("/media/index", func(writer http.ResponseWriter, request *http.Request) {
+						dirs, _ := ioutil.ReadDir(MEDIA_PATH)
+						html := ""
+						for _, info := range dirs {
+							if !info.IsDir() || strings.HasPrefix(info.Name(), ".") {
+								continue
+							}
+							html += fmt.Sprintf(`
+				
+<a href="%s" style="
+    display: inline-block;    width: 200px;text-align: center;
+">
+					<img src="/static/img/folder.jpg" style="
+    width: 200px;
+    display: inline-block;
+">
+					<span style="
+">%s</span>
+					</a>
+`, "/media/"+info.Name(), info.Name())
+						}
+
+						fmt.Fprintf(writer, html)
+					})
+
+					data["msg"] = "open ok!"
+
+				}
+
 			} else {
-
-				http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir(MEDIA_PATH))))
-
-				data["msg"] = "open ok!"
-
+				data["msg"] = "already set, restart app to reset!"
 			}
 
 		} else {
@@ -70,7 +100,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data["path"] = MEDIA_PATH
-		link := "http://" + getLocalIPInternal() + ":9999" + "/media/"
+		link := "http://" + getLocalIPInternal() + ":9999" + "/media/index"
 		data["link"] = link
 		data["showlink"] = true
 
