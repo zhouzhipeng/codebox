@@ -49,11 +49,27 @@ func querySql(sqlString string, ds string) string {
 		}
 		tableData = append(tableData, entry)
 	}
+
+	if len(tableData) == 0 {
+		entry := make(map[string]interface{})
+		if len(columns) > 0 {
+
+			for _, col := range columns {
+				entry[col] = ""
+			}
+			tableData = append(tableData, entry)
+		} else {
+			entry["#msg"] = "Executed Successful!"
+			tableData = append(tableData, entry)
+		}
+	}
+
 	jsonData, err := json.Marshal(tableData)
 	if err != nil {
 		log.Println(err)
 		return err.Error()
 	}
+
 	//fmt.Println(string(jsonData))
 	return string(jsonData)
 }

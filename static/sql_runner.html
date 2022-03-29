@@ -99,7 +99,7 @@ show tables
 				console.log(e)
 
 				//parse error, display msg colum in table
-				array = [{"msg": arrayData}]
+				array = [{"#msg": arrayData}]
 			}
 
 			//Add the header row.
@@ -116,7 +116,7 @@ show tables
 				row = table.insertRow(-1);
 				for (let index in array[i]) {
 					let cell = row.insertCell(-1);
-					cell.innerHTML = array[i][index];
+					cell.innerHTML = array[i][index].replaceAll("\n", "<br/>");
 				}
 			}
 
