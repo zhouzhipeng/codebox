@@ -3,6 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>sql执行器</title>
+
+	<link rel=stylesheet href="/static/codemirror/doc/docs.css">
+
+	<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css" />
+	<script src="/static/codemirror/lib/codemirror.js"></script>
+	<script src="/static/codemirror/addon/edit/matchbrackets.js"></script>
+	<script src="/static/codemirror/mode/sql/sql.js"></script>
+	<link rel="stylesheet" href="/static/codemirror/addon/hint/show-hint.css" />
+	<script src="/static/codemirror/addon/hint/show-hint.js"></script>
+	<script src="/static/codemirror/addon/hint/sql-hint.js"></script>
+
 	<style type="text/css">
 		body
 		{
@@ -25,7 +36,13 @@
 			padding: 5px;
 			border-color: #ccc;
 		}
+
+		.CodeMirror {
+			border-top: 1px solid black;
+			border-bottom: 1px solid black;
+		}
 	</style>
+
 </head>
 <body>
 
@@ -42,6 +59,22 @@ show tables
 	</div>
 
 	<script>
+
+		window.editor = CodeMirror.fromTextArea(document.getElementById('sqlInput'), {
+			mode: "text/x-mysql",
+			indentWithTabs: true,
+			smartIndent: true,
+			lineNumbers: true,
+			matchBrackets : true,
+			autofocus: true,
+			//extraKeys: {"Ctrl-Space": "autocomplete"},
+			// hintOptions: {tables: {
+			// 		users: ["name", "score", "birthDate"],
+			// 		countries: ["name", "population", "size"]
+			// 	}}
+		});
+
+
 		let KEY_EXEC_PATH= "sql_runner.sql"
 
 		if(localStorage.getItem(KEY_EXEC_PATH)){
@@ -128,6 +161,9 @@ show tables
 			dvTable.appendChild(document.createElement("hr"))
 			dvTable.appendChild(table);
 		}
+
+
+
 	</script>
 </body>
 </html>
