@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
+	"strconv"
 )
 
 // UI interface allows talking to the HTML5 UI from Go.
@@ -80,6 +83,9 @@ func New(url, dir string, width, height int, customArgs ...string) (UI, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//print chrome's pid into a file
+	os.WriteFile(filepath.Join(dir, "pid.txt"), []byte(strconv.Itoa(chrome.cmd.Process.Pid)), 0777)
 
 	go func() {
 		chrome.cmd.Wait()

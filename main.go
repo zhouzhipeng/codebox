@@ -29,23 +29,26 @@ var TEMP_FILES_DIR = ""
 
 func genTmpUploadFilesDir() {
 	if os.Getenv("IN_DOCKER") == "" {
-		tmp, err := os.MkdirTemp("", "gogo_files")
-		if err != nil {
-			log.Println("getTmpUploadFilesDir error", err)
-			return
-		}
-		TEMP_FILES_DIR = tmp
+		//tmp, err := os.MkdirTemp("", "gogo_files")
+		//if err != nil {
+		//	log.Println("getTmpUploadFilesDir error", err)
+		//	return
+		//}
+		//TEMP_FILES_DIR = tmp
+
+		TEMP_FILES_DIR = filepath.Join(os.TempDir(), "gogo_files")
 	} else {
 		//run in docker or linux , use /tmp
 		TEMP_FILES_DIR = "/tmp"
-		os.Mkdir(TEMP_FILES_DIR, 0777)
 
 	}
+
+	os.Mkdir(TEMP_FILES_DIR, 0777)
 
 	if os.Getenv("DISABLE_LOG_FILE") == "" {
 		//设置log输出到文件
 		file := filepath.Join(TEMP_FILES_DIR, "message.txt")
-		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+		logFile, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
 		if err != nil {
 			log.Println(err)
 			return
@@ -63,10 +66,13 @@ func genTmpUploadFilesDir() {
 var ui lorca.UI
 
 func main() {
+
 	mime.AddExtensionType(".js", "application/javascript")
 
 	//open browser window.
 	if os.Getenv("IN_DOCKER") == "" {
+		//check if there is another app running
+
 		// open ui window
 		args := []string{}
 		if runtime.GOOS == "linux" {
@@ -160,9 +166,17 @@ func main() {
 
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 	if err != nil {
-		log.Fatal(err)
-		ui.Close()
+		//already has a app running , notify him to kill himself.
+		http.Get("http://127.0.0.1:9999/api/killself")
+		ln, err = net.Listen("tcp", "0.0.0.0:9999")
+
 	}
+	if err != nil {
+		log.Println("cant startup ,because 9999 port is used by other app.")
+		ui.Close()
+		log.Fatal(err)
+	}
+
 	//get port
 	log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
 
@@ -188,8 +202,8 @@ func main() {
 	}
 
 	// Wait until the interrupt signal arrives or browser window is closed
-	sigc := make(chan os.Signal)
-	signal.Notify(sigc, os.Interrupt)
+	sigc := make(chan os.Signal, 1)
+	signal.Notify(sigc, os.Interrupt, os.Kill)
 	if ui != nil {
 		select {
 		case <-sigc:
@@ -214,8 +228,8 @@ func main() {
 	}
 
 	//CLEAN temp files dir
-	os.RemoveAll(TEMP_FILES_DIR)
-	log.Println("removed TEMP_FILES_DIR: ", TEMP_FILES_DIR)
+	//os.RemoveAll(TEMP_FILES_DIR)
+	//log.Println("removed TEMP_FILES_DIR: ", TEMP_FILES_DIR)
 
 }
 
