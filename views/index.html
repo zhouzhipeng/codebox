@@ -30,19 +30,17 @@
     <option value="/sqlite-web/">sqlite-web</option>
     {{end}}
 </select>
-{{if .IsLocal}}
-<!--<a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>-->
-{{end}}
-<!--<iframe id="mainContent" style="border: 0" src="dd-upload.html" title="iframe example 1" width="100%" height="100%">-->
-<!--    <p>Your browser does not support iframes.</p>-->
-<!--</iframe>-->
 
 
-<a  href="/files/" target="_blank">Files</a>
+<div style="float:right;display: inline;">
+    <a href="/files/" target="_blank">Files</a>
+    <a href="/files/message.txt" target="_blank">Log</a>
 
-<a  href="/files/message.txt" target="_blank">Logs</a>
-<span id="timeSpan"></span>
-<span>(built time)</span>
+
+    <span id="timeSpan"></span>
+    <span>(built time)</span>
+</div>
+
 
 <script type="text/javascript">
     (async ()=>{
