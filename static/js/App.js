@@ -47,13 +47,16 @@ export default class App {
                 this._refreshNotes();
             },
             onNoteEdit: (title, body) => {
-                NotesAPI.saveNote({
-                    id: this.activeNote.id,
-                    title,
-                    body
-                });
+                const selectedNote = this.notes.find(note => note.id === this.activeNote.id);
+                if(body !== selectedNote.body){
+                    NotesAPI.saveNote({
+                        id: this.activeNote.id,
+                        title,
+                        body
+                    });
 
-                this._refreshNotes();
+                    this._refreshNotes();
+                }
             },
             onNoteDelete: noteId => {
                 NotesAPI.deleteNote(noteId);

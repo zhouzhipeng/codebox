@@ -13,9 +13,13 @@ export default class NotesAPI {
 
         // Edit/Update
         if (existing) {
+
+
             existing.title = noteToSave.title;
             existing.body = noteToSave.body;
             existing.updated = new Date().toISOString();
+
+
         } else {
             noteToSave.id = Math.floor(Math.random() * 1000000);
             noteToSave.updated = new Date().toISOString();

@@ -17,8 +17,9 @@ export default class NotesView {
 
         editor.on("blur", () => {
 
-            const updatedBody = editor.getDoc().getValue().trim();;
-            const updatedTitle = updatedBody.split("\n")[0].substring(0,20);
+            let updatedBody = editor.getDoc().getValue().trim();
+            const updatedTitle = updatedBody.split("\n")[0]
+            updatedBody =  updatedBody.substring(Math.min(updatedBody.length,updatedTitle.length) )
 
             this.onNoteEdit(updatedTitle, updatedBody);
         });
