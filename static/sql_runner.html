@@ -82,7 +82,7 @@ show tables
 		let KEY_EXEC_PATH= "sql_runner.sql"
 
 		if(localStorage.getItem(KEY_EXEC_PATH)){
-			sqlInput.value=localStorage.getItem(KEY_EXEC_PATH)
+			editor.getDoc().setValue(localStorage.getItem(KEY_EXEC_PATH))
 		}
 
 
