@@ -5,16 +5,7 @@ export default class NotesView {
         this.onNoteAdd = onNoteAdd;
         this.onNoteEdit = onNoteEdit;
         this.onNoteDelete = onNoteDelete;
-        this.root.innerHTML = `
-            <div class="notes__sidebar">
-                <button class="notes__add" type="button">Add Note</button>
-                <div class="notes__list"></div>
-            </div>
-            <div class="notes__preview">
-                <input class="notes__title" type="text" placeholder="New Note...">
-                <textarea class="notes__body">Take Note...</textarea>
-            </div>
-        `;
+
 
         const btnAddNote = this.root.querySelector(".notes__add");
         const inpTitle = this.root.querySelector(".notes__title");
@@ -24,14 +15,14 @@ export default class NotesView {
             this.onNoteAdd();
         });
 
-        [inpTitle, inpBody].forEach(inputField => {
-            inputField.addEventListener("blur", () => {
-                const updatedTitle = inpTitle.value.trim();
-                const updatedBody = inpBody.value.trim();
+        editor.on("blur", () => {
 
-                this.onNoteEdit(updatedTitle, updatedBody);
-            });
+            const updatedBody = editor.getDoc().getValue().trim();;
+            const updatedTitle = updatedBody.split("\n")[0].substring(0,20);
+
+            this.onNoteEdit(updatedTitle, updatedBody);
         });
+
 
         this.updateNotePreviewVisibility(false);
     }
@@ -41,7 +32,7 @@ export default class NotesView {
 
         return `
             <div class="notes__list-item" data-note-id="${id}">
-                <div class="notes__small-title">${title}</div>
+                <div class="notes__small-title">${body.split("\n")[0].substring(0,20)}</div>
                 <div class="notes__small-body">
                     ${body.substring(0, MAX_BODY_LENGTH)}
                     ${body.length > MAX_BODY_LENGTH ? "..." : ""}
@@ -82,8 +73,9 @@ export default class NotesView {
     }
 
     updateActiveNote(note) {
-        this.root.querySelector(".notes__title").value = note.title;
-        this.root.querySelector(".notes__body").value = note.body;
+        // this.root.querySelector(".notes__title").value = note.title;
+        // this.root.querySelector(".notes__body").value = note.body;
+        editor.getDoc().setValue(note.body);
 
         this.root.querySelectorAll(".notes__list-item").forEach(noteListItem => {
             noteListItem.classList.remove("notes__list-item--selected");

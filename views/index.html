@@ -7,6 +7,8 @@
         body {
             margin: 0;
             padding: 0;
+            overflow: hidden; /* Hide scrollbars */
+
         }
 
     </style>
@@ -37,6 +39,10 @@
 
 
 <div style="float:right;display: inline;">
+    {{if .IsLocal}}
+    <a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>
+    <!--<a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>-->
+    {{end}}
     <a href="/files/" target="_blank">Files</a>
     <a href="/files/message.txt" target="_blank">Log</a>
 
@@ -59,7 +65,7 @@
 		iframe.src = url;
 		iframe.style.border=0;
 		iframe.width="100%";
-		iframe.height="100%";
+		iframe.height="95%";
 		let frame= document.querySelector("#mainContent");
 		if(frame){
 			frame.remove()
@@ -94,16 +100,16 @@
     //     history.pushState(null, null, document.URL);
     // });
 
-    {{if .IsLocal}}
-    async function getLocalIP(){
-        //获取ip
-        let ip = await (await fetch("/api/get-local-ip")).text()
-        document.querySelector("#openInBrowserLink").setAttribute("href","http://"+ip+":9999/")
-
-    }
-
-    getLocalIP();
-    {{end}}
+    // {{if .IsLocal}}
+    // async function getLocalIP(){
+    //     //获取ip
+    //     let ip = await (await fetch("/api/get-local-ip")).text()
+    //     document.querySelector("#openInBrowserLink").setAttribute("href","http://"+ip+":9999/")
+    //
+    // }
+    //
+    // getLocalIP();
+    // {{end}}
 </script>
 </body>
 </html>
