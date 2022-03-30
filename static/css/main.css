@@ -55,10 +55,16 @@ body {
 
 .notes__small-title {
     font-size: 1.2em;
+    overflow: hidden;
+    word-break: break-all;
+    /* line-height: 10px; */
+    white-space: nowrap;
 }
 
 .notes__small-body {
     padding: 0 10px;
+    overflow: hidden;
+    word-break: break-all;
 }
 
 .notes__small-updated {
@@ -92,4 +98,6 @@ body {
     line-height: 1.5;
     margin-top: 2em;
     resize: none;
+    word-break: break-all;
+    white-space: nowrap;
 }
