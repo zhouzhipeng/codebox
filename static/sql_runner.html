@@ -98,7 +98,7 @@ show tables
 			btn.value="Running..."
 
 
-			localStorage.setItem(KEY_EXEC_PATH,sqlInput.value)
+			localStorage.setItem(KEY_EXEC_PATH,editor.getDoc().getValue())
 
 			let data = new FormData();
 			data.append( "sql", txt);
