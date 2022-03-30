@@ -96,9 +96,11 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 	switch r.URL.Path {
 	case "/api/killself":
+		fmt.Fprintf(w, "ok")
 		if ui != nil {
 			ui.Close()
 		}
+
 	case "/api/upload-file":
 		fileUpload(w, r)
 	case "/api/get-clipboard-data":
