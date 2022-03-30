@@ -49,7 +49,7 @@ body { margin:0px; padding:0px 0px; font-family:'Ubuntu',sans-serif; }
 .topnav { background-color:#F2F2F2; background:-webkit-liear, near-gradient(top,#F7F7F7 0,#F2F2F2 100%); background: -o-linear-gradient(top,#F7F7F7 0,#F2F2F2 100%); background: linear-gradient(to bottom,#F7F7F7 0,#F2F2F2 100%); background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient; border-left:1px solid #bcbcbc; border-right:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; position:absolute; top:0px; z-index:999; }
 .divider { border-bottom:1px dashed #70967C; width:95%; margin:2px auto!important; }
 #stage{  width:100%; height:100%!important; padding:margin:0px 0px 0px 0px }
-#center {background:#fff url(/images/worn-dots.png); overflow:hidden; }
+#center {background:#fff url(/static/whiteboard/images/worn-dots.png); overflow:hidden; }
 .clear { clear:both; height:6px; }
 
 /* css for slider */
