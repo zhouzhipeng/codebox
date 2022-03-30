@@ -18,8 +18,8 @@ export default class NotesView {
         editor.on("blur", () => {
 
             let updatedBody = editor.getDoc().getValue().trim();
-            const updatedTitle = updatedBody.split("\n")[0]
-            updatedBody =  updatedBody.substring(Math.min(updatedBody.length,updatedTitle.length) )
+            const updatedTitle = ""
+            // updatedBody =  updatedBody.substring(Math.min(updatedBody.length,updatedTitle.length) )
 
             this.onNoteEdit(updatedTitle, updatedBody);
         });
@@ -33,7 +33,7 @@ export default class NotesView {
 
         return `
             <div class="notes__list-item" data-note-id="${id}">
-                <div class="notes__small-title">${body.split("\n")[0].substring(0,20)}</div>
+                <div class="notes__small-title" style="display: none"></div>
                 <div class="notes__small-body">
                     ${body.substring(0, MAX_BODY_LENGTH)}
                     ${body.length > MAX_BODY_LENGTH ? "..." : ""}
