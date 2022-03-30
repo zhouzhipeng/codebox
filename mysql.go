@@ -41,8 +41,8 @@ func querySql(sqlString string, ds string) string {
 	valuePtrs := make([]interface{}, count)
 
 	for rows.Next() {
-		if len(tableData) > 10000 {
-			log.Println("warning : only 100000  rows can be returned.")
+		if len(tableData) > 100 {
+			log.Println("warning : only 100 rows can be returned.")
 			break
 		}
 
