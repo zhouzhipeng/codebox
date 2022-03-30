@@ -39,7 +39,13 @@ func querySql(sqlString string, ds string) string {
 	tableData := make([]map[string]interface{}, 0)
 	values := make([]interface{}, count)
 	valuePtrs := make([]interface{}, count)
+
 	for rows.Next() {
+		if len(tableData) > 10000 {
+			log.Println("warning : only 100000  rows can be returned.")
+			break
+		}
+
 		for i := 0; i < count; i++ {
 			valuePtrs[i] = &values[i]
 		}

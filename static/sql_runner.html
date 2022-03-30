@@ -156,7 +156,12 @@ show tables
 				row = table.insertRow(-1);
 				for (let index in array[i]) {
 					let cell = row.insertCell(-1);
-					cell.innerHTML = array[i][index].replaceAll("\n", "<br/>");
+					if(array[i][index]){
+						cell.innerHTML = array[i][index].replaceAll("\n", "<br/>");
+
+					}else{
+						cell.innerHTML ="null";
+					}
 				}
 			}
 
