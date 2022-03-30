@@ -12,6 +12,8 @@ import (
 func querySql(sqlString string, ds string) string {
 	log.Printf("querySql >> %s  , ds = %s ", sqlString, ds)
 
+	prefix := ""
+
 	//judge if contains insert, update, delete
 	tsql := strings.ToLower(sqlString)
 	if strings.HasPrefix(tsql, "insert") || strings.HasPrefix(tsql, "update") || strings.HasPrefix(tsql, "delete") {
@@ -42,7 +44,9 @@ func querySql(sqlString string, ds string) string {
 
 	for rows.Next() {
 		if len(tableData) > 100 {
-			log.Println("warning : only 100 rows can be returned.")
+
+			prefix = "warning : Only 100 rows returned for below table." + "<br/>"
+			log.Println(prefix)
 			break
 		}
 
@@ -86,7 +90,8 @@ func querySql(sqlString string, ds string) string {
 	}
 
 	//fmt.Println(string(jsonData))
-	return string(jsonData)
+
+	return prefix + string(jsonData)
 }
 
 func writeSql(sqlString string, ds string) string {
