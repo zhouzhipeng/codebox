@@ -185,7 +185,11 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 			//execute last sql
 			result += querySql(rawSql, ds) + "<br/>"
 		} else {
-			result += " Error: No @ds specified."
+			if ds == "" {
+				result += " Error: No @ds selected!"
+			} else if rawSql == "" {
+				result += " Error: No sql selected!"
+			}
 		}
 
 		fmt.Fprintf(w, result)
