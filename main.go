@@ -5,6 +5,7 @@ import (
 	"gogo/lorca"
 	"io/fs"
 	"log"
+	"mime"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -62,6 +63,7 @@ func genTmpUploadFilesDir() {
 var ui lorca.UI
 
 func main() {
+	mime.AddExtensionType(".js", "application/javascript")
 
 	//open browser window.
 	if os.Getenv("IN_DOCKER") == "" {

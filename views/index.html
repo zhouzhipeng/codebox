@@ -13,6 +13,8 @@
 </head>
 <body>
 <select onchange="switchIFrame(this.value)">
+
+    <option value="/static/notepad.html">记事本</option>
     <option value="/static/notes.html">sticky notes</option>
     <option value="/static/dd-upload.html">文件上传</option>
 
@@ -63,7 +65,7 @@
 		document.body.appendChild(iframe);
     }
 
-    switchIFrame("/static/notes.html");
+    switchIFrame("/static/notepad.html");
 
     //window.location.href="http://127.0.0.1:59989/www"
     if (location.href.indexOf("islocal=1") !== -1) {
