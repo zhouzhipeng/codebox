@@ -46,6 +46,7 @@ var defaultChromeArgs = []string{
 	"--password-store=basic",
 	"--use-mock-keychain",
 	"--disk-cache-size=1",
+	"--no-startup-window",
 }
 
 // New returns a new HTML5 UI for the given URL, user profile directory, window
