@@ -21,7 +21,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [x] js端封装通用ajax请求方法。 js--> go
 - [x] [废弃]js端vue做数据绑定渲染
 - [x] [废弃]www.zhouzhipeng.com gogo server 导航
-- [ ] go+python best practice
+- [ ] http://jsfiddle.net/viliusl/xq2aLj4b/5/ 记事本 图片粘贴 
 
 ## else
 go template: http://books.studygolang.com/gowebexamples/templates/ 
