@@ -206,9 +206,7 @@ $(document).ready(function() {
       <a href="javascript:void(0)" class="easyui-linkbutton" id="create_meeting_room">Create Meeting Room</a>
       <a href="javascript:void(0)" class="easyui-linkbutton" id="join_meeting_room">Join Meeting Room</a>
    </div>
-   <a href='http://www.tutorialspoint.com/'>
-      <img src="/green/images/diamond.png" height="50px" style="padding:5px; float:left;"/>
-   </a>
+
    <h1 class="whtboard">Whiteboard</h1>
 
    <!-- header top right menu first -->      
@@ -1916,13 +1914,7 @@ $(document).ready(function(event) {
             $('#helpWindow').window('close');
          }
     });
-    $('.ancHelp').click(function(event) {
-        event.stopPropagation();
-        $('#helpWindow').window('close');
-        var imgsrc = 'http://www.tutorialspoint.com/whiteboard/images/help/' + $(this).attr('alt') + '.jpg';
-        $('#helpWindow img').attr('src', imgsrc);
-        $('#helpWindow').window('open');
-    });
+
     $('html').keyup(function(e) {
         if (e.keyCode == 46 || e.keyCode == 8) {
             var cobj = gcanvas.getActiveObject();
