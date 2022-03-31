@@ -1,6 +1,7 @@
 
 set -eux
 
+rm -rf dist
 
 # start build python exe file
 cd pytool
