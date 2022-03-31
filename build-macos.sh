@@ -22,5 +22,9 @@ cat > $APP/Contents/Info.plist << EOF
 EOF
 cp icons/icon.icns $APP/Contents/Resources/icon.icns
 
+# copy python executable file
+cp pytool/dist/web $APP/Contents/MacOS/web
+
+
 mv $APP dist/$APP
-cd dist && zip -r gogo.zip gogo.app && rm -rf $APP
+cd dist && zip -r gogo_mac.zip gogo.app && rm -rf $APP
