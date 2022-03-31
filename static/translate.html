@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>中英翻译</title>
+</head>
+<body>
+
+<textarea id="srcInput" style="
+    width: 100%;
+    height: 100px;
+    /* font-family: Arial, monospace; */
+"></textarea> <br>
+
+<input type="button" id="btnTranslate" onclick="translateX(srcInput.value)"  value="Translate"/>
+<hr/>
+<pre id="resultBlock"></pre>
+
+
+
+<script type="text/javascript">
+    async function translateX(s){
+        btnTranslate.setAttribute("disabled","disabled")
+        btnTranslate.value="Translating..."
+
+        let data = new FormData();
+        data.append( "s",s.trim());
+
+        let result = await (await fetch("https://www.zhouzhipeng.com/py/translate",
+            {
+                method: "POST",
+                body: data
+            })).text()
+        // resultArea.value= result.trim()
+        resultBlock.innerText = result;
+
+        btnTranslate.removeAttribute("disabled")
+        btnTranslate.value="Translate"
+    }
+</script>
+
+</body>
+</html>
