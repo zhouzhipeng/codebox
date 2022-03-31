@@ -5,16 +5,21 @@
     <title>中英翻译</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
 <textarea id="srcInput" style="
-    width: 100%;
+    width: 90%;
     height: 100px;
     /* font-family: Arial, monospace; */
 "></textarea> <br>
+<button type="button"  id="btnTranslate"  class="btn btn-success"  onclick="translateX(srcInput.value)">Translate</button>
 
-<input type="button" id="btnTranslate" onclick="translateX(srcInput.value)"  value="Translate"/>
+<!--<input type="button" id="btnTranslate" onclick="translateX(srcInput.value)"  value="Translate"/>-->
 <hr/>
 <pre id="resultBlock"></pre>
 

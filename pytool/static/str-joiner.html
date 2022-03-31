@@ -32,6 +32,11 @@
             background-color: #f8f8f8;
         }
     </style>
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <h2>字符串拼接器</h2>
@@ -42,7 +47,10 @@
 <div class="wenku" id="wenku">
     <textarea class="art" id="art" style="width:90%; height:300px" placeholder="输入字符串模板"></textarea>
     <p>
-    <input type="button" style="    margin-top: 15px; margin-left: 30px;" onclick="formatText()" value="拼接">
+
+        <button type="button"  style="    margin-top: 15px; margin-left: 30px;"  class="btn btn-success"  onclick="formatText()" >拼接</button>
+
+<!--        <input type="button" style="    margin-top: 15px; margin-left: 30px;" onclick="formatText()" value="拼接">-->
     </p>
     <textarea class="art" id="resultArea" style="width:90%; height:150px; margin-left: 30px;" placeholder="点击拼接按钮，展示结果"></textarea>
 
