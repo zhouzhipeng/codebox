@@ -38,7 +38,7 @@
 </head>
 <body>
 <select onchange="switchIFrame(this.value)"  class="form-select">
-
+    <option value="/static/about.html">关于</option>
     <option value="/static/notepad.html">记事本</option>
     <option value="/static/notes.html">贴纸</option>
     <option value="/static/dd-upload.html">文件上传</option>
@@ -102,7 +102,7 @@
 		document.body.appendChild(iframe);
     }
 
-    switchIFrame("/static/notepad.html");
+    switchIFrame("/static/about.html");
 
     //window.location.href="http://127.0.0.1:59989/www"
     // if (location.href.indexOf("islocal=1") !== -1) {
