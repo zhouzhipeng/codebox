@@ -2,7 +2,13 @@
 <html manifest="StickyNotes.manifest">
 <head>
 <title>WebKit HTML 5 SQL Storage Notes Demo</title>
-<style>
+
+
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+    <style>
 body {
     font-family: 'Lucida Grande', 'Helvetica', sans-serif;
 }
@@ -352,7 +358,9 @@ if (db != null)
 </head>
 <body>
 <!--<p>This page demonstrates the use of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/section-sql.html">HTML 5 Client-side Database Storage API</a>. Any notes you create will be saved in a database on your local hard drive, and will be reloaded from that database the next time you visit this page. To try it out, use a <a href="http://nightly.webkit.org/">WebKit Nightly Build</a>.</p>-->
-<button id="newNoteButton" onclick="newNote()">New Note</button>
+<!--<button id="newNoteButton" onclick="newNote()">New Note</button>-->
+<button type="button"   id="newNoteButton"  style="    margin-top: 15px; margin-left: 30px;"  class="btn btn-success"   onclick="newNote()">New Note</button>
+
 <script>
 document.getElementById("newNoteButton").disabled = !db;
 </script>
