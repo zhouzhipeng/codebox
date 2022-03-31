@@ -58,26 +58,32 @@
     <option value="/py/static/str-joiner.html">字符串拼接器</option>
     <option value="/sqlite-web/">sqlite-web</option>
     {{end}}
+
+
+    <option disabled>──────────</option>
+    <option value="/files/">Files</option>
+    <option value="/files/message.txt">Log</option>
+    <option disabled  id="timeSpan">Built Time</option>
 </select>
 
 
-<div style="float:right;display: inline;">
+<div style="float:right;display: inline;    margin-right: 10px;">
     {{if .IsLocal}}
     <a id="openInBrowserLink" href="/" target="_blank">Open New</a>
     <!--<a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>-->
     {{end}}
-    <a href="/files/" target="_blank">Files</a>
-    <a href="/files/message.txt" target="_blank">Log</a>
+<!--    <a href="/files/" target="_blank">Files</a>-->
+<!--    <a href="/files/message.txt" target="_blank">Log</a>-->
 
 
-    <span id="timeSpan"></span>
-    <span>(built time)</span>
+<!--    <span id="timeSpan"></span>-->
+<!--    <span>(built time)</span>-->
 </div>
 
 
 <script type="text/javascript">
     (async ()=>{
-        document.querySelector("#timeSpan").innerHTML=await (await fetch("/static/time.txt")).text();
+        document.querySelector("#timeSpan").innerHTML= (await (await fetch("/static/time.txt")).text())+"(built time)";
     })();
 
 
