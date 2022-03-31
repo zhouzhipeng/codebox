@@ -95,6 +95,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL.Path)
 
 	switch r.URL.Path {
+
 	case "/api/killself":
 		fmt.Fprintf(w, "ok")
 		if ui != nil {

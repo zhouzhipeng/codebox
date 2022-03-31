@@ -1,10 +1,8 @@
-import dataclasses
-
+import requests
 from bottle import *
 
 from lib.ffmpeg_util import parse_thumbnail
 from lib.shell_util import *
-from user_dao import *
 
 UPLOAD_PATH = "/static/upload/"
 BASE_PATH = "/py"
@@ -29,6 +27,33 @@ def str_joiner_format():
     s = request.forms['s']
     print(s)
     return unescape(template(s + '\n'))  # 加上 \n 防止被识别为html模板文件名
+
+
+#检验是否含有中文字符
+def is_contains_chinese(strs):
+    for _char in strs:
+        if '\u4e00' <= _char <= '\u9fa5':
+            return True
+    return False
+
+@post(BASE_PATH + '/translate')
+def translate():
+    response.content_type = 'text/text; charset=UTF8'
+    response.set_header("Access-Control-Allow-Origin","*")
+    response.set_header("Access-Control-Allow-Methods","*")
+
+    src = request.forms['s']
+    print(src)
+
+    resp = requests.post(url="https://api-free.deepl.com/v2/translate",
+                         data={"auth_key": "dd039ec7-c394-cb4d-7894-f3bf631635e9:fx",
+                               "text": src,
+                               "target_lang": "EN" if is_contains_chinese(src) else "ZH"}
+                         , headers={'Content-Type': 'application/x-www-form-urlencoded'}).json()
+
+    print(resp)
+
+    return resp["translations"][0]["text"]
 
 
 @post(BASE_PATH + '/upload-file')
@@ -72,23 +97,6 @@ def send_static(filename):
     return static_file(filename, root='./static')
 
 
-@route('/user/<name>')
-def show(name):
-    print("in443...")
-    row = query_user(name)
-    return {"data": [dataclasses.asdict(r) for r in row]}
-
-
-@route('/user/add')
-def add_user():
-    count = insert_user(User(**request.params))
-    return "affected:" + str(count)
-
-
-@route('/user/batch-add')
-def batch_add_user():
-    count = batch_insert_users([User(name='ahei', age=11, id=0), User(name='asss', age=11, id=0)])
-    return "affected:" + str(count)
 
 
 is_dev = os.environ.get('ENV') != 'prod'
