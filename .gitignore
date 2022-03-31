@@ -4,3 +4,5 @@ files/
 *.iml
 build/
 .eggs/
+web.spec
+__pycache__/
