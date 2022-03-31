@@ -103,7 +103,7 @@ show tables
 			}
 
 			btn.setAttribute("disabled","disabled")
-			btn.value="Running..."
+			btn.innerText="Running..."
 
 
 			localStorage.setItem(KEY_EXEC_PATH,editor.getDoc().getValue())
@@ -121,7 +121,7 @@ show tables
 			sqlInput.focus()
 
 			btn.removeAttribute("disabled")
-			btn.value="Run Selected"
+			btn.innerText="Run Selected"
 
 
 			result.trim().split("<br/>").map(GenerateTable);

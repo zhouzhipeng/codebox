@@ -28,7 +28,7 @@
 <script type="text/javascript">
     async function translateX(s){
         btnTranslate.setAttribute("disabled","disabled")
-        btnTranslate.value="Translating..."
+        btnTranslate.innerText="Translating..."
 
         let data = new FormData();
         data.append( "s",s.trim());
@@ -42,7 +42,7 @@
         resultBlock.innerText = result;
 
         btnTranslate.removeAttribute("disabled")
-        btnTranslate.value="Translate"
+        btnTranslate.innerText="Translate"
     }
 </script>
 

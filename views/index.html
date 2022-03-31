@@ -12,10 +12,32 @@
 
         }
 
+        .form-select {
+            /*display: block;*/
+            /*width: 100%;*/
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            -moz-padding-start: calc(0.75rem - 3px);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-image: url("/static/img/arrow_down.svg");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
     </style>
 </head>
 <body>
-<select onchange="switchIFrame(this.value)">
+<select onchange="switchIFrame(this.value)"  class="form-select">
 
     <option value="/static/notepad.html">记事本</option>
     <option value="/static/notes.html">贴纸</option>
@@ -41,7 +63,7 @@
 
 <div style="float:right;display: inline;">
     {{if .IsLocal}}
-    <a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>
+    <a id="openInBrowserLink" href="/" target="_blank">Open New</a>
     <!--<a id="openInBrowserLink" href="/" target="_blank">Open In browser</a>-->
     {{end}}
     <a href="/files/" target="_blank">Files</a>

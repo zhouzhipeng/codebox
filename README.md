@@ -25,8 +25,8 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [ ] http://jsfiddle.net/viliusl/xq2aLj4b/5/ 记事本 图片粘贴 
 - [ ] html5 postman tool
 - [ ] https://github.com/mholt/archiver 压缩解压工具
-- [ ] button style : https://www.runoob.com/try/try.php?filename=bootstrap3-button-options
-- [ ] dropdown menu :  https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0
+- [x] button style : https://www.runoob.com/try/try.php?filename=bootstrap3-button-options
+- [x] dropdown menu :  https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0
 - [ ] sql runner page see : https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0  (page structure) 
 
 ## others
