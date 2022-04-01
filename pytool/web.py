@@ -7,6 +7,8 @@ from lib.shell_util import *
 UPLOAD_PATH = "/static/upload/"
 BASE_PATH = "/py"
 
+os.environ['PYTHONUNBUFFERED']="1"
+
 
 @route('/')
 def index():
