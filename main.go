@@ -184,6 +184,9 @@ func main() {
 
 	//startup python web server
 	var pyProcess *os.Process
+	cwd, _ := os.Getwd()
+	log.Println(" cwd is " + cwd)
+
 	switch runtime.GOOS {
 	case "darwin":
 		pyWebPath := "web"
