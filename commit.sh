@@ -4,7 +4,7 @@ set -eux
 rm -rf dist
 
 
-if [ "$(git status  | grep pytool)" != "" ] ; then
+if [ "$(git status  | grep pytool)" != "" ] || [ "$2" == "f" ] ; then
   echo "pytool change"
 
 
