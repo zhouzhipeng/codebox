@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"gogo/lorca"
 	"io/fs"
 	"log"
@@ -165,15 +166,17 @@ func main() {
 	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
 	//kill python web server
-	go http.Get("http://127.0.0.1:8086/py/api/killself")
+	if IsPortInUse(8086) {
+		http.Get("http://127.0.0.1:8086/py/api/killself")
+	}
+
+	//kill another main app
+	if IsPortInUse(9999) {
+		http.Get("http://127.0.0.1:9999/api/killself")
+	}
 
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
-	if err != nil {
-		//already has a app running , notify him to kill himself.
-		http.Get("http://127.0.0.1:9999/api/killself")
-		ln, err = net.Listen("tcp", "0.0.0.0:9999")
 
-	}
 	if err != nil {
 		log.Println("cant startup ,because 9999 port is used by other app.")
 		ui.Close()
@@ -305,4 +308,19 @@ func NoCache(h http.Handler) http.Handler {
 	}
 
 	return http.HandlerFunc(fn)
+}
+
+// 判断端口是否可以（未被占用）
+func IsPortInUse(port int) bool {
+
+	address := fmt.Sprintf("%s:%d", "0.0.0.0", port)
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+
+		log.Printf("port %s is taken: %s", address, err)
+		return true
+	}
+
+	defer listener.Close()
+	return false
 }
