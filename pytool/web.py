@@ -7,7 +7,27 @@ from lib.shell_util import *
 UPLOAD_PATH = "/static/upload/"
 BASE_PATH = "/py"
 
-os.environ['PYTHONUNBUFFERED']="1"
+
+class Unbuffered(object):
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+
+    def writelines(self, datas):
+        self.stream.writelines(datas)
+        self.stream.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+
+import sys
+
+sys.stdout = Unbuffered(sys.stdout)
+sys.stderr = Unbuffered(sys.stderr)
 
 
 @route('/')
@@ -31,7 +51,6 @@ def str_joiner_format():
     return unescape(template(s + '\n'))  # 加上 \n 防止被识别为html模板文件名
 
 
-
 @get(BASE_PATH + '/api/killself')
 def kill_self():
     print("py received : kill_self")
@@ -39,21 +58,19 @@ def kill_self():
     return "ok"
 
 
-
-
-
-#检验是否含有中文字符
+# 检验是否含有中文字符
 def is_contains_chinese(strs):
     for _char in strs:
         if '\u4e00' <= _char <= '\u9fa5':
             return True
     return False
 
+
 @post(BASE_PATH + '/translate')
 def translate():
     response.content_type = 'text/text; charset=UTF8'
-    response.set_header("Access-Control-Allow-Origin","*")
-    response.set_header("Access-Control-Allow-Methods","*")
+    response.set_header("Access-Control-Allow-Origin", "*")
+    response.set_header("Access-Control-Allow-Methods", "*")
 
     src = request.forms['s']
     print(src)
@@ -108,8 +125,6 @@ def upload_file():
 @route(BASE_PATH + '/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='./static')
-
-
 
 
 is_dev = os.environ.get('ENV') != 'prod'
