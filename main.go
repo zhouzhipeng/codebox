@@ -209,6 +209,16 @@ func main() {
 		go cmd.Run()
 
 	case "windows":
+		pyWebPath := filepath.Join(cwd, "web.exe")
+		if os.Getenv("PY_WEB_PATH") != "" {
+			pyWebPath = os.Getenv("PY_WEB_PATH")
+		}
+		cmd := exec.Command(pyWebPath)
+		cmd.Stdout = log.Writer()
+		cmd.Stderr = log.Writer()
+
+		log.Println("win python  web server started")
+		go cmd.Run()
 	default:
 		cmd := exec.Command("python", "/app/web.py")
 		cmd.Stdout = log.Writer()
