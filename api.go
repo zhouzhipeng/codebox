@@ -101,6 +101,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		if ui != nil {
 			ui.Close()
 		}
+		os.Exit(0)
 
 	case "/api/upload-file":
 		fileUpload(w, r)
