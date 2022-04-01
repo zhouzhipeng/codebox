@@ -98,9 +98,6 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 	case "/api/killself":
 		fmt.Fprintf(w, "ok")
-		if ui != nil {
-			ui.Close()
-		}
 		os.Exit(0)
 
 	case "/api/upload-file":
@@ -109,12 +106,12 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		getClipboardData(w, r)
 	case "/api/get-local-ip":
 		getLocalIP(w, r)
-	case "/api/window-close":
-		//bind browser window close event;
-		go http.Get("http://127.0.0.1:8086/py/api/killself")
-
-		fmt.Fprintf(w, "ok.")
-		ui.Close()
+	//case "/api/window-close":
+	//	//bind browser window close event;
+	//	go http.Get("http://127.0.0.1:8086/py/api/killself")
+	//
+	//	fmt.Fprintf(w, "ok.")
+	//	ui.Close()
 	case "/api/get-available-pages":
 		if os.Getenv("IN_DOCKER") == "" {
 			//local
