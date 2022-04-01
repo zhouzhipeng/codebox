@@ -3,9 +3,8 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/getlantern/systray/example/icon"
 	"github.com/skratchdot/open-golang/open"
-	"gogo/lorca"
+	"gogo/icons"
 	"gogo/systray"
 	"io/fs"
 	"log"
@@ -67,10 +66,8 @@ func genTmpUploadFilesDir() {
 
 }
 
-var ui lorca.UI
-
 func onReady() {
-	systray.SetTemplateIcon(icon.Data, icon.Data)
+	systray.SetTemplateIcon(icons.Data, icons.Data)
 	systray.SetTitle("Awesome App")
 	systray.SetTooltip("Lantern")
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
@@ -83,14 +80,14 @@ func onReady() {
 
 	// We can manipulate the systray in other goroutines
 	go func() {
-		systray.SetTemplateIcon(icon.Data, icon.Data)
+		systray.SetTemplateIcon(icons.Data, icons.Data)
 		systray.SetTitle("Awesome App")
 		systray.SetTooltip("Pretty awesome棒棒嗒")
 		mChange := systray.AddMenuItem("Change Me", "Change Me")
 		mChecked := systray.AddMenuItemCheckbox("Unchecked", "Check Me", true)
 		mEnabled := systray.AddMenuItem("Enabled", "Enabled")
 		// Sets the icon of a menu item. Only available on Mac.
-		mEnabled.SetTemplateIcon(icon.Data, icon.Data)
+		mEnabled.SetTemplateIcon(icons.Data, icons.Data)
 
 		systray.AddMenuItem("Ignored", "Ignored")
 
@@ -103,7 +100,7 @@ func onReady() {
 		mQuit := systray.AddMenuItem("退出", "Quit the whole app")
 
 		// Sets the icon of a menu item. Only available on Mac.
-		mQuit.SetIcon(icon.Data)
+		mQuit.SetIcon(icons.Data)
 
 		systray.AddSeparator()
 		mToggle := systray.AddMenuItem("Toggle", "Toggle the Quit button")
@@ -255,7 +252,6 @@ func main() {
 
 	if err != nil {
 		log.Println("cant startup ,because 9999 port is used by other app.")
-		ui.Close()
 		log.Fatal(err)
 	}
 

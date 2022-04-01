@@ -10,6 +10,6 @@ require (
 )
 
 require (
-	github.com/getlantern/systray v1.2.1 // indirect
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
+	golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f // indirect
 )
