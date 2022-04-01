@@ -195,19 +195,18 @@ func main() {
 	cwd := filepath.Dir(ex)
 	log.Println(" cwd is " + cwd)
 
-	var pyProcess *exec.Cmd
 	switch runtime.GOOS {
 	case "darwin":
 		pyWebPath := filepath.Join(cwd, "web")
 		if os.Getenv("PY_WEB_PATH") != "" {
 			pyWebPath = os.Getenv("PY_WEB_PATH")
 		}
-		pyProcess = exec.Command(pyWebPath)
-		pyProcess.Stdout = log.Writer()
-		pyProcess.Stderr = log.Writer()
+		cmd := exec.Command(pyWebPath)
+		cmd.Stdout = log.Writer()
+		cmd.Stderr = log.Writer()
 
 		log.Println("python web server started")
-		go pyProcess.Run()
+		go cmd.Run()
 
 	case "windows":
 	default:
@@ -252,15 +251,6 @@ func main() {
 		//关闭ui窗口
 		ui.Close()
 		log.Println("ui window existed...")
-	}
-
-	//close python web server
-	if pyProcess != nil {
-		if state := pyProcess.ProcessState; state == nil || !state.Exited() {
-			pyProcess.Process.Kill()
-		}
-
-		log.Println("python server existed...")
 	}
 
 	//CLEAN temp files dir

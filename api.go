@@ -110,6 +110,8 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		getLocalIP(w, r)
 	case "/api/window-close":
 		//bind browser window close event;
+		go http.Get("http://127.0.0.1:8086/py/api/killself")
+
 		fmt.Fprintf(w, "ok.")
 		ui.Close()
 	case "/api/get-available-pages":
