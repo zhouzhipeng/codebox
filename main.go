@@ -183,7 +183,23 @@ func main() {
 	go http.Serve(ln, nil)
 
 	//startup python web server
-	if os.Getenv("START_PYTHON_SERVER") == "1" {
+	var pyProcess *os.Process
+	switch runtime.GOOS {
+	case "darwin":
+		pyWebPath := "./web"
+		if os.Getenv("PY_WEB_PATH") != "" {
+			pyWebPath = os.Getenv("PY_WEB_PATH")
+		}
+		cmd := exec.Command(pyWebPath)
+		cmd.Stdout = log.Writer()
+		cmd.Stderr = log.Writer()
+
+		log.Println("python web server started")
+		go cmd.Run()
+		pyProcess = cmd.Process
+
+	case "windows":
+	default:
 		cmd := exec.Command("python", "/app/web.py")
 		cmd.Stdout = log.Writer()
 		cmd.Stderr = log.Writer()
@@ -225,6 +241,12 @@ func main() {
 		//关闭ui窗口
 		ui.Close()
 		log.Println("ui window existed...")
+	}
+
+	//close python web server
+	if pyProcess != nil {
+		pyProcess.Kill()
+		log.Println("python server existed...")
 	}
 
 	//CLEAN temp files dir
