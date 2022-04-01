@@ -137,7 +137,7 @@ func onReady() {
 				mEnabled.SetTitle("Disabled")
 				mEnabled.Disable()
 			case <-mUrl.ClickedCh:
-				open.Run("https://www.getlantern.org")
+				open.Run("http://127.0.0.1:9999")
 			case <-subMenuBottom2.ClickedCh:
 				panic("panic button pressed")
 			case <-subMenuBottom.ClickedCh:
@@ -259,6 +259,9 @@ func main() {
 	log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
 
 	go http.Serve(ln, nil)
+
+	// open web page
+	open.Run("http://127.0.0.1:9999")
 
 	//startup python web server
 

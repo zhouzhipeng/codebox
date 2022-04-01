@@ -55,7 +55,7 @@ def str_joiner_format():
 def kill_self():
     print("py received : kill_self")
     sys.stderr.close()
-    return "ok"
+
 
 
 # 检验是否含有中文字符
@@ -131,8 +131,11 @@ is_dev = os.environ.get('ENV') != 'prod'
 
 print("is_dev : " + str(is_dev))
 
-run(host='0.0.0.0', port=8086, reloader=False, debug=is_dev,
+try:
+    run(host='0.0.0.0', port=8086, reloader=False, debug=is_dev,
     server="wsgiref")
+except Exception as e:
+    print("server error", e)
 
 # from  sqlite_web import  sqlite_web
 # sqlite_web.initialize_app("test.db")
