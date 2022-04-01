@@ -186,7 +186,7 @@ func main() {
 	var pyProcess *os.Process
 	switch runtime.GOOS {
 	case "darwin":
-		pyWebPath := "./web"
+		pyWebPath := "web"
 		if os.Getenv("PY_WEB_PATH") != "" {
 			pyWebPath = os.Getenv("PY_WEB_PATH")
 		}
