@@ -33,7 +33,8 @@ def str_joiner_format():
 @get(BASE_PATH + '/api/killself')
 def kill_self():
     print("py received : kill_self")
-    sys.exit(1)
+    sys.stderr.close()
+    return "ok"
 
 
 
