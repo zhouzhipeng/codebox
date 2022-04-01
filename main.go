@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -184,9 +183,14 @@ func main() {
 	go http.Serve(ln, nil)
 
 	//startup python web server
-	var pyProcess *os.Process
+	var pyProcess *exec.Cmd
 
-	cwd, _ := syscall.Getwd()
+	ex, err := os.Executable()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	cwd := filepath.Dir(ex)
 	log.Println(" cwd is " + cwd)
 
 	switch runtime.GOOS {
@@ -201,7 +205,6 @@ func main() {
 
 		log.Println("python web server started")
 		go cmd.Run()
-		pyProcess = cmd.Process
 
 	case "windows":
 	default:
@@ -250,7 +253,10 @@ func main() {
 
 	//close python web server
 	if pyProcess != nil {
-		pyProcess.Kill()
+		if state := pyProcess.ProcessState; state == nil || !state.Exited() {
+			pyProcess.Process.Kill()
+		}
+
 		log.Println("python server existed...")
 	}
 
