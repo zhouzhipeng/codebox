@@ -90,7 +90,7 @@
         let data = new FormData();
         data.append( "s",s.trim());
 
-        let result = await (await fetch("https://www.zhouzhipeng.com/py/translate",
+        let result = await (await fetch("/py/translate",
             {
                 method: "POST",
                 body: data
