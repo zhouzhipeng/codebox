@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -184,12 +185,13 @@ func main() {
 
 	//startup python web server
 	var pyProcess *os.Process
-	cwd, _ := os.Getwd()
+
+	cwd, _ := syscall.Getwd()
 	log.Println(" cwd is " + cwd)
 
 	switch runtime.GOOS {
 	case "darwin":
-		pyWebPath := "web"
+		pyWebPath := filepath.Join(cwd, "web")
 		if os.Getenv("PY_WEB_PATH") != "" {
 			pyWebPath = os.Getenv("PY_WEB_PATH")
 		}
