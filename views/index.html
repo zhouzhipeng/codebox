@@ -105,22 +105,22 @@
     switchIFrame("/static/about.html");
 
     //window.location.href="http://127.0.0.1:59989/www"
-    // if (location.href.indexOf("islocal=1") !== -1) {
-    //     window.addEventListener('beforeunload', async function (e) {
-    //         e.preventDefault();
-    //         // e.returnValue = '';
-    //         console.log("browser close...");
-    //         await fetch("/api/window-close")
-    //     });
-    //
-	// 	window.addEventListener('beforeunload', async function (e) {
-	// 		e.preventDefault();
-	// 		// e.returnValue = '';
-	// 		console.log("browser close...");
-	// 		await fetch("/api/window-close")
-	// 	});
-    //
-    // }
+    if (location.href.indexOf("islocal=1") !== -1) {
+        window.addEventListener('beforeunload', async function (e) {
+            e.preventDefault();
+            // e.returnValue = '';
+            console.log("browser close...");
+            await fetch("/api/window-close")
+        });
+
+		window.addEventListener('beforeunload', async function (e) {
+			e.preventDefault();
+			// e.returnValue = '';
+			console.log("browser close...");
+			await fetch("/api/window-close")
+		});
+
+    }
 
 
     //禁用页面前进后退

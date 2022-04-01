@@ -108,10 +108,10 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		getClipboardData(w, r)
 	case "/api/get-local-ip":
 		getLocalIP(w, r)
-	//case "/api/window-close":
-	//	//bind browser window close event;
-	//	fmt.Fprintf(w, "ok.")
-	//	ui.Close()
+	case "/api/window-close":
+		//bind browser window close event;
+		fmt.Fprintf(w, "ok.")
+		ui.Close()
 	case "/api/get-available-pages":
 		if os.Getenv("IN_DOCKER") == "" {
 			//local
