@@ -208,6 +208,9 @@ func main() {
 		cmd.Stdout = log.Writer()
 		cmd.Stderr = log.Writer()
 
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "PYTHONUNBUFFERED=1")
+
 		log.Println("python web server started")
 		go cmd.Run()
 
@@ -219,6 +222,9 @@ func main() {
 		cmd := exec.Command(pyWebPath)
 		cmd.Stdout = log.Writer()
 		cmd.Stderr = log.Writer()
+
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "PYTHONUNBUFFERED=1")
 
 		log.Println("win python  web server started")
 		go cmd.Run()
