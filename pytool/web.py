@@ -103,7 +103,7 @@ is_dev = os.environ.get('ENV') != 'prod'
 
 print("is_dev : " + str(is_dev))
 
-run(host='0.0.0.0', port=8086, reloader=is_dev, debug=is_dev,
+run(host='0.0.0.0', port=8086, reloader=False, debug=is_dev,
     server="wsgiref")
 
 # from  sqlite_web import  sqlite_web

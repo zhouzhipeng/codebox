@@ -113,13 +113,6 @@
             await fetch("/api/window-close")
         });
 
-		window.addEventListener('beforeunload', async function (e) {
-			e.preventDefault();
-			// e.returnValue = '';
-			console.log("browser close...");
-			await fetch("/api/window-close")
-		});
-
     }
 
 
