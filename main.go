@@ -199,12 +199,12 @@ func main() {
 		if os.Getenv("PY_WEB_PATH") != "" {
 			pyWebPath = os.Getenv("PY_WEB_PATH")
 		}
-		cmd := exec.Command(pyWebPath)
-		cmd.Stdout = log.Writer()
-		cmd.Stderr = log.Writer()
+		pyProcess = exec.Command(pyWebPath)
+		pyProcess.Stdout = log.Writer()
+		pyProcess.Stderr = log.Writer()
 
 		log.Println("python web server started")
-		go cmd.Run()
+		go pyProcess.Run()
 
 	case "windows":
 	default:
