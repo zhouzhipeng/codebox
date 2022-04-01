@@ -121,5 +121,5 @@ echo bar
 
 ## 打包mac
 ```bash
-python3 setup.py py2app
+python3 install pyinstaller
 ```
