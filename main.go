@@ -164,6 +164,9 @@ func main() {
 	//处理文件下载
 	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
+	//kill python web server
+	go http.Get("http://127.0.0.1:8086/py/api/killself")
+
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 	if err != nil {
 		//already has a app running , notify him to kill himself.
@@ -183,7 +186,6 @@ func main() {
 	go http.Serve(ln, nil)
 
 	//startup python web server
-	var pyProcess *exec.Cmd
 
 	ex, err := os.Executable()
 	if err != nil {
@@ -193,6 +195,7 @@ func main() {
 	cwd := filepath.Dir(ex)
 	log.Println(" cwd is " + cwd)
 
+	var pyProcess *exec.Cmd
 	switch runtime.GOOS {
 	case "darwin":
 		pyWebPath := filepath.Join(cwd, "web")

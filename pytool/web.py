@@ -29,6 +29,16 @@ def str_joiner_format():
     return unescape(template(s + '\n'))  # 加上 \n 防止被识别为html模板文件名
 
 
+
+@get(BASE_PATH + '/api/killself')
+def kill_self():
+    print("py received : kill_self")
+    sys.exit(0)
+
+
+
+
+
 #检验是否含有中文字符
 def is_contains_chinese(strs):
     for _char in strs:
