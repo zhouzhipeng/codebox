@@ -2,10 +2,7 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"github.com/skratchdot/open-golang/open"
-	"gogo/icons"
-	"gogo/systray"
 	"io/fs"
 	"log"
 	"mime"
@@ -32,18 +29,10 @@ var TEMP_FILES_DIR = ""
 
 func genTmpUploadFilesDir() {
 	if os.Getenv("IN_DOCKER") == "" {
-		//tmp, err := os.MkdirTemp("", "gogo_files")
-		//if err != nil {
-		//	log.Println("getTmpUploadFilesDir error", err)
-		//	return
-		//}
-		//TEMP_FILES_DIR = tmp
-
 		TEMP_FILES_DIR = filepath.Join(os.TempDir(), "gogo_files")
 	} else {
 		//run in docker or linux , use /tmp
 		TEMP_FILES_DIR = "/tmp"
-
 	}
 
 	os.Mkdir(TEMP_FILES_DIR, 0777)
@@ -64,35 +53,6 @@ func genTmpUploadFilesDir() {
 
 	log.Println("temp files dir :", TEMP_FILES_DIR)
 
-}
-
-func onReady() {
-	systray.SetTemplateIcon(icons.Data, icons.Data)
-	systray.SetTitle("Awesome App")
-	systray.SetTooltip("Lantern")
-	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
-	go func() {
-		<-mQuitOrig.ClickedCh
-		fmt.Println("Requesting quit")
-		systray.Quit()
-		fmt.Println("Finished quitting")
-	}()
-
-	// We can manipulate the systray in other goroutines
-	go func() {
-		systray.SetTemplateIcon(icons.Data, icons.Data)
-		systray.SetTitle("GoGO!")
-		systray.SetTooltip("A great tool for developers.")
-
-		mUrl := systray.AddMenuItem("Open UI", "my home")
-
-		for {
-			select {
-			case <-mUrl.ClickedCh:
-				open.Run("http://127.0.0.1:9999")
-			}
-		}
-	}()
 }
 
 func main() {
@@ -203,24 +163,9 @@ func main() {
 	//startup python web server
 	startPythonServer()
 
-	//open systray menu
-	if os.Getenv("IN_DOCKER") == "" {
-		onExit := func() {
-			//now := time.Now()
-			//ioutil.WriteFile(fmt.Sprintf(`on_exit_%d.txt`, now.UnixNano()), []byte(now.String()), 0644)
-			log.Println("menu exited!")
+	//load ui
+	LoadUI()
 
-			log.Println("exiting...")
-
-			//通知py server 关闭
-			go http.Get("http://127.0.0.1:8086/py/api/killself")
-
-			//关闭服务器
-			ln.Close()
-			log.Println("server existed...")
-		}
-		systray.Run(onReady, onExit)
-	}
 }
 
 func startPythonServer() {

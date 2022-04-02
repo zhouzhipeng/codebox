@@ -11,7 +11,7 @@ COPY go.sum ./
 RUN go mod download
 
 COPY . .
-RUN ./build-linux.sh && ./build-macos.sh && ./build-windows.sh
+RUN ./build-linux.sh
 
 
 
