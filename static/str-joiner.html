@@ -193,7 +193,7 @@
             </div>
             <div class="card-body">
                 <div id="iframeResult">
-                    <textarea class="art" id="resultArea"  placeholder="点击拼接按钮，展示结果"></textarea>
+                    <pre class="art" id="resultArea" ></pre>
                 </div>
             </div>
         </div>
@@ -291,8 +291,8 @@ Todo List
                 method: "POST",
                 body: data
             })).text()
-        // resultArea.value= result.trim()
-        resultMirror.getDoc().setValue(result.trim());
+        resultArea.innerText= result
+        // resultMirror.getDoc().setValue(result);
 
         autodivheight();
     }
@@ -303,26 +303,25 @@ Todo List
             version: 3,
             singleLineStringErrors: false},
         lineNumbers: true,
+        indentWithTabs: true,
         indentUnit: 4,
         matchBrackets: true,
-        viewportMargin: Infinity
     });
 
 
-    let resultMirror = CodeMirror.fromTextArea(document.getElementById('resultArea'), {
-        mode: "text",
-        indentWithTabs: true,
-        smartIndent: true,
-        lineNumbers: true,
-        matchBrackets : true,
-        autofocus: true,
-        viewportMargin: Infinity
-        //extraKeys: {"Ctrl-Space": "autocomplete"},
-        // hintOptions: {tables: {
-        // 		users: ["name", "score", "birthDate"],
-        // 		countries: ["name", "population", "size"]
-        // 	}}
-    });
+    // let resultMirror = CodeMirror.fromTextArea(document.getElementById('resultArea'), {
+    //     mode: "text",
+    //     indentWithTabs: true,
+    //     lineNumbers: true,
+    //     matchBrackets : true,
+    //     autofocus: true,
+    //     indentUnit: 4,
+    //     //extraKeys: {"Ctrl-Space": "autocomplete"},
+    //     // hintOptions: {tables: {
+    //     // 		users: ["name", "score", "birthDate"],
+    //     // 		countries: ["name", "population", "size"]
+    //     // 	}}
+    // });
 
 
 
@@ -350,7 +349,7 @@ Todo List
         }
         let height = winHeight*0.8
         mirror.setSize('100%', height);
-        resultMirror.setSize('100%', height);
+        // resultMirror.setSize('100%', height);
         document.getElementById("iframeResult").style.height= height +"px";
         showFrameSize();
 

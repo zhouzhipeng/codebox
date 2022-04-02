@@ -27,7 +27,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [ ] https://github.com/mholt/archiver 压缩解压工具
 - [x] button style : https://www.runoob.com/try/try.php?filename=bootstrap3-button-options
 - [x] dropdown menu :  https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0
-- [ ] sql runner page see : https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0  (page structure) 
+- [x] sql runner page see : https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0  (page structure) 
 - [ ] 文件拖拽直接打开 （自动识别文本和二进制)
 
 ## others

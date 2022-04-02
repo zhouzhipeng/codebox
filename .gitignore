@@ -5,3 +5,4 @@ build/
 .eggs/
 web.spec
 __pycache__/
+dist/

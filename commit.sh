@@ -1,7 +1,7 @@
 
 set -eux
 
-rm -rf dist
+#rm -rf dist
 
 
 if [ "$(git status  | grep pytool)" != "" ] || [ "$2" == "f" ] ; then

@@ -235,28 +235,23 @@ func main() {
 	//处理文件下载
 	http.Handle("/files/", NoCache(http.StripPrefix("/files/", http.FileServer(http.Dir(TEMP_FILES_DIR)))))
 
-	//kill python web server
-	if IsPortInUse(8086) {
-		log.Println("port 8086 is using, sending kill command...")
-		http.Get("http://127.0.0.1:8086/py/api/killself")
-	}
-
-	//kill another main app
-	if IsPortInUse(9999) {
-		log.Println("port 9999 is using, sending kill command...")
-
-		http.Get("http://127.0.0.1:9999/api/killself")
-	}
-
 	ln, err := net.Listen("tcp", "0.0.0.0:9999")
 
 	if err != nil {
 		log.Println("cant startup ,because 9999 port is used by other app.")
-		log.Fatal(err)
+		log.Println("port 9999 is using, sending kill command...")
+
+		http.Get("http://127.0.0.1:9999/api/killself")
+
+		ln, err = net.Listen("tcp", "0.0.0.0:9999")
+	}
+
+	if err != nil {
+		log.Fatal("start failed, port is in using!")
 	}
 
 	//get port
-	log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
+	//log.Println("Using port:", ln.Addr().(*net.TCPAddr).Port)
 
 	go http.Serve(ln, nil)
 
@@ -264,6 +259,39 @@ func main() {
 	open.Run("http://127.0.0.1:9999")
 
 	//startup python web server
+	startPythonServer()
+
+	//open systray menu
+	if os.Getenv("IN_DOCKER") == "" {
+		onExit := func() {
+			//now := time.Now()
+			//ioutil.WriteFile(fmt.Sprintf(`on_exit_%d.txt`, now.UnixNano()), []byte(now.String()), 0644)
+			log.Println("menu exited!")
+
+			log.Println("exiting...")
+
+			//通知py server 关闭
+			go http.Get("http://127.0.0.1:8086/py/api/killself")
+
+			//关闭服务器
+			ln.Close()
+			log.Println("server existed...")
+		}
+		systray.Run(onReady, onExit)
+	}
+}
+
+func startPythonServer() {
+	if os.Getenv("DONT_START_PY") != "" {
+		log.Println("DONT_START_PY is true , ignored starting python server.")
+		return
+	}
+
+	//kill python web server
+	if IsPortInUse(8086) {
+		log.Println("port 8086 is using, sending kill command...")
+		http.Get("http://127.0.0.1:8086/py/api/killself")
+	}
 
 	ex, err := os.Executable()
 	if err != nil {
@@ -321,24 +349,6 @@ func main() {
 
 	}
 
-	//open systray menu
-	if os.Getenv("IN_DOCKER") == "" {
-		onExit := func() {
-			//now := time.Now()
-			//ioutil.WriteFile(fmt.Sprintf(`on_exit_%d.txt`, now.UnixNano()), []byte(now.String()), 0644)
-			log.Println("menu exited!")
-
-			log.Println("exiting...")
-
-			//通知py server 关闭
-			go http.Get("http://127.0.0.1:8086/py/api/killself")
-
-			//关闭服务器
-			ln.Close()
-			log.Println("server existed...")
-		}
-		systray.Run(onReady, onExit)
-	}
 }
 
 var epoch = time.Unix(0, 0).Format(time.RFC1123)

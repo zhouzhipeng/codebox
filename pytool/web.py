@@ -7,6 +7,8 @@ from lib.shell_util import *
 UPLOAD_PATH = "/static/upload/"
 BASE_PATH = "/py"
 
+os.environ['PYTHONUNBUFFERED']="1"
+
 
 class Unbuffered(object):
     def __init__(self, stream):
@@ -42,20 +44,48 @@ def notes():
 
 from html import unescape
 
+from io import StringIO
+import sys
+import traceback
 
 @post(BASE_PATH + '/str-joiner/format-text')
 def str_joiner_format():
     response.content_type = 'text/text; charset=UTF8'
     s = request.forms['s']
     print(s)
-    return unescape(template(s + '\n'))  # 加上 \n 防止被识别为html模板文件名
+
+    old_stdout = sys.stdout
+    sys.stdout = mystdout = StringIO()
+
+    old_stderr = sys.stderr
+    sys.stderr = mystdout
+
+    try:
+        code = compile(s, '<string>', 'exec')
+        eval(code, {})
+
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+
+        message = mystdout.getvalue()
+
+        return message  # 加上 \n 防止被识别为html模板文件名
+
+    except Exception:
+        return traceback.format_exc()
+
+
+
+import psutil
+import signal
+
 
 
 @get(BASE_PATH + '/api/killself')
 def kill_self():
     print("py received : kill_self")
-    sys.stderr.close()
-
+    current_process = psutil.Process()
+    current_process.send_signal(signal.SIGTERM)
 
 
 # 检验是否含有中文字符
@@ -132,8 +162,10 @@ is_dev = os.environ.get('ENV') != 'prod'
 print("is_dev : " + str(is_dev))
 
 try:
+
+
     run(host='0.0.0.0', port=8086, reloader=False, debug=is_dev,
-    server="wsgiref")
+        )
 except Exception as e:
     print("server error", e)
 
