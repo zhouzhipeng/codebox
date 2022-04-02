@@ -98,6 +98,9 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 	case "/api/killself":
 		fmt.Fprintf(w, "ok")
+		//通知py server 关闭
+		go http.Get("http://127.0.0.1:8086/py/api/killself")
+
 		os.Exit(0)
 
 	case "/api/upload-file":

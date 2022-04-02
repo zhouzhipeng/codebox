@@ -3,6 +3,7 @@ set -eux
 
 #rm -rf dist
 
+echo "$(date +%F\ %T)" >  static/time.txt
 
 
 
@@ -23,7 +24,6 @@ fi
 
 # end build python exe file
 
-echo "$(date +%F\ %T)" >  static/time.txt
 
 git add .
 git commit -am "$1"
