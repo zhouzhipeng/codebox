@@ -29,6 +29,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
 - [x] dropdown menu :  https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0
 - [x] sql runner page see : https://www.runoob.com/try/try.php?filename=bootstrap3-dropdown-basic&basepath=0  (page structure) 
 - [ ] 文件拖拽直接打开 （自动识别文本和二进制)
+- [ ] win box https://github.com/nextapps-de/winbox
 
 ## others
 go template: http://books.studygolang.com/gowebexamples/templates/ 
