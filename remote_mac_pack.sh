@@ -1,1 +1,0 @@
-ssh 192.168.0.109 "set -eux ; cd ~/Code/gogo &&  git pull && . /etc/profile && ./build-macos.sh && cd dist && cp -R gogo_mac.zip /var/folders/35/6khqmb1d4yg1w7_nmd4c67nh0000gn/T/gogo_files/"
