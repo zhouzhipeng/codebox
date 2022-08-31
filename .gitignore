@@ -1,0 +1,9 @@
+.idea/
+files/
+*.iml
+build/
+.eggs/
+web.spec
+__pycache__/
+dist/
+env/

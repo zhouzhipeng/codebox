@@ -1,0 +1,10 @@
+.idea/
+*.pyc
+target/
+.git/
+.gitignore
+**/upload/
+__pycache__/
+build/
+dist/
+.eggs/
