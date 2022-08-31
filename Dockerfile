@@ -31,6 +31,5 @@ EXPOSE ${MAIN_PORT} ${HTTPS_PORT}
 COPY --from=BuildGolangImage /app/dist/gogo ${BASE_DIR}/gogo
 COPY --from=BuildPythonImage /app/dist/web ${BASE_DIR}/web
 
-COPY bin/userdata.db.zip /root/
 
 ENTRYPOINT ${BASE_DIR}/gogo
