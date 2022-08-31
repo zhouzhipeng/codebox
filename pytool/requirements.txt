@@ -3,7 +3,6 @@ requests
 psutil
 mysql-connector-python
 xlrd
-pandas
 ffmpy
 qrcode[pil]
 kafka-python

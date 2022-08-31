@@ -4,11 +4,10 @@ pip install -r requirements.txt
 pip install pyinstaller
 rm -rf web.spec build dist/web
 
-
+#   --hidden-import=pandas   \
 pyinstaller  --noconfirm  --console  --collect-datas webssh   --log-level "DEBUG" --add-data "lib:lib" \
    --hidden-import=sqlite3   \
    --hidden-import=qrcode   \
-   --hidden-import=pandas   \
    --hidden-import=pycron   \
    --hidden-import=kafka   \
    --hidden-import=snappy   \
