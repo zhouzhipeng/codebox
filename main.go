@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/tls"
-	"embed"
+	_ "embed"
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/p4gefau1t/trojan-go/common"
@@ -23,11 +23,6 @@ import (
 	"strings"
 	"time"
 )
-
-//go:embed bin/gogo.db
-var gogoDB embed.FS
-
-var BASE_DIR = ""
 
 var accessLogger *log.Logger
 
@@ -396,8 +391,8 @@ func injectEnv(cmd *exec.Cmd) {
 	cmd.Env = append(cmd.Env,
 		"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8",
 		"MAIN_PORT="+GetMainPort(),
-		"BASE_DIR="+BASE_DIR,
-		"FILE_UPLOAD_PATH="+BASE_DIR)
+		"DB_PATH="+GetDBPath(),
+		"FILE_UPLOAD_PATH="+GetDBPath())
 
 }
 

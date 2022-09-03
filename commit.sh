@@ -1,9 +1,8 @@
-set -eux
+#echo "$(date +%F\ %T)" >  static/time.txt
 
-
-git pull
 cp -r "C:\Users\zhouzhipeng\AppData\Local\Temp\gogo_files\gogo.db" bin/gogo.db
 
 git add .
-git commit -am "update db"
+git commit -am "$1"
+
 git push

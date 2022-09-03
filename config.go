@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	_ "embed"
 	"io"
 	"log"
@@ -17,6 +18,11 @@ var envTxt string
 
 //go:embed config.html
 var configHtml string
+
+//go:embed bin/gogo.db
+var gogoDB embed.FS
+
+var BASE_DIR = ""
 
 func configureLogPath(parentPath string) {
 	if os.Getenv("DISABLE_LOG_FILE") == "" {
@@ -64,17 +70,6 @@ func StartConfigServer() {
 
 	log.Println("base dir :", BASE_DIR)
 
-	//update sqlite db path
-	var dbpath = filepath.Join(BASE_DIR, "gogo.db")
-
-	if _, err := os.Stat(dbpath); err == nil {
-		log.Println("db File exists , ignore init db.")
-	} else {
-		log.Println("File does not exist, begin to copy db file to tmp path.")
-		bytes, _ := gogoDB.ReadFile("bin/gogo.db")
-		os.WriteFile(dbpath, bytes, 0777)
-	}
-
 	//parse  envTxt
 	for _, s := range strings.Split(envTxt, "\n") {
 		s = strings.TrimSpace(s)
@@ -98,6 +93,17 @@ func StartConfigServer() {
 		}
 	}
 
+	//update sqlite db path
+	var dbpath = filepath.Join(GetDBPath(), "gogo.db")
+
+	if _, err := os.Stat(dbpath); err == nil {
+		log.Println("db File exists , ignore init db.")
+	} else {
+		log.Println("File does not exist, begin to copy db file to tmp path.")
+		bytes, _ := gogoDB.ReadFile("bin/gogo.db")
+		os.WriteFile(dbpath, bytes, 0777)
+	}
+
 	go func() {
 		http.ListenAndServe(":28888", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 
@@ -116,6 +122,7 @@ func StartConfigServer() {
 
 			} else if request.URL.Path == "/save" {
 				s := request.FormValue("s")
+				envTxt = s
 				err := os.WriteFile(envTxtPath, []byte(s), 0777)
 				if err != nil {
 					io.WriteString(w, "Save Error :"+err.Error())
