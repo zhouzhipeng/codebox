@@ -19,3 +19,6 @@ func LoadUI() {
 
 	select {}
 }
+
+func LoadConfigUI() {
+}

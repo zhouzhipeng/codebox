@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Config</title>
+    <style>
+        textarea{
+            width: 100%;
+            height: 500px;
+            font-size: 20px;
+            font-family: ui-monospace;
+        }
+        button{
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+<textarea id="envTxt">{{ .Name}}</textarea>
+<button onclick="save()">Save</button>
+<span>After save, you need to restart app manually.</span>
+<p id="saveResult"></p>
+<script>
+    async function save(){
+        let data = new URLSearchParams();
+        data.append("s", envTxt.value);
+        let resp= await fetch('/save', {method: "POST",headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}, body: data})
+        saveResult.innerText = await resp.text();
+        setTimeout(()=>{
+            saveResult.innerText =""
+        }, 2000)
+
+    }
+</script>
+</body>
+</html>

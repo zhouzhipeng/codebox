@@ -20,8 +20,8 @@ import (
 )
 
 type Todo struct {
-	Title string
-	Done  bool
+	Name        string
+	Description string
 }
 
 type TodoPageData struct {
@@ -268,14 +268,6 @@ func handle301(w http.ResponseWriter, r *http.Request) bool {
 		}
 	}
 	return false
-}
-
-func getAutoRedirectHTTPS() bool {
-	var redirect = os.Getenv("AUTO_REDIRECT_TO_HTTPS")
-	if redirect == "" {
-		redirect = "true"
-	}
-	return redirect == "true"
 }
 
 func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {

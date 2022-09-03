@@ -19,8 +19,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -29,69 +27,9 @@ import (
 //go:embed bin/gogo.db
 var gogoDB embed.FS
 
-//存放临时上传的文件(窗口关闭后删除）
 var BASE_DIR = ""
 
 var accessLogger *log.Logger
-
-func genereateBasePath() {
-
-	if os.Getenv("BASE_DIR") != "" {
-		BASE_DIR = os.Getenv("BASE_DIR")
-	} else {
-		switch runtime.GOOS {
-		case "darwin":
-			BASE_DIR = filepath.Join("/tmp", "gogo_files")
-		case "windows":
-			BASE_DIR = filepath.Join(os.TempDir(), "gogo_files")
-		default:
-			BASE_DIR = "/tmp"
-		}
-	}
-
-	//if os.Getenv("IN_DOCKER") == "" {
-	//	BASE_DIR = filepath.Join(os.TempDir(), "gogo_files")
-	//} else {
-	//	//run in docker or linux , use /tmp
-	//	BASE_DIR = "/tmp"
-	//}
-
-	os.Mkdir(BASE_DIR, 0777)
-
-	if os.Getenv("DISABLE_LOG_FILE") == "" {
-		//设置log输出到文件
-		file := filepath.Join(BASE_DIR, "message.txt")
-		logFile, err := os.OpenFile(file, os.O_APPEND|os.O_RDWR|os.O_CREATE /*|os.O_TRUNC*/, 0777)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		log.SetOutput(logFile) // 将文件设置为log输出的文件
-		log.SetPrefix("[gogo]")
-		log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
-
-		accessLogFilePath := filepath.Join(BASE_DIR, "access_log.txt")
-		accesslogFile, err := os.OpenFile(accessLogFilePath, os.O_APPEND|os.O_RDWR|os.O_CREATE /*|os.O_TRUNC*/, 0777)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		accessLogger = log.New(accesslogFile, "[gogo]", log.LstdFlags|log.Lshortfile|log.LUTC)
-	}
-
-	log.Println("temp files dir :", BASE_DIR)
-
-	//update sqlite db path
-	var dbpath = filepath.Join(BASE_DIR, "gogo.db")
-
-	if _, err := os.Stat(dbpath); err == nil {
-		log.Println("db File exists , ignore init db.")
-	} else {
-		log.Println("File does not exist, begin to copy db file to tmp path.")
-		bytes, _ := gogoDB.ReadFile("bin/gogo.db")
-		os.WriteFile(dbpath, bytes, 0777)
-	}
-}
 
 type TimingRoundtripper struct {
 	transport http.RoundTripper
@@ -215,76 +153,6 @@ func commonReverseProxy(writer http.ResponseWriter, request *http.Request, serve
 	}
 
 	proxy.ServeHTTP(writer, request)
-}
-
-func GetMainPort() string {
-	var port = os.Getenv("MAIN_PORT")
-	if port == "" {
-		port = "80"
-	}
-	return port
-}
-
-func GetTrojanPassword() string {
-	var pwd = os.Getenv("TROJAN_PASSWORD")
-	if pwd == "" {
-		pwd = "123456"
-	}
-	return pwd
-}
-
-func GetHTTPSPort() string {
-	var port = os.Getenv("HTTPS_PORT")
-	if port == "" {
-		port = "443"
-	}
-	return port
-}
-
-func ShouldStart443Server() bool {
-	var env = os.Getenv("START_443_SERVER")
-	if env == "" {
-		env = "false"
-	}
-	return env == "true"
-}
-
-func ShouldStartMailServer() bool {
-	var env = os.Getenv("START_MAIL_SERVER")
-	if env == "" {
-		env = "false"
-	}
-	return env == "true"
-}
-
-func ShouldStartLocalProxyServer() bool {
-	var env = os.Getenv("START_TROJAN_PROXY")
-	if env == "" {
-		env = "true"
-	}
-	return env == "true"
-}
-
-func getWhitelistRootDomains() []string {
-	var domains = os.Getenv("WHITELIST_ROOT_DOMAINS")
-	if domains == "" {
-		domains = "zhouzhipeng.com"
-	}
-
-	return strings.Split(domains, ",")
-}
-
-func getWhitelistMailDomain() string {
-	var domains = os.Getenv("WHITELIST_MAIL_DOMAIN")
-	if domains == "" {
-		domains = "@zhouzhipeng.com"
-	}
-
-	return domains
-}
-
-func getCertCacheDir() string {
-	return filepath.Join(BASE_DIR, "cert_cache")
 }
 
 var tlsConfig *tls.Config
@@ -610,8 +478,8 @@ func listen443() {
 }
 
 func main() {
-	//创建临时文件目录
-	genereateBasePath()
+
+	StartConfigServer()
 
 	//尝试开启http端口
 	ln80 := tryOpenPort()
