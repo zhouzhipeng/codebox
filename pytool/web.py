@@ -23,7 +23,7 @@ os.environ['PYTHONUNBUFFERED'] = "1"
 class Unbuffered(object):
     def __init__(self, stream):
         self.stream = stream
-        sys.stdout.reconfigure(encoding='utf-8')
+        # sys.stdout.reconfigure(encoding='utf-8')
 
     def write(self, data):
         t =  "" # ("[%s] " % str(datetime.now())) if data.strip() else ""
