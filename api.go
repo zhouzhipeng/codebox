@@ -334,6 +334,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 	//	log.Println("DELETE upload files")
 	case "/api/killself":
 		fmt.Fprintf(w, "ok")
+		TurnOffGlobalProxy()
 		//通知py server 关闭
 		client := http.Client{
 			Timeout: 1 * time.Second,
