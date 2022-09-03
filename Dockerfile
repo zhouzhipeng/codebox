@@ -34,4 +34,4 @@ COPY --from=BuildGolangImage /app/dist/gogo gogo
 COPY --from=BuildPythonImage /app/dist/web  web
 
 
-ENTRYPOINT gogo
+ENTRYPOINT /app/gogo
