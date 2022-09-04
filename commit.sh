@@ -1,6 +1,8 @@
 #echo "$(date +%F\ %T)" >  static/time.txt
+set -eux
 
-cp -r "C:\Users\zhouzhipeng\AppData\Local\Temp\gogo_files\gogo.db" bin/gogo.db
+# optional
+cp -r "/tmp/gogo_files/gogo.db" bin/gogo.db
 
 git add .
 git commit -am "$1"

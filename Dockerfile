@@ -18,7 +18,6 @@ FROM debian:buster AS RuntimeImage
 ENV MAIN_PORT=80\
     HTTPS_PORT=443 \
     ENABLE_AUTH=true \
-    BASE_DIR=/tmp \
     TROJAN_PASSWORD=123456 \
     AUTO_REDIRECT_TO_HTTPS=true \
     WHITELIST_ROOT_DOMAINS=zhouzhipeng.com \

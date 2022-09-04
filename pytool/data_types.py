@@ -7,7 +7,7 @@ from bottle import template
 import lib.sqlite_db as _db
 
 
-DB_PARENT_PATH = os.getenv("FILE_UPLOAD_PATH")
+DB_PARENT_PATH = os.getenv("DB_PATH","")
 DEFAULT_DB_PATH = os.path.join(DB_PARENT_PATH, "gogo.db")
 
 print("db path : ", DEFAULT_DB_PATH)
@@ -15,7 +15,7 @@ print("db path : ", DEFAULT_DB_PATH)
 def set_db_parent_path(db_parent_path):
     global DB_PARENT_PATH
     global DEFAULT_DB_PATH
-    os.environ["FILE_UPLOAD_PATH"]= db_parent_path
+    os.environ["DB_PATH"]= db_parent_path
     DB_PARENT_PATH = db_parent_path
     DEFAULT_DB_PATH = os.path.join(DB_PARENT_PATH, "gogo.db")
 

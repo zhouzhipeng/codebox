@@ -2,27 +2,18 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"time"
 )
 
 func StartPythonServer() {
-	if os.Getenv("DONT_START_PY") != "" {
-		log.Println("DONT_START_PY is true , ignored starting python server.")
-		return
-	}
 
 	//kill python web server
 	if IsPortInUse(8086) {
-		log.Println("port 8086 is using, sending kill command...")
-		client := http.Client{
-			Timeout: 1 * time.Second,
-		}
-		client.Get("http://127.0.0.1:8086/py/api/killself")
+		log.Println("pyserver is already running, ignore.")
+		return
 	}
 
 	ex, err := os.Executable()

@@ -25,26 +25,27 @@ var gogoDB embed.FS
 var BASE_DIR = ""
 
 func configureLogPath(parentPath string) {
-	if os.Getenv("DISABLE_LOG_FILE") == "" {
-		//设置log输出到文件
-		file := filepath.Join(parentPath, "message.txt")
-		logFile, err := os.OpenFile(file, os.O_APPEND|os.O_RDWR|os.O_TRUNC, 0777)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		log.SetOutput(logFile) // 将文件设置为log输出的文件
-		log.SetPrefix("[gogo]")
-		log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
-
-		accessLogFilePath := filepath.Join(parentPath, "access_log.txt")
-		accesslogFile, err := os.OpenFile(accessLogFilePath, os.O_APPEND|os.O_RDWR|os.O_TRUNC, 0777)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		accessLogger = log.New(accesslogFile, "[gogo]", log.LstdFlags|log.Lshortfile|log.LUTC)
+	//设置log输出到文件
+	file := filepath.Join(parentPath, "message.txt")
+	logFile, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_RDWR|os.O_TRUNC, 0777)
+	if err != nil {
+		log.Println(err)
+		return
 	}
+
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(mw)
+
+	log.SetPrefix("[gogo]")
+	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
+
+	accessLogFilePath := filepath.Join(parentPath, "access_log.txt")
+	accesslogFile, err := os.OpenFile(accessLogFilePath, os.O_CREATE|os.O_APPEND|os.O_RDWR|os.O_TRUNC, 0777)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	accessLogger = log.New(accesslogFile, "[gogo]", log.LstdFlags|log.Lshortfile|log.LUTC)
 
 }
 
@@ -74,7 +75,7 @@ func StartConfigServer() {
 	for _, s := range strings.Split(envTxt, "\n") {
 		s = strings.TrimSpace(s)
 		if s != "" && !strings.HasPrefix(s, "#") {
-			cols := strings.Split(s, "=")
+			cols := strings.SplitN(s, "=", 2)
 			if len(cols) != 2 {
 				log.Println("warning : env line not valid : ", s)
 				continue
@@ -129,6 +130,8 @@ func StartConfigServer() {
 				} else {
 					io.WriteString(w, "Save Ok.")
 				}
+			} else if request.URL.Path == "/getenv" {
+				io.WriteString(w, strings.Join(os.Environ(), "\n"))
 			} else {
 				io.WriteString(w, "404 not found.")
 			}
@@ -179,7 +182,11 @@ func GetDBPath() string {
 	path := os.Getenv("DB_PATH")
 	if path == "" {
 		path = BASE_DIR
+
 	}
+
+	os.Setenv("DB_PATH", path)
+	os.Setenv("FILE_UPLOAD_PATH", path)
 	return path
 }
 

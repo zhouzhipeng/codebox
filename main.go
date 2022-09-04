@@ -387,13 +387,14 @@ func injectEnv(cmd *exec.Cmd) {
 	cmd.Stdout = log.Writer()
 	cmd.Stderr = log.Writer()
 
-	cmd.Env = os.Environ()
-	cmd.Env = append(cmd.Env,
-		"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8",
-		"MAIN_PORT="+GetMainPort(),
-		"DB_PATH="+GetDBPath(),
-		"FILE_UPLOAD_PATH="+GetDBPath())
-
+	//cmd.Env = os.Environ()
+	//cmd.Env = append(cmd.Env,
+	//	"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8",
+	//	"DB_PATH="+GetDBPath(),
+	//	"FILE_UPLOAD_PATH="+GetDBPath())
+	//for _, e := range os.Environ() {
+	//	cmd.Env = append(cmd.Env, e)
+	//}
 }
 
 var epoch = time.Unix(0, 0).Format(time.RFC1123)

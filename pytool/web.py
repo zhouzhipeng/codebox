@@ -7,15 +7,14 @@ import zlib
 
 import bottle
 import psutil
+import requests
 from bottle import *
-from tornado.ioloop import IOLoop
 
 from lib.shell_util import *
 # for package
 from lib.sqlite_db import set_show_sql
 
-bottle.BaseRequest.MEMFILE_MAX = 1024 *1024 *1024 * 1024 # (or whatever you want)
-
+bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
 
 os.environ['PYTHONUNBUFFERED'] = "1"
 
@@ -26,13 +25,13 @@ class Unbuffered(object):
         # sys.stdout.reconfigure(encoding='utf-8')
 
     def write(self, data):
-        t =  "" # ("[%s] " % str(datetime.now())) if data.strip() else ""
+        t = ""  # ("[%s] " % str(datetime.now())) if data.strip() else ""
         self.stream.write(t + data)
         self.stream.flush()
 
     def writelines(self, datas):
-        t =  "" #("[%s] " % str(datetime.now())) if datas else ""
-        self.stream.writelines(t+datas)
+        t = ""  # ("[%s] " % str(datetime.now())) if datas else ""
+        self.stream.writelines(t + datas)
         self.stream.flush()
 
     def __getattr__(self, attr):
@@ -44,14 +43,13 @@ import sys
 sys.stdout = Unbuffered(sys.stdout)
 sys.stderr = Unbuffered(sys.stderr)
 
-import sys
 import traceback
 
-from data_types import tables, functions, should_use_compress, Tables, render_tpl
+from data_types import tables, functions, should_use_compress, Tables, render_tpl, set_db_parent_path
 
 
 def check_permission() -> str:
-    PASSED=""
+    PASSED = ""
     # return PASSED
     if os.getenv("ENABLE_AUTH", "false") == "false":
         return PASSED
@@ -69,6 +67,7 @@ def index():
     print(request.params)
     return "ok"
 
+
 @route('/files/<filepath:path>')
 def server_static(filepath):
     cc = check_permission()
@@ -76,9 +75,10 @@ def server_static(filepath):
         return cc
 
     use_download = not filepath.endswith(".txt")
-    return static_file(filepath, download=use_download,  root= os.getenv("FILE_UPLOAD_PATH"))
+    return static_file(filepath, download=use_download, root=os.getenv("DB_PATH"))
 
-@route('/tables/<uri:path>', method=['GET', 'POST','PUT', 'DELETE'])
+
+@route('/tables/<uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def operate_table(uri):
     try:
         cc = check_permission()
@@ -90,16 +90,13 @@ def operate_table(uri):
         if 'id' not in request.params:
             request.params['id'] = None
 
-
         if 'Content-Type' in request.headers and 'form-urlencoded' in request.headers['Content-Type']:
             form = FormsDict(request.params).decode('utf-8')
         else:
             form = request.params
 
-
-
         ll = Tables.get_by_uri(request.fullpath)
-        if len(ll)>0:
+        if len(ll) > 0:
 
             templ = ll[0]
             result = tables(templ.table_name, templ.operation, **form)
@@ -109,7 +106,7 @@ def operate_table(uri):
             else:
                 return str(result)
         else:
-            response.status=404
+            response.status = 404
             return "table not found."
     except Exception:
         response.headers['Content-Type'] = "text/text; charset=UTF-8"
@@ -118,7 +115,8 @@ def operate_table(uri):
         response.status = 500
         return err
 
-@route('/functions/<func_uri:path>', method=['GET', 'POST','PUT', 'DELETE'])
+
+@route('/functions/<func_uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function(func_uri):
     try:
         if not func_uri.startswith("public/"):
@@ -128,7 +126,7 @@ def call_function(func_uri):
 
         response.headers['Content-Type'] = "text/text; charset=UTF-8"
 
-        #print(f"api request for call_function : func_name :{func_uri}, params : {request.query_string}")
+        # print(f"api request for call_function : func_name :{func_uri}, params : {request.query_string}")
         funcs = tables("functions", "get", uri=request.fullpath)
         if funcs:
             if 'Content-Type' in request.headers and 'form-urlencoded' in request.headers['Content-Type']:
@@ -218,7 +216,6 @@ def static_files(filepath):
 
             response.headers['Content-Length'] = len(page_body_decompressed)
 
-
             return page_body_decompressed
 
         else:
@@ -242,9 +239,7 @@ def version():
     return "2022.8.23 9:56"
 
 
-
-
-@route('/py/functions/<func_name>', method=['GET', 'POST','PUT', 'DELETE'])
+@route('/py/functions/<func_name>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function_from_golang(func_name):
     try:
         params = FormsDict(request.params).decode('utf-8')
@@ -258,7 +253,10 @@ def call_function_from_golang(func_name):
         response.status = 500
         return err
 
-from  webssh.main import main as webssh_main, options as webssh_options, options
+
+from webssh.main import main as webssh_main, options as webssh_options
+
+
 def run_webssh(port):
     # options.xsrf = False
     asyncio.set_event_loop(asyncio.new_event_loop())
@@ -266,14 +264,16 @@ def run_webssh(port):
     webssh_options.port = port
     webssh_main()
 
+
 if __name__ == '__main__':
-
-    is_dev = os.environ.get('ENV') != 'prod'
-
-    print("is_dev : " + str(is_dev))
+    # read env from config server.
+    for line in requests.get('http://127.0.0.1:28888/getenv').text.split("\n"):
+        k, v = line.split(sep="=", maxsplit=2)
+        os.environ[k] = v
 
     try:
 
+        set_db_parent_path(os.getenv("DB_PATH"))
 
         # read settings table into env
         debug = functions('get_setting', name='SHOW_SQL', default="1") == "1"
@@ -292,28 +292,28 @@ if __name__ == '__main__':
             print(functions('SYS_INIT_USERDATA_DB'))
         except Exception:
             err = traceback.format_exc()
-            print("SYS_INIT_USERDATA_DB Err >>>>>>",  err)
-
+            print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
 
         # run crontab thread.
         # print("starting crontab thread ...")
         # crontab_thread.start()
+        os.environ['PYTHONUNBUFFERED'] = "1"
+        os.environ['PYTHONIOENCODING'] = "utf8"
 
         print(os.environ)
 
-
         # run webssh server
         webssh_thread = threading.Thread(target=run_webssh, args=(8087,))
-        webssh_thread.daemon=True
+        webssh_thread.daemon = True
         webssh_thread.start()
 
         print("webssh server started.")
 
-        run(host='127.0.0.1', port=8086, reloader=False, debug=is_dev, server="tornado")
+        run(host='127.0.0.1', port=8086, reloader=False, server="tornado")
 
 
 
 
     except Exception:
         err = traceback.format_exc()
-        print("Python Err >>>>>>",  err)
+        print("Python Err >>>>>>", err)
