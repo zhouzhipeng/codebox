@@ -23,42 +23,20 @@ func StartPythonServer() {
 	}
 	cwd := filepath.Dir(ex)
 	log.Println(" cwd is " + cwd)
+	pyWebPath := filepath.Join(cwd, "web")
 
-	switch runtime.GOOS {
-	case "darwin":
-		pyWebPath := filepath.Join(cwd, "web")
-
-		cmd := exec.Command(pyWebPath)
-
-		injectEnv(cmd)
-
-		log.Println("python web server started")
-		go cmd.Run()
-
-	case "windows":
-		pyWebPath := filepath.Join(cwd, "web.exe")
-		if os.Getenv("PY_WEB_PATH") != "" {
-			pyWebPath = os.Getenv("PY_WEB_PATH")
-		}
-		cmd := exec.Command(pyWebPath)
-		injectEnv(cmd)
-		log.Println("win python  web server started")
-		go func() {
-			err := cmd.Run()
-			if err != nil {
-				log.Println("python web "+
-					"server error : {}", err)
-			}
-		}()
-	default:
-		pyWebPath := filepath.Join(cwd, "web")
-		cmd := exec.Command(pyWebPath)
-
-		injectEnv(cmd)
-
-		log.Println("python web server started")
-		go cmd.Run()
-
+	if runtime.GOOS == "windows" {
+		pyWebPath = filepath.Join(cwd, "web.exe")
 	}
+
+	cmd := exec.Command(pyWebPath)
+	injectEnv(cmd)
+	log.Println("python  web server started")
+	go func() {
+		err := cmd.Run()
+		if err != nil {
+			log.Println("python webserver error : {}", err)
+		}
+	}()
 
 }
