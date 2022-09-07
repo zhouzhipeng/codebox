@@ -195,20 +195,21 @@ func getFixedTempPath() string {
 	var base_dir string
 	switch runtime.GOOS {
 	case "darwin":
-		ex, err := os.Executable()
-		if err != nil {
-			log.Println("get base path error!", err)
-			panic(err)
+		homePath := os.Getenv("HOME")
+		if homePath == "" {
+			homePath = "/tmp"
 		}
-		cwd := filepath.Dir(ex)
-		log.Println(" cwd is " + cwd)
-		base_dir = filepath.Join(cwd, "gogo_files")
+		base_dir = filepath.Join(homePath, "gogo_files")
 	case "windows":
 		base_dir = filepath.Join(os.TempDir(), "gogo_files")
 	default:
 		base_dir = "/tmp"
 	}
-	os.Mkdir(base_dir, 0777)
+	err := os.Mkdir(base_dir, 0777)
+	if err != nil {
+		log.Println("getFixedTempPath err", err)
+		panic(err)
+	}
 
 	return base_dir
 }

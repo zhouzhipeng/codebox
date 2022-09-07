@@ -459,6 +459,7 @@ func listen443() {
 }
 
 func main() {
+	log.Println("home>>>", os.Getenv("HOME"))
 
 	StartConfigServer()
 

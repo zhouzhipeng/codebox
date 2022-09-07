@@ -271,6 +271,7 @@ if __name__ == '__main__':
         k, v = line.split(sep="=", maxsplit=2)
         os.environ[k] = v
 
+    print("init python env done.")
     try:
 
         set_db_parent_path(os.getenv("DB_PATH"))
