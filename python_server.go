@@ -8,6 +8,20 @@ import (
 	"runtime"
 )
 
+func injectEnv(cmd *exec.Cmd) {
+	cmd.Stdout = log.Writer()
+	cmd.Stderr = log.Writer()
+
+	//cmd.Env = os.Environ()
+	//cmd.Env = append(cmd.Env,
+	//	"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8",
+	//	"DB_PATH="+GetDBPath(),
+	//	"FILE_UPLOAD_PATH="+GetDBPath())
+	//for _, e := range os.Environ() {
+	//	cmd.Env = append(cmd.Env, e)
+	//}
+}
+
 func StartPythonServer() {
 
 	//kill python web server

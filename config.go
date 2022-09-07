@@ -191,10 +191,18 @@ func GetDBPath() string {
 }
 
 func getFixedTempPath() string {
+
 	var base_dir string
 	switch runtime.GOOS {
 	case "darwin":
-		base_dir = filepath.Join("/tmp", "gogo_files")
+		ex, err := os.Executable()
+		if err != nil {
+			log.Println("get base path error!", err)
+			panic(err)
+		}
+		cwd := filepath.Dir(ex)
+		log.Println(" cwd is " + cwd)
+		base_dir = filepath.Join(cwd, "gogo_files")
 	case "windows":
 		base_dir = filepath.Join(os.TempDir(), "gogo_files")
 	default:
