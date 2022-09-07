@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"text/template"
 )
@@ -192,24 +191,19 @@ func GetDBPath() string {
 
 func getFixedTempPath() string {
 
-	var base_dir string
-	switch runtime.GOOS {
-	case "darwin":
-		homePath := os.Getenv("HOME")
-		if homePath == "" {
-			homePath = "/tmp"
-		}
-		base_dir = filepath.Join(homePath, "gogo_files")
-	case "windows":
-		base_dir = filepath.Join(os.TempDir(), "gogo_files")
-	default:
-		base_dir = "/tmp"
-	}
-	err := os.Mkdir(base_dir, 0777)
+	var baseDir string
+	configDir, err := os.UserConfigDir()
+	baseDir = filepath.Join(configDir, "gogo_files")
 	if err != nil {
 		log.Println("getFixedTempPath err", err)
 		panic(err)
 	}
 
-	return base_dir
+	err = os.Mkdir(baseDir, 0777)
+	if err != nil {
+		log.Println("getFixedTempPath err", err)
+		panic(err)
+	}
+
+	return baseDir
 }
