@@ -270,8 +270,8 @@ if __name__ == '__main__':
     for line in requests.get('http://127.0.0.1:28888/getenv').text.split("\n"):
         # k, v = line.split(sep="=", maxsplit=2)
         i = line.index('=')
-        k = s[:i]
-        v = s[i+1:]
+        k = line[:i]
+        v = line[i+1:]
         os.environ[k] = v
 
     print("init python env done.")
