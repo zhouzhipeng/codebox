@@ -272,7 +272,8 @@ if __name__ == '__main__':
         i = line.index('=')
         k = line[:i]
         v = line[i+1:]
-        os.environ[k] = v
+        if k:
+            os.environ[k] = v
 
     print("init python env done.")
     try:
