@@ -268,7 +268,10 @@ def run_webssh(port):
 if __name__ == '__main__':
     # read env from config server.
     for line in requests.get('http://127.0.0.1:28888/getenv').text.split("\n"):
-        k, v = line.split(sep="=", maxsplit=2)
+        # k, v = line.split(sep="=", maxsplit=2)
+        i = line.index('=')
+        k = s[:i]
+        v = s[i+1:]
         os.environ[k] = v
 
     print("init python env done.")
