@@ -38,10 +38,10 @@ class Unbuffered(object):
         return getattr(self.stream, attr)
 
 
-import sys
+# import sys
 
-sys.stdout = Unbuffered(sys.stdout)
-sys.stderr = Unbuffered(sys.stderr)
+# sys.stdout = Unbuffered(sys.stdout)
+# sys.stderr = Unbuffered(sys.stderr)
 
 import traceback
 
