@@ -16,8 +16,6 @@ from lib.sqlite_db import set_show_sql
 
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
 
-os.environ['PYTHONUNBUFFERED'] = "1"
-
 
 class Unbuffered(object):
     def __init__(self, stream):
@@ -302,8 +300,8 @@ if __name__ == '__main__':
         # run crontab thread.
         # print("starting crontab thread ...")
         # crontab_thread.start()
-        os.environ['PYTHONUNBUFFERED'] = "1"
-        os.environ['PYTHONIOENCODING'] = "utf8"
+        # os.environ['PYTHONUNBUFFERED'] = "1"
+        # os.environ['PYTHONIOENCODING'] = "utf8"
 
         print(os.environ)
 
