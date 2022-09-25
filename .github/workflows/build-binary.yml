@@ -41,14 +41,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-10.15
-            TARGET: macos
-            CMD_BUILD: >
-              cd pytool && bash buildMac.sh  && cd ..  &&
-              bash build-golang-macos.sh &&
-              mv dist/gogo_mac.zip dist/gogo_mac_old.zip
-            OUT_FILE_NAME: gogo_mac_old.zip
-            ASSET_MIME: application/zip
+          # - os: macos-10.15
+          #   TARGET: macos
+          #   CMD_BUILD: >
+          #     cd pytool && bash buildMac.sh  && cd ..  &&
+          #     bash build-golang-macos.sh &&
+          #     mv dist/gogo_mac.zip dist/gogo_mac_old.zip
+          #   OUT_FILE_NAME: gogo_mac_old.zip
+          #   ASSET_MIME: application/zip
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
