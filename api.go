@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -108,6 +109,9 @@ var natTicker = time.NewTicker(1 * time.Second)
 var natIsRunning = false
 var lastPulledDataTime = time.Now()
 var natTickerDone = make(chan bool, 1)
+
+//go:embed pytool/requirements.txt
+var requirementsTxt string
 
 func handleAPI(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.URL.Path)
@@ -290,7 +294,8 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		for _, req := range reqList {
 			delete(requestMap, req.ReqId)
 		}
-
+	case "/api/py-requirements":
+		w.Write([]byte(requirementsTxt))
 	case "/api/nat-push-resp":
 		reqId := r.FormValue("reqId")
 

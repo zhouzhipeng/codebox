@@ -21,19 +21,7 @@ import traceback
 
 from data_types import tables, functions, should_use_compress, Tables, render_tpl, set_db_parent_path
 
-
-def check_permission() -> str:
-    PASSED = ""
-    # return PASSED
-    if os.getenv("ENABLE_AUTH", "false") == "false":
-        return PASSED
-
-    has_permission = functions("SYS_CHECK_PERMISSION", uri=request.fullpath, headers=dict(request.headers)
-                               , cookies=dict(request.cookies))
-    if not has_permission:
-        response.status = 403
-        return f"403 Forbidden . You have no permission for uri : {request.fullpath}"
-    return PASSED
+f = functions
 
 
 @post('/')
@@ -44,7 +32,7 @@ def index():
 
 @route('/files/<filepath:path>')
 def server_static(filepath):
-    cc = check_permission()
+    cc = f('check_permission')
     if cc:
         return cc
 
@@ -55,7 +43,7 @@ def server_static(filepath):
 @route('/tables/<uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def operate_table(uri):
     try:
-        cc = check_permission()
+        cc = f('check_permission')
         if cc:
             return cc
         response.headers['Content-Type'] = "text/text; charset=UTF-8"
@@ -94,7 +82,7 @@ def operate_table(uri):
 def call_function(func_uri):
     try:
         if not func_uri.startswith("public/"):
-            cc = check_permission()
+            cc = f('check_permission')
             if cc:
                 return cc
 
@@ -126,7 +114,7 @@ def call_function(func_uri):
 def dynamic_pages(page_uri):
     try:
         if page_uri.startswith('private/'):
-            cc = check_permission()
+            cc = f('check_permission')
             if cc:
                 return cc
 
@@ -160,7 +148,7 @@ def static_files(filepath):
         charset = 'UTF-8'
 
         if filepath.startswith("private/"):
-            cc = check_permission()
+            cc = f('check_permission')
             if cc:
                 return cc
             f = tables("files", "get", uri=request.fullpath)
