@@ -38,150 +38,32 @@ def server_static(filepath):
 @route('/tables/<uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def operate_table(uri):
     try:
-        cc = f('check_permission')
-        if cc:
-            return cc
-        response.headers['Content-Type'] = "text/text; charset=UTF-8"
-
-        # id is system function , but will make trouble  in sql template.
-        if 'id' not in request.params:
-            request.params['id'] = None
-
-        if 'Content-Type' in request.headers and 'form-urlencoded' in request.headers['Content-Type']:
-            form = FormsDict(request.params).decode('utf-8')
-        else:
-            form = request.params
-
-        ll = Tables.get_by_uri(request.fullpath)
-        if len(ll) > 0:
-
-            templ = ll[0]
-            result = tables(templ.table_name, templ.operation, **form)
-            if type(result) == list:
-                response.headers['Content-Type'] = "application/json; charset=UTF-8"
-                return json.dumps(result)
-            else:
-                return str(result)
-        else:
-            response.status = 404
-            return "table not found."
+        return f('operate_table',uri=uri )
     except Exception:
-        response.headers['Content-Type'] = "text/text; charset=UTF-8"
-        err = traceback.format_exc()
-        print(err)
-        response.status = 500
-        return err
-
+        return _err_handle()
 
 @route('/functions/<func_uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function(func_uri):
     try:
-        if not func_uri.startswith("public/"):
-            cc = f('check_permission')
-            if cc:
-                return cc
-
-        response.headers['Content-Type'] = "text/text; charset=UTF-8"
-
-        # print(f"api request for call_function : func_name :{func_uri}, params : {request.query_string}")
-        funcs = tables("functions", "get", uri=request.fullpath)
-        if funcs:
-            if 'Content-Type' in request.headers and 'form-urlencoded' in request.headers['Content-Type']:
-                params = FormsDict(request.params).decode('utf-8')
-            else:
-                params = request.params
-            for k, v in request.files.allitems():
-                params[k] = v
-
-            return str(functions(funcs[0]['name'], **params))
-        else:
-            response.status = 404
-            return "Function not found."
+        return f('call_function',func_uri=func_uri )
     except Exception:
-        response.headers['Content-Type'] = "text/text; charset=UTF-8"
-        err = traceback.format_exc()
-        print(err)
-        response.status = 500
-        return err
+        return _err_handle()
 
 
 @get('/pages/<page_uri:path>')
 def dynamic_pages(page_uri):
     try:
-        if page_uri.startswith('private/'):
-            cc = f('check_permission')
-            if cc:
-                return cc
-
-        print("request page_uri :", page_uri)
-
-        page = tables('pages', 'get_by_uri', uri=request.fullpath)
-
-        if page:
-            page = page[0]
-            html_content = page['html']
-
-            final_content = html_content
-            if page['use_template']:
-                final_content = render_tpl(page['name'], html_content)
-
-            return final_content
-        else:
-            response.status = 404
-            return "Page not found."
+        return f('dynamic_pages',page_uri=page_uri )
     except Exception:
-        err = traceback.format_exc()
-        print(err)
-        response.status = 500
-        return err
-
+        return _err_handle()
 
 @get('/static/<filepath:path>')
 def static_files(filepath):
-    t1 = time.time()
     try:
-        charset = 'UTF-8'
-
-        if filepath.startswith("private/"):
-            cc = f('check_permission')
-            if cc:
-                return cc
-            f = tables("files", "get", uri=request.fullpath)
-        else:
-            f = tables("resources", "get", uri=request.fullpath)
-        if len(f):
-
-            page_body_decompressed = zlib.decompress(f[0]['content']) if f[0]['use_compress'] else f[0]['content']
-
-            if (not should_use_compress(f[0]['name'])) and f[0]['use_compress']:
-                # need to convert it to raw bytes
-                tables("resources", "update_more", id=f[0]['id'], content_hex=page_body_decompressed.hex()
-                       , raw_size=len(page_body_decompressed), compressed_size=len(page_body_decompressed),
-                       use_compress=0)
-
-            mimetype, encoding = mimetypes.guess_type(f[0]['name'])
-            if encoding:
-                response.headers['Content-Encoding'] = encoding
-
-            if mimetype:
-                if mimetype[:5] == 'text/' and charset and 'charset' not in mimetype:
-                    mimetype += '; charset=%s' % charset
-                response.headers['Content-Type'] = mimetype
-
-                if f[0]['name'].endswith(".js"):
-                    response.headers['Content-Type'] = "application/javascript"
-
-            response.headers['Content-Length'] = len(page_body_decompressed)
-
-            return page_body_decompressed
-
-        else:
-            response.status = 404
-            return "404 not found"
-    finally:
-        t2 = time.time()
-        response.headers['X-py-time'] = str((t2 - t1) * 1000) + "ms"
-        # print(filepath, " t2-t1= ", (t2-t1))
+        return f('static_files',filepath=filepath )
+    except Exception:
+        return _err_handle()
+        
 
 
 @get('/py/api/killself')
@@ -194,17 +76,15 @@ def kill_self():
 @route('/py/functions/<func_name>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function_from_golang(func_name):
     try:
-        params = FormsDict(request.params).decode('utf-8')
-        print(f"callback from golang :  func_name : {func_name}")
-
-        response.headers['Content-Type'] = "text/text; charset=UTF-8"
-        return str(functions(func_name, **params))
+        return f('call_function_from_golang',func_name=func_name )
     except Exception:
-        err = traceback.format_exc()
-        print(err)
-        response.status = 500
-        return err
+        return _err_handle()
 
+def _err_handle():
+    err = traceback.format_exc()
+    print(err)
+    response.status = 500
+    return err
 
 from webssh.main import main as webssh_main, options as webssh_options
 
@@ -254,12 +134,6 @@ if __name__ == '__main__':
             err = traceback.format_exc()
             print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
 
-        # run crontab thread.
-        # print("starting crontab thread ...")
-        # crontab_thread.start()
-        # os.environ['PYTHONUNBUFFERED'] = "1"
-        # os.environ['PYTHONIOENCODING'] = "utf8"
-
         print(os.environ)
 
         # run webssh server
@@ -270,8 +144,6 @@ if __name__ == '__main__':
         print("webssh server started.")
 
         run(host='127.0.0.1', port=8086, reloader=False, server="tornado")
-
-
 
 
     except Exception:
