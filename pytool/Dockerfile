@@ -1,5 +1,4 @@
-# tag 来源： md5 base.Dockerfile 前四位
-FROM zhouzhipeng/pytool-base:709c
+FROM python:slim
 
 ARG  PORT=8080
 EXPOSE ${PORT}

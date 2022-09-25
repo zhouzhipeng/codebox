@@ -10,9 +10,8 @@ import psutil
 import requests
 from bottle import *
 
-from lib.shell_util import *
-# for package
-from lib.sqlite_db import set_show_sql
+
+
 import sys
 
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
@@ -260,7 +259,7 @@ if __name__ == '__main__':
 
         # read settings table into env
         debug = functions('get_setting', name='SHOW_SQL', default="1") == "1"
-        set_show_sql(debug)
+        os.environ['SHOW_SQL'] = str(debug)
 
         if debug:
             # You must initialize logging, otherwise you'll not see debug output.
