@@ -33,8 +33,8 @@ func configureLogPath(parentPath string) {
 		return
 	}
 
-	mw := io.MultiWriter(os.Stdout, logFile)
-	log.SetOutput(mw)
+	//mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(logFile)
 
 	log.SetPrefix("[gogo]")
 	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
