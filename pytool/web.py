@@ -10,12 +10,7 @@ import psutil
 import requests
 from bottle import *
 
-
-
-import sys
-
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
-
 
 import traceback
 
@@ -196,11 +191,6 @@ def kill_self():
     current_process.send_signal(signal.SIGTERM)
 
 
-@get('/py/api/version')
-def version():
-    return "2022.9.25"
-
-
 @route('/py/functions/<func_name>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function_from_golang(func_name):
     try:
@@ -233,7 +223,7 @@ if __name__ == '__main__':
         # k, v = line.split(sep="=", maxsplit=2)
         i = line.index('=')
         k = line[:i]
-        v = line[i+1:]
+        v = line[i + 1:]
         if k:
             os.environ[k] = v
 
@@ -241,7 +231,7 @@ if __name__ == '__main__':
     try:
 
         # set print to file
-        sys.stdout =sys.stderr =  open(os.path.join(os.getenv("BASE_DIR") , "python.txt") , "w")
+        sys.stdout = sys.stderr = open(os.path.join(os.getenv("BASE_DIR"), "python.txt"), "w")
 
         set_db_parent_path(os.getenv("DB_PATH"))
 
