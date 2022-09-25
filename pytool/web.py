@@ -27,13 +27,10 @@ def index():
 
 @route('/files/<filepath:path>')
 def server_static(filepath):
-    cc = f('check_permission')
-    if cc:
-        return cc
-
-    use_download = not filepath.endswith(".txt")
-    return static_file(filepath, download=use_download, root=os.getenv("DB_PATH"))
-
+    try:
+        return f('server_static',filepath=filepath )
+    except Exception:
+        return _err_handle()
 
 @route('/tables/<uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def operate_table(uri):
