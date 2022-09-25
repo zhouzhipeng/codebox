@@ -26,6 +26,7 @@ var BASE_DIR = ""
 func configureLogPath(parentPath string) {
 	//设置log输出到文件
 	file := filepath.Join(parentPath, "message.txt")
+	os.Setenv("LOG_FILE", file)
 	logFile, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Println(err)
@@ -50,6 +51,8 @@ func configureLogPath(parentPath string) {
 
 func StartConfigServer() {
 	BASE_DIR = getFixedTempPath()
+
+	os.Setenv("BASE_DIR", BASE_DIR)
 
 	configureLogPath(BASE_DIR)
 

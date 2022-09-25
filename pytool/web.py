@@ -13,12 +13,9 @@ from bottle import *
 from lib.shell_util import *
 # for package
 from lib.sqlite_db import set_show_sql
+import sys
 
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
-
-
-import functools
-print = functools.partial(print, flush=True)
 
 
 import traceback
@@ -255,6 +252,9 @@ if __name__ == '__main__':
 
     print("init python env done.")
     try:
+
+        # set print to file
+        sys.stdout =sys.stderr =  open(os.getenv("LOG_FILE"), "a")
 
 
         set_db_parent_path(os.getenv("DB_PATH"))

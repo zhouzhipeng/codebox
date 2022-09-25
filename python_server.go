@@ -9,8 +9,8 @@ import (
 )
 
 func injectEnv(cmd *exec.Cmd) {
-	cmd.Stdout = log.Writer()
-	cmd.Stderr = log.Writer()
+	//cmd.Stdout = log.Writer()
+	//cmd.Stderr = log.Writer()
 
 	//cmd.Env = os.Environ()
 	//cmd.Env = append(cmd.Env,
