@@ -17,48 +17,9 @@ from lib.sqlite_db import set_show_sql
 bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you want)
 
 
-class Unbuffered(object):
-    def __init__(self, stream):
-        self.stream = stream
-        # sys.stdout.reconfigure(encoding='utf-8')
+import functools
+print = functools.partial(print, flush=True)
 
-    def write(self, data):
-        t = ""  # ("[%s] " % str(datetime.now())) if data.strip() else ""
-        self.stream.write(t + data)
-        self.stream.flush()
-
-    def writelines(self, datas):
-        t = ""  # ("[%s] " % str(datetime.now())) if datas else ""
-        self.stream.writelines(t + datas)
-        self.stream.flush()
-
-    def __getattr__(self, attr):
-        return getattr(self.stream, attr)
-
-class IgnoreBrokenPipe(object):
-    def __init__(self, stream):
-        self.stream = stream
-        def ignore_einval(fn):
-            from functools import wraps
-            @wraps(fn)
-            def wrapper(*args, **kwargs):
-                try:
-                    return fn(*args, **kwargs)
-                except OSError as exc:
-                    if exc.errno != 22:
-                        raise exc
-                    else:  # mimicking the default SIGPIPE behavior on Windows
-                        sys.exit(1)
-            return wrapper
-
-        self.write = ignore_einval(lambda data: self.stream.write(data))
-        self.flush = ignore_einval(lambda: self.stream.flush())
-
-import sys
-# sys.stdout = Unbuffered(sys.stdout)
-# sys.stderr = Unbuffered(sys.stderr)
-sys.stdout = IgnoreBrokenPipe(sys.stdout)
-sys.stderr = IgnoreBrokenPipe(sys.stderr)
 
 import traceback
 
@@ -253,7 +214,7 @@ def kill_self():
 
 @get('/py/api/version')
 def version():
-    return "2022.8.23 9:56"
+    return "2022.9.25"
 
 
 @route('/py/functions/<func_name>', method=['GET', 'POST', 'PUT', 'DELETE'])
@@ -294,6 +255,7 @@ if __name__ == '__main__':
 
     print("init python env done.")
     try:
+
 
         set_db_parent_path(os.getenv("DB_PATH"))
 

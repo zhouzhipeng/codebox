@@ -344,7 +344,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		os.Exit(0)
 	case "/api/version":
 		resp, _ := doGet("http://127.0.0.1:8086/py/api/version")
-		fmt.Fprintf(w, "go: "+"2022.08.23 19:41 \n"+"py: "+resp.Body)
+		fmt.Fprintf(w, "go: "+"2022.09.25 \n"+"py: "+resp.Body)
 	case "/api/aes-encrypt":
 		text := r.FormValue("text")
 		AesKey := []byte(r.FormValue("key")) //秘钥长度为16的倍数

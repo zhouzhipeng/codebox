@@ -12,9 +12,9 @@ func injectEnv(cmd *exec.Cmd) {
 	cmd.Stdout = log.Writer()
 	cmd.Stderr = log.Writer()
 
-	cmd.Env = os.Environ()
-	cmd.Env = append(cmd.Env,
-		"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8")
+	//cmd.Env = os.Environ()
+	//cmd.Env = append(cmd.Env,
+	//	"PYTHONUNBUFFERED=1", "PYTHONIOENCODING=utf8")
 
 }
 
@@ -41,11 +41,13 @@ func StartPythonServer() {
 
 	cmd := exec.Command(pyWebPath)
 	injectEnv(cmd)
-	log.Println("python  web server started")
+
 	go func() {
 		err := cmd.Run()
 		if err != nil {
 			log.Println("python webserver error : {}", err)
+		} else {
+			log.Println("python  web server started")
 		}
 	}()
 
