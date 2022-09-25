@@ -254,8 +254,7 @@ if __name__ == '__main__':
     try:
 
         # set print to file
-        sys.stdout =sys.stderr =  open(os.getenv("LOG_FILE"), "a")
-
+        sys.stdout =sys.stderr =  open(os.path.join(os.getenv("BASE_DIR") , "python.txt") , "w")
 
         set_db_parent_path(os.getenv("DB_PATH"))
 
