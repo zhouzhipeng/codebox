@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import json
 import logging
 import signal
-import zlib
 
 import bottle
 import psutil
@@ -14,7 +12,7 @@ bottle.BaseRequest.MEMFILE_MAX = 1024 * 1024 * 1024 * 1024  # (or whatever you w
 
 import traceback
 
-from data_types import tables, functions, should_use_compress, Tables, render_tpl, set_db_parent_path
+from data_types import functions, set_db_parent_path
 
 f = functions
 
