@@ -49,7 +49,7 @@ var staticCache = map[string]Resp{}
 func cachedProxyPy(uri string, writer http.ResponseWriter) {
 	if _, ok := staticCache[uri]; !ok {
 		resp, err := doGet("http://127.0.0.1:8086" + uri)
-		if err == nil {
+		if err == nil && resp.Status != 500 {
 			staticCache[uri] = resp
 		} else {
 			log.Println("cachedProxyPy.error", err)
@@ -71,7 +71,7 @@ func cachedProxyPy(uri string, writer http.ResponseWriter) {
 		writer.Write([]byte(val.Body))
 
 	} else {
-		writer.WriteHeader(502)
+		writer.WriteHeader(500)
 		writer.Write([]byte("resource error."))
 	}
 
