@@ -52,35 +52,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 					data["showlink"] = false
 					data["msg"] = "invalid path!"
 				} else {
-
-					http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir(MEDIA_PATH))))
-					http.HandleFunc("/media/index", func(writer http.ResponseWriter, request *http.Request) {
-						dirs, _ := ioutil.ReadDir(MEDIA_PATH)
-						html := ""
-						for _, info := range dirs {
-							if !info.IsDir() || strings.HasPrefix(info.Name(), ".") {
-								continue
-							}
-							html += fmt.Sprintf(`
-				
-<a href="%s" style="
-    display: inline-block;    width: 200px;text-align: center;
-">
-					<img src="/static/img/folder.jpg" style="
-    width: 200px;
-    display: inline-block;
-">
-					<span style="
-">%s</span>
-					</a>
-`, "/media/"+info.Name(), info.Name())
-						}
-
-						fmt.Fprintf(writer, html)
-					})
-
 					data["msg"] = "open ok!"
-
 				}
 
 			} else {
@@ -289,6 +261,36 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 		strings.HasPrefix(r.URL.Path, "/static/") {
 
 		cachedProxyPy(r.URL.Path, w)
+	} else if strings.HasPrefix(r.URL.Path, "/media/") {
+		if r.URL.Path == "/media/index" {
+			func(writer http.ResponseWriter, request *http.Request) {
+				dirs, _ := ioutil.ReadDir(MEDIA_PATH)
+				html := ""
+				for _, info := range dirs {
+					if !info.IsDir() || strings.HasPrefix(info.Name(), ".") {
+						continue
+					}
+					html += fmt.Sprintf(`
+				
+<a href="%s" style="
+    display: inline-block;    width: 200px;text-align: center;
+">
+					<img src="/static/img/folder.jpg" style="
+    width: 200px;
+    display: inline-block;
+">
+					<span style="
+">%s</span>
+					</a>
+`, "/media/"+info.Name(), info.Name())
+				}
+
+				fmt.Fprintf(writer, html)
+			}(w, r)
+		} else {
+			http.StripPrefix("/media/", http.FileServer(http.Dir(MEDIA_PATH))).ServeHTTP(w, r)
+		}
+
 	} else {
 		w.WriteHeader(404)
 		w.Write([]byte("404 Not Found. path : " + r.URL.Path))
