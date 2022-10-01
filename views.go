@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -274,10 +273,6 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 	//log.Println("request in >>  url : ", r.URL.Path)
 	if r.URL.Path == "/" {
 		handleIndexPage(w)
-	} else if r.URL.Path == "/files/message.txt" {
-		dat, _ := os.ReadFile(path.Join(BASE_DIR, "message.txt"))
-		dat2, _ := os.ReadFile(path.Join(BASE_DIR, "python.txt"))
-		w.Write(append(dat, dat2...))
 	} else if strings.HasPrefix(r.URL.Path, "/api/") {
 		handleAPI(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/views/") {
