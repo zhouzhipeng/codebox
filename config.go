@@ -201,8 +201,8 @@ func getFixedTempPath() string {
 		log.Println("getFixedTempPath err", err)
 		panic(err)
 	}
-
-	err = os.Mkdir(baseDir, 0777)
+	log.Println("baseDir >>>", baseDir)
+	err = os.MkdirAll(baseDir, 0777)
 	if err != nil {
 		log.Println("getFixedTempPath err", err)
 	}
