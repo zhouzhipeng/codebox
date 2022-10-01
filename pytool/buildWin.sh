@@ -7,7 +7,7 @@ pyinstaller --clean  --noconfirm  --collect-datas webssh --noconsole   \
  --hidden-import=sqlite3   \
  --hidden-import=qrcode   \
  --hidden-import=pycron   \
- --hidden-import=tornado   \
+ --hidden-import=cheroot   \
  --hidden-import=psutil   \
  --hidden-import=jwt   \
  --hidden-import=redis   \

@@ -138,7 +138,7 @@ if __name__ == '__main__':
 
         print("webssh server started.")
 
-        run(host='127.0.0.1', port=8086, reloader=False, server="tornado")
+        run(host='127.0.0.1', port=8086, reloader=False, server="cheroot")
 
 
     except Exception:

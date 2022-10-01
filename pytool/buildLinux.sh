@@ -11,7 +11,7 @@ pyinstaller  --noconfirm  --console  --collect-datas webssh   --log-level "DEBUG
    --hidden-import=pycron   \
    --hidden-import=kafka   \
    --hidden-import=snappy   \
-   --hidden-import=tornado   \
+   --hidden-import=cheroot   \
    --hidden-import=psutil   \
    --hidden-import=jwt   \
    --hidden-import=redis   \

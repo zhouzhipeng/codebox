@@ -8,7 +8,7 @@ qrcode[pil]
 kafka-python
 python-snappy
 pycron
-tornado
+cheroot
 pyjwt
 redis
 ecdsa

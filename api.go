@@ -571,7 +571,10 @@ func doRequest(url, method string, data string, headers map[string]string) (Resp
 
 	request.Header.Set("Host", "127.0.0.1:"+GetMainPort())
 
-	client := new(http.Client)
+	//client := new(http.Client)
+	client := http.Client{
+		Timeout: 10 * time.Second,
+	}
 
 	response, err := client.Do(request)
 	if response != nil {
