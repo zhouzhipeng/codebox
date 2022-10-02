@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/atotto/clipboard"
 	"io"
 	"io/ioutil"
 	"log"
@@ -61,23 +60,23 @@ func fileUpload(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", "/files/"+fname)
 }
 
-func getClipboardData(w http.ResponseWriter, r *http.Request) {
-	// Init returns an error if the package is not ready for use.
-	//err := clipboard.Init()
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	data, _ := clipboard.ReadAll()
-	fmt.Fprintf(w, "%s", data)
-
-	/*
-		// write/read image format data of the clipboard, and
-		// the byte buffer regarding the image are PNG encoded.
-		clipboard.Write(clipboard.FmtImage, []byte("image data"))
-		clipboard.Read(clipboard.FmtImage)
-	*/
-}
+//func getClipboardData(w http.ResponseWriter, r *http.Request) {
+//	// Init returns an error if the package is not ready for use.
+//	//err := clipboard.Init()
+//	//if err != nil {
+//	//	panic(err)
+//	//}
+//
+//	data, _ := clipboard.ReadAll()
+//	fmt.Fprintf(w, "%s", data)
+//
+//	/*
+//		// write/read image format data of the clipboard, and
+//		// the byte buffer regarding the image are PNG encoded.
+//		clipboard.Write(clipboard.FmtImage, []byte("image data"))
+//		clipboard.Read(clipboard.FmtImage)
+//	*/
+//}
 
 func getLocalIP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, getLocalIPInternal())

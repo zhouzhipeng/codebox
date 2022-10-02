@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
-	github.com/atotto/clipboard v0.1.4
 	github.com/dustin/go-humanize v1.0.0
 	github.com/emersion/go-smtp v0.15.0
 	github.com/emirpasic/gods v1.18.1

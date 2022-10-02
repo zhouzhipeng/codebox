@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/skip2/go-qrcode"
+
 	"html/template"
 	"io/ioutil"
 	"log"
