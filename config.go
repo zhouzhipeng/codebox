@@ -97,7 +97,7 @@ func StartConfigServer() {
 	}
 
 	//update sqlite db path
-	var dbpath = filepath.Join(GetDBPath(), "gogo.db")
+	var dbpath = filepath.Join(BASE_DIR, "gogo.db")
 
 	if _, err := os.Stat(dbpath); err == nil {
 		log.Println("db File exists , ignore init db.")
@@ -178,18 +178,6 @@ func getCertCacheDir() string {
 
 func getAutoRedirectHTTPS() bool {
 	return os.Getenv("AUTO_REDIRECT_TO_HTTPS") == "true"
-}
-
-func GetDBPath() string {
-	path := os.Getenv("DB_PATH")
-	if path == "" {
-		path = BASE_DIR
-
-	}
-
-	os.Setenv("DB_PATH", path)
-	os.Setenv("FILE_UPLOAD_PATH", path)
-	return path
 }
 
 func getFixedTempPath() string {

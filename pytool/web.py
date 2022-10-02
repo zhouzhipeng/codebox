@@ -123,7 +123,7 @@ if __name__ == '__main__':
         # set print to file
         sys.stdout = sys.stderr= Logger(os.path.join(os.getenv("BASE_DIR"), "python.txt"))
 
-        set_db_parent_path(os.getenv("DB_PATH"))
+        set_db_parent_path(os.getenv("BASE_DIR"))
 
         # read settings table into env
         debug = functions('get_setting', name='SHOW_SQL', default="1") == "1"

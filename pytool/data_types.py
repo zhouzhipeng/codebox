@@ -106,7 +106,7 @@ def exec_write(sql: str, file_path=":memory:", custom_functions: dict = None, pl
     return result
 
 
-DB_PARENT_PATH = os.getenv("DB_PATH", "")
+DB_PARENT_PATH = os.getenv("BASE_DIR", "")
 DEFAULT_DB_PATH = os.path.join(DB_PARENT_PATH, "gogo.db")
 
 print("db path : ", DEFAULT_DB_PATH)
@@ -115,7 +115,7 @@ print("db path : ", DEFAULT_DB_PATH)
 def set_db_parent_path(db_parent_path):
     global DB_PARENT_PATH
     global DEFAULT_DB_PATH
-    os.environ["DB_PATH"] = db_parent_path
+    os.environ["BASE_DIR"] = db_parent_path
     DB_PARENT_PATH = db_parent_path
     DEFAULT_DB_PATH = os.path.join(DB_PARENT_PATH, "gogo.db")
 
