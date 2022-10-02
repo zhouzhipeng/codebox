@@ -1,12 +1,8 @@
 bottle==0.12.21
 requests
 psutil
-mysql-connector-python
 xlrd
-ffmpy
 qrcode[pil]
-kafka-python
-python-snappy
 pycron
 cheroot
 pyjwt
@@ -14,5 +10,4 @@ redis
 ecdsa
 base58
 pyminizip
-webssh
 dnspython

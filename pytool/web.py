@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import asyncio
 import logging
 import signal
 
@@ -26,21 +25,23 @@ def index():
 @route('/files/<filepath:path>')
 def server_static(filepath):
     try:
-        return f('server_static',filepath=filepath )
+        return f('server_static', filepath=filepath)
     except Exception:
         return _err_handle()
+
 
 @route('/tables/<uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def operate_table(uri):
     try:
-        return f('operate_table',uri=uri )
+        return f('operate_table', uri=uri)
     except Exception:
         return _err_handle()
+
 
 @route('/functions/<func_uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function(func_uri):
     try:
-        return f('call_function',func_uri=func_uri )
+        return f('call_function', func_uri=func_uri)
     except Exception:
         return _err_handle()
 
@@ -48,17 +49,17 @@ def call_function(func_uri):
 @get('/pages/<page_uri:path>')
 def dynamic_pages(page_uri):
     try:
-        return f('dynamic_pages',page_uri=page_uri )
+        return f('dynamic_pages', page_uri=page_uri)
     except Exception:
         return _err_handle()
+
 
 @get('/static/<filepath:path>')
 def static_files(filepath):
     try:
-        return f('static_files',filepath=filepath )
+        return f('static_files', filepath=filepath)
     except Exception:
         return _err_handle()
-        
 
 
 @get('/py/api/killself')
@@ -71,9 +72,10 @@ def kill_self():
 @route('/py/functions/<func_name>', method=['GET', 'POST', 'PUT', 'DELETE'])
 def call_function_from_golang(func_name):
     try:
-        return f('call_function_from_golang',func_name=func_name )
+        return f('call_function_from_golang', func_name=func_name)
     except Exception:
         return _err_handle()
+
 
 def _err_handle():
     err = traceback.format_exc()
@@ -81,22 +83,12 @@ def _err_handle():
     response.status = 500
     return err
 
-from webssh.main import main as webssh_main, options as webssh_options
-
-
-def run_webssh(port):
-    # options.xsrf = False
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    webssh_options.address = '127.0.0.1'
-    webssh_options.port = port
-    webssh_main()
-
 
 class Logger:
 
     def __init__(self, filename):
         self.console = sys.stdout
-        self.file = open(filename, "w",encoding='utf-8')
+        self.file = open(filename, "w", encoding='utf-8')
 
     def write(self, message):
         # self.console.write(message)
@@ -106,6 +98,7 @@ class Logger:
     def flush(self):
         # self.console.flush()
         self.file.flush()
+
 
 if __name__ == '__main__':
     # read env from config server.
@@ -121,7 +114,7 @@ if __name__ == '__main__':
     try:
 
         # set print to file
-        sys.stdout = sys.stderr= Logger(os.path.join(os.getenv("BASE_DIR"), "python.txt"))
+        sys.stdout = sys.stderr = Logger(os.path.join(os.getenv("BASE_DIR"), "python.txt"))
 
         set_db_parent_path(os.getenv("BASE_DIR"))
 
@@ -145,13 +138,6 @@ if __name__ == '__main__':
             print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
 
         # print(os.environ)
-
-        # run webssh server
-        webssh_thread = threading.Thread(target=run_webssh, args=(8087,))
-        webssh_thread.daemon = True
-        webssh_thread.start()
-
-        print("webssh server started.")
 
         run(host='127.0.0.1', port=8086, reloader=False, server="cheroot")
 

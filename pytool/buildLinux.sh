@@ -5,12 +5,10 @@ pip install pyinstaller
 rm -rf web.spec build dist/web
 
 #   --hidden-import=pandas   \
-pyinstaller  --noconfirm  --console  --collect-datas webssh   --log-level "DEBUG"  \
+pyinstaller  --noconfirm  --console    --log-level "DEBUG"  \
    --hidden-import=sqlite3   \
    --hidden-import=qrcode   \
    --hidden-import=pycron   \
-   --hidden-import=kafka   \
-   --hidden-import=snappy   \
    --hidden-import=cheroot   \
    --hidden-import=psutil   \
    --hidden-import=jwt   \

@@ -3,7 +3,7 @@ pip install -r requirements.txt
 pip install pyinstaller
 
 rm -rf web.spec .eggs build dist/web.exe
-pyinstaller --clean  --noconfirm  --collect-datas webssh --noconsole   \
+pyinstaller --clean  --noconfirm   --noconsole   \
  --hidden-import=sqlite3   \
  --hidden-import=qrcode   \
  --hidden-import=pycron   \
