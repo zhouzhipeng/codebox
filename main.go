@@ -53,6 +53,9 @@ func cachedProxyPy(uri string, writer http.ResponseWriter) {
 			staticCache[uri] = resp
 		} else {
 			log.Println("cachedProxyPy.error", err)
+			writer.WriteHeader(resp.Status)
+			writer.Write([]byte(resp.Body))
+			return
 		}
 	}
 

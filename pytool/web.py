@@ -92,6 +92,21 @@ def run_webssh(port):
     webssh_main()
 
 
+class Logger:
+
+    def __init__(self, filename):
+        self.console = sys.stdout
+        self.file = open(filename, "w",encoding='utf-8')
+
+    def write(self, message):
+        # self.console.write(message)
+        self.file.write(message)
+        self.file.flush()
+
+    def flush(self):
+        # self.console.flush()
+        self.file.flush()
+
 if __name__ == '__main__':
     # read env from config server.
     for line in requests.get('http://127.0.0.1:28888/getenv').text.split("\n"):
@@ -106,7 +121,7 @@ if __name__ == '__main__':
     try:
 
         # set print to file
-        sys.stdout = sys.stderr = open(os.path.join(os.getenv("BASE_DIR"), "python.txt"), "w")
+        sys.stdout = sys.stderr= Logger(os.path.join(os.getenv("BASE_DIR"), "python.txt"))
 
         set_db_parent_path(os.getenv("DB_PATH"))
 
@@ -129,7 +144,7 @@ if __name__ == '__main__':
             err = traceback.format_exc()
             print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
 
-        print(os.environ)
+        # print(os.environ)
 
         # run webssh server
         webssh_thread = threading.Thread(target=run_webssh, args=(8087,))

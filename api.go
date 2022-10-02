@@ -348,7 +348,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 		os.Exit(0)
 	case "/api/version":
-		fmt.Fprintf(w, "go: "+"2022.10.01 \n"+"py: 2022.09.25")
+		fmt.Fprintf(w, "go: "+"2022.10.02 \n"+"py: 2022.10.02")
 	case "/api/aes-encrypt":
 		text := r.FormValue("text")
 		AesKey := []byte(r.FormValue("key")) //秘钥长度为16的倍数
@@ -573,7 +573,7 @@ func doRequest(url, method string, data string, headers map[string]string) (Resp
 
 	//client := new(http.Client)
 	client := http.Client{
-		Timeout: 10 * time.Second,
+		//Timeout: 10 * time.Second,
 	}
 
 	response, err := client.Do(request)
