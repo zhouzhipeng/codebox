@@ -15,4 +15,5 @@ pyinstaller --clean  --noconfirm   --noconsole   \
   --hidden-import=base58   \
   --hidden-import=pyminizip   \
   --hidden-import=dns.resolver   \
+  --hidden-import=bit   \
  --log-level "DEBUG"  -F  web.py

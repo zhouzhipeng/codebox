@@ -11,3 +11,4 @@ ecdsa
 base58
 pyminizip
 dnspython
+bit
