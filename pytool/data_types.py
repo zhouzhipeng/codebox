@@ -211,6 +211,9 @@ from bottle import SimpleTemplate
 
 
 def render_tpl(__name__, __str__, **kwargs):
+    kwargs['p'] = kwargs['pages'] = pages
+    kwargs['f'] = kwargs['functions'] = functions
+    kwargs['t'] = kwargs['tables'] = tables
     if not __str__:
         return __str__
     t = SimpleTemplate(__str__, noescape=True)
