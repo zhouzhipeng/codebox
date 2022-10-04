@@ -254,8 +254,6 @@ def tables(__table_name, __operation, **kwargs):
 
 
 _function_cache = {}
-_pages_cache = {}
-_resources_cache = {}
 
 
 def clear_function_cache(name):
@@ -269,6 +267,16 @@ def functions(_f_name, **kwargs):
     return function_ref(_f_name)(**kwargs)
 
 
+def pages(_p_name_or_uri, **kwargs):
+    print("pages call in : ", _p_name_or_uri)
+    page = tables('pages', 'get_by_name_or_uri', keyword=_p_name_or_uri)[0]
+    final_content = page['html']
+    if page['use_template']:
+        final_content = render_tpl(page['name'], page['html'], **kwargs)
+
+    return final_content
+
+
 def function_ref(name):
     if name in _function_cache:
         return _function_cache[name]
@@ -277,7 +285,7 @@ def function_ref(name):
         func_code = tables('functions', 'get_by_name', name=name)[0]['code']
 
         compiled_code = compile(func_code + f"\nglobal __ret__;__ret__=" + name, name, 'exec')
-        g = {'functions': functions, 'f': functions, 'tables': tables, 't': tables}
+        g = {'functions': functions, 'f': functions, 'tables': tables, 't': tables, 'p': pages, "pages": pages}
         eval(compiled_code, g)
         f = g['__ret__']
         _function_cache[name] = f
@@ -305,9 +313,6 @@ def should_use_compress(filename: str) -> bool:
         use_compress = False
     return use_compress
 
-
-# 保持兼容
-sql_template = tables
 
 # cache module
 _custom_cache = {}

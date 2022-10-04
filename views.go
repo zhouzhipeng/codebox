@@ -260,8 +260,11 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 		proxyPy(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/pages/") ||
 		strings.HasPrefix(r.URL.Path, "/static/") {
-
-		cachedProxyPy(r.URL.Path, w)
+		fullPath := r.URL.Path
+		if r.URL.RawQuery != "" {
+			fullPath += "?" + r.URL.RawQuery
+		}
+		cachedProxyPy(fullPath, w)
 	} else if strings.HasPrefix(r.URL.Path, "/media/") {
 		if r.URL.Path == "/media/index" {
 			func(writer http.ResponseWriter, request *http.Request) {
