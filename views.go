@@ -347,7 +347,11 @@ func handleNAT(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func handleIndexPage(w http.ResponseWriter) {
-	uri := "/pages/index"
+	uri := os.Getenv("HOME_PAGE_URI")
+	if uri == "" {
+		uri = "/pages/index"
+	}
+
 	if _, ok := staticCache[uri]; !ok {
 		resp, err := doGet("http://127.0.0.1:8086" + uri)
 		if err == nil {
