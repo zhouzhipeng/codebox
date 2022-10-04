@@ -16,14 +16,13 @@ from data_types import functions, set_db_parent_path
 f = functions
 
 
-@post('/')
+@get('/')
 def index():
-    print(request.params)
     return "ok"
 
-
+@route('/files/')
 @route('/files/<filepath:path>')
-def server_static(filepath):
+def server_static(filepath='/'):
     try:
         return f('server_static', filepath=filepath)
     except Exception:
