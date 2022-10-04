@@ -128,7 +128,6 @@ class Tables:
     is_query: bool = True
     sql_tmpl: str = None
     custom_functions: str = None
-    callback_func: str = None
     uri: str = None
     db: str = 'gogo.db'
     updated: datetime = datetime.now()
@@ -247,11 +246,6 @@ def tables(__table_name, __operation, **kwargs):
     else:
         result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db),
                                  custom_functions=custom_functions)
-
-    # invoke callback function
-    if templ.callback_func:
-        functions('async_functions', func_name=templ.callback_func, ctx={"table_id": templ.id, "data": kwargs})
-        print(f"callback_func called. table_name :  {__table_name}, operation: {__operation}")
 
     return result_data
 
