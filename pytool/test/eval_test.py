@@ -35,17 +35,29 @@
 # print(render_tpl("test1", "select * from abc where id={{id}} ", id='=$&ss'))
 
 
-from  dns import resolver
+# from  dns import resolver
+#
+# my_resolver = resolver.Resolver()
+#
+# # 8.8.8.8 is Google's public DNS server
+# my_resolver.nameservers = ['8.8.8.8','114.114.114.114']
+#
+# answersTXT = my_resolver.resolve("ssh.zhouzhipeng.com","TXT")
+# for tdata in answersTXT:
+#     for txt_string in tdata.strings:
+#         txt_string = txt_string.decode()
+#         print(txt_string)
+#
+# # print(answer[0])
 
-my_resolver = resolver.Resolver()
 
-# 8.8.8.8 is Google's public DNS server
-my_resolver.nameservers = ['8.8.8.8','114.114.114.114']
+from bit import Key
+from bit.network import fees
+key = Key('L31BtLkh49pHEBYcyMCfUi91EF4h4sVwUKuGnsvUYu5fBZQGg33v')
 
-answersTXT = my_resolver.resolve("ssh.zhouzhipeng.com","TXT")
-for tdata in answersTXT:
-    for txt_string in tdata.strings:
-        txt_string = txt_string.decode()
-        print(txt_string)
+print(key.address)
+print(key.get_balance('btc'))
+print(key.get_unspents())
+print(key.send([('1Boti3tBysZo6FiiLDq5Jc46nYHejiC76c',0.1, 'btc')], combine=False))
+print(fees.get_fee())
 
-# print(answer[0])

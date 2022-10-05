@@ -241,10 +241,24 @@ def tables(__table_name, __operation, **kwargs):
 
     result_data = None
     if templ.is_query:
-        result_data = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db),
-                                 custom_functions=custom_functions)
+        if '+' in templ.db:
+            result_data = []
+            for db_name in templ.db.split("+"):
+                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()),
+                                         custom_functions=custom_functions))
+
+        else:
+            result_data = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()),
+                                     custom_functions=custom_functions)
     else:
-        result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db),
+        if '+' in templ.db:
+            result_data =0
+            for db_name in templ.db.split("+"):
+                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()),
+                                         custom_functions=custom_functions)
+
+        else:
+            result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()),
                                  custom_functions=custom_functions)
 
     return result_data
