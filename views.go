@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/skip2/go-qrcode"
+	"path"
 
 	"html/template"
 	"io/ioutil"
@@ -246,6 +247,12 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 	//log.Println("request in >>  url : ", r.URL.Path)
 	if r.URL.Path == "/" {
 		handleIndexPage(w)
+	} else if r.URL.Path == "/files/message.txt" {
+		dat, _ := os.ReadFile(path.Join(BASE_DIR, "message.txt"))
+		w.Write(dat)
+	} else if r.URL.Path == "/files/python.txt" {
+		dat2, _ := os.ReadFile(path.Join(BASE_DIR, "python.txt"))
+		w.Write(dat2)
 	} else if strings.HasPrefix(r.URL.Path, "/api/") {
 		handleAPI(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/views/") {
