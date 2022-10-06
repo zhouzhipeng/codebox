@@ -120,47 +120,6 @@ def set_db_parent_path(db_parent_path):
     DEFAULT_DB_PATH = os.path.join(DB_PARENT_PATH, "gogo.db")
 
 
-@dataclass
-class Tables:
-    id: int = None
-    table_name: str = None
-    operation: str = None
-    is_query: bool = True
-    sql_tmpl: str = None
-    custom_functions: str = None
-    uri: str = None
-    db: str = 'gogo.db'
-    updated: datetime = datetime.now()
-
-    @staticmethod
-    def get(table_name, operation):
-        cached_table = get_table_query_cache(table_name, operation)
-        if not cached_table:
-            cached_table = [Tables(**dict) for dict in exec_query(sql=render_tpl(_join_key(table_name, operation), '''
-            select * from tables
-            where table_name  = '{{table_name}}' 
-            and operation  = '{{operation}}'
-        ''', table_name=table_name, operation=operation), file_path=DEFAULT_DB_PATH)][0]
-            set_table_query_cache(cached_table)
-        return cached_table
-
-    @staticmethod
-    def get_by_uri(uri):
-        cached_table = get_table_query_cache_by_uri(uri)
-        if not cached_table:
-
-            cached_table = [Tables(**dict) for dict in exec_query(sql=render_tpl(uri, '''
-            select * from tables
-            where uri  = '{{uri}}' 
-        ''', uri=uri), file_path=DEFAULT_DB_PATH)]
-            if len(cached_table) > 0:
-                cached_table = cached_table[0]
-                set_table_query_cache(cached_table)
-            else:
-                return []
-        return [cached_table]
-
-
 def _join_key(table_name, operation):
     return table_name + "." + operation
 
@@ -221,45 +180,38 @@ def render_tpl(__name__, __str__, **kwargs):
     return s
 
 
-def tables(__table_name, __operation, **kwargs):
-    # print(f"tables request for operating tables : table_name :{__table_name}, operation : {__operation}")
-    # key = _join_key(table_name, operation)
-    # if  key in _tables_query_cache:
-    #     return _tables_query_cache[key]
+def get_table_row(keyword):
+    root_tmpl = exec_query('select * from tables where id=0', file_path=DEFAULT_DB_PATH)[0]
+    sql = render_tpl(_join_key(root_tmpl.table_name, root_tmpl.operation), root_tmpl.sql_tmpl, keyword=keyword)
+    data = []
+    for db_name in root_tmpl.db.split("+"):
+        data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+    print("get_table_row >>", data)
+    row = data[0]
+    _tables_query_cache[keyword] = row
+    return row
 
-    templ = Tables.get(__table_name, __operation)
 
-    custom_functions = None
-    if templ.custom_functions:
-        custom_functions = {}
-        # query  function codes
-        for fname in templ.custom_functions.strip().split(","):
-            fname = fname.strip()
-            custom_functions[fname] = function_ref(fname)
+def tables(__table_name_or_uri, __operation=None, **kwargs):
+    # templ = Tables.get(__table_name, __operation)
+    keyword = _join_key(__table_name_or_uri, __operation) if __operation else __table_name_or_uri
+
+    templ = _tables_query_cache[keyword] if keyword in _tables_query_cache else get_table_row(keyword)
 
     sql = render_tpl(templ.table_name + "." + templ.operation, templ.sql_tmpl, **kwargs)
 
     result_data = None
     if templ.is_query:
-        if '+' in templ.db:
-            result_data = []
-            for db_name in templ.db.split("+"):
-                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()),
-                                         custom_functions=custom_functions))
 
-        else:
-            result_data = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()),
-                                     custom_functions=custom_functions)
+        result_data = []
+        for db_name in templ.db.split("+"):
+            result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+
     else:
-        if '+' in templ.db:
-            result_data =0
-            for db_name in templ.db.split("+"):
-                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()),
-                                         custom_functions=custom_functions)
 
-        else:
-            result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()),
-                                 custom_functions=custom_functions)
+        result_data = 0
+        for db_name in templ.db.split("+"):
+            result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
 
     return result_data
 
@@ -269,7 +221,9 @@ _function_cache = {}
 
 def clear_function_cache(name):
     if name in _function_cache:
-        del _function_cache[name]
+        fun_obj = tables('functions', 'get_by_name_or_uri', name=name)[0]
+        del _function_cache[fun_obj.name]
+        del _function_cache[fun_obj.uri]
         print("clear_function_cache name : ", name)
 
 
@@ -293,13 +247,15 @@ def function_ref(name):
         return _function_cache[name]
     else:
         # func_code = exec_query(template(Tables.get('functions', 'get_by_name').sql_tmpl, name = name) , file_path=DEFAULT_DB_PATH)[0]['code']
-        func_code = tables('functions', 'get_by_name', name=name)[0]['code']
+        fun_obj = tables('functions', 'get_by_name_or_uri', name=name)[0]
+
+        func_code = fun_obj['code']
 
         compiled_code = compile(func_code + f"\nglobal __ret__;__ret__=" + name, name, 'exec')
         g = {'functions': functions, 'f': functions, 'tables': tables, 't': tables, 'p': pages, "pages": pages}
         eval(compiled_code, g)
         f = g['__ret__']
-        _function_cache[name] = f
+        _function_cache[fun_obj.name] = _function_cache[fun_obj.uri] = f
         return f
 
 

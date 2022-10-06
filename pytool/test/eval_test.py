@@ -50,14 +50,19 @@
 #
 # # print(answer[0])
 
+#
+# from bit import Key
+# from bit.network import fees
+# key = Key('L31BtLkh49pHEBYcyMCfUi91EF4h4sVwUKuGnsvUYu5fBZQGg33v')
+#
+# print(key.address)
+# print(key.get_balance('btc'))
+# print(key.get_unspents())
+# print(key.send([('1Boti3tBysZo6FiiLDq5Jc46nYHejiC76c',0.1, 'btc')], combine=False))
+# print(fees.get_fee())
 
-from bit import Key
-from bit.network import fees
-key = Key('L31BtLkh49pHEBYcyMCfUi91EF4h4sVwUKuGnsvUYu5fBZQGg33v')
+def add(a,b=None, **kwargs):
+    print(a,b, kwargs)
 
-print(key.address)
-print(key.get_balance('btc'))
-print(key.get_unspents())
-print(key.send([('1Boti3tBysZo6FiiLDq5Jc46nYHejiC76c',0.1, 'btc')], combine=False))
-print(fees.get_fee())
+add(1,2, c=2)
 
