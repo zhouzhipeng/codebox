@@ -116,6 +116,14 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.URL.Path)
 
 	switch r.URL.Path {
+	case "/api/dump-static-cache":
+		keys := make([]string, 0, len(staticCache))
+		for k := range staticCache {
+			keys = append(keys, k)
+		}
+
+		bb, _ := json.Marshal(keys)
+		w.Write(bb)
 	case "/api/clear-static-cache":
 		uri := r.FormValue("uri")
 		delete(staticCache, uri)
