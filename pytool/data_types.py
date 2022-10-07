@@ -68,6 +68,8 @@ def is_table_exist(db_path, table_name)->bool:
 
     return __table_exist_cache[k]
 
+def clear_table_exist_cache():
+    __table_exist_cache.clear()
 
 def exec_write(sql: str, file_path=":memory:", custom_functions: dict = None, placeholder_params: list = None) -> int:
     conn = sqlite3.connect(file_path, isolation_level=None)
