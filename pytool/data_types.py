@@ -190,7 +190,8 @@ def get_table_row(keyword):
             data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
         except:
             err = traceback.format_exc()
-            print("get_table_row Err >>>>>>", err)
+            print("get_table_row  Err >>>>>>", err)
+
 
     print("get_table_row >>", data)
     row = data[0]
@@ -211,13 +212,21 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
 
         result_data = []
         for db_name in templ.db.split("+"):
-            result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+            try:
+                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+            except:
+                err = traceback.format_exc()
+                print("tables operation read Err >>>>>>", err)
 
     else:
 
         result_data = 0
         for db_name in templ.db.split("+"):
-            result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+            try:
+                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+            except:
+                err = traceback.format_exc()
+                print("tables operation write Err >>>>>>", err)
 
     return result_data
 
