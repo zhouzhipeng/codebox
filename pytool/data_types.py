@@ -1,8 +1,5 @@
 import os
 import sqlite3
-import traceback
-from dataclasses import dataclass
-from datetime import datetime
 
 
 class AttributeDict(dict):
@@ -185,13 +182,13 @@ def get_table_row(keyword):
     root_tmpl = exec_query('select * from tables where id=0', file_path=DEFAULT_DB_PATH)[0]
     sql = render_tpl(_join_key(root_tmpl.table_name, root_tmpl.operation), root_tmpl.sql_tmpl, keyword=keyword)
     data = []
-    for db_name in root_tmpl.db.split("+"):
-        try:
-            data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
-        except:
-            err = traceback.format_exc()
-            print("get_table_row  Err >>>>>>", err)
 
+    for db_name in root_tmpl.db.split("|"):
+
+        r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+        if r:
+            data.extend(r)
+            continue
 
     print("get_table_row >>", data)
     row = data[0]
@@ -211,22 +208,27 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
     if templ.is_query:
 
         result_data = []
+        for db_name in templ.db.split("|"):
+
+            r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+            if r:
+                result_data = r
+                continue
         for db_name in templ.db.split("+"):
-            try:
-                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
-            except:
-                err = traceback.format_exc()
-                print("tables operation read Err >>>>>>", err)
+            result_data = result_data.extend(
+                exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+
 
     else:
 
         result_data = 0
+        for db_name in templ.db.split("|"):
+            r = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+            if r:
+                result_data = r
+                continue
         for db_name in templ.db.split("+"):
-            try:
-                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
-            except:
-                err = traceback.format_exc()
-                print("tables operation write Err >>>>>>", err)
+            result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
 
     return result_data
 
