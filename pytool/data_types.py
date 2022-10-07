@@ -58,7 +58,7 @@ def exec_query(sql: str, file_path=":memory:", custom_functions: dict = None, se
 
 
 def is_show_sql():
-    return os.getenv("SHOW_SQL", "True") == "True"
+    return os.getenv("SHOW_SQL", "1") == "1"
 
 
 def exec_write(sql: str, file_path=":memory:", custom_functions: dict = None, placeholder_params: list = None) -> int:
