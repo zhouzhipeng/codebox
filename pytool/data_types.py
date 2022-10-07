@@ -134,6 +134,8 @@ def _join_key(table_name, operation):
 
 _tables_query_cache = {}
 
+def clear_all_table_query_cache():
+    _tables_query_cache.clear()
 
 def set_table_query_cache(table):
     _tables_query_cache[_join_key(table.table_name, table.operation)] = table
