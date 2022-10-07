@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
 import signal
 
 import bottle
@@ -19,6 +18,7 @@ f = functions
 @get('/')
 def index():
     return "ok"
+
 
 @route('/files/')
 @route('/files/<filepath:path>')
@@ -117,10 +117,6 @@ if __name__ == '__main__':
 
         set_db_parent_path(os.getenv("BASE_DIR"))
 
-        # read settings table into env
-        debug = functions('get_setting', name='SHOW_SQL', default="1") == "1"
-        os.environ['SHOW_SQL'] = str(debug)
-
         try:
             # init userdata.db
             print(functions('SYS_INIT_USERDATA_DB'))
@@ -129,6 +125,10 @@ if __name__ == '__main__':
             print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
 
         # print(os.environ)
+
+        # read settings table into env
+        debug = functions('get_setting', name='SHOW_SQL', default="1") == "1"
+        os.environ['SHOW_SQL'] = str(debug)
 
         run(host='127.0.0.1', port=8086, reloader=False, server="cheroot")
 
