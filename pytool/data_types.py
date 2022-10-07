@@ -187,8 +187,8 @@ def get_table_row(keyword):
 
         r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
         if r:
-            data.extend(r)
-            continue
+            data = r
+            break
 
     print("get_table_row >>", data)
     row = data[0]
@@ -208,27 +208,34 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
     if templ.is_query:
 
         result_data = []
-        for db_name in templ.db.split("|"):
+        if "|" in templ.db:
+            for db_name in templ.db.split("|"):
 
-            r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
-            if r:
-                result_data = r
-                continue
-        for db_name in templ.db.split("+"):
-            result_data = result_data.extend(
-                exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
-
+                r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+                if r:
+                    result_data = r
+                    break
+        elif "+" in templ.db:
+            for db_name in templ.db.split("+"):
+                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+        else:
+            result_data = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()))
 
     else:
 
         result_data = 0
-        for db_name in templ.db.split("|"):
-            r = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
-            if r:
-                result_data = r
-                continue
-        for db_name in templ.db.split("+"):
-            result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+        if "|" in templ.db:
+            for db_name in templ.db.split("|"):
+                r = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+                if r:
+                    result_data = r
+                    break
+
+        elif "+" in templ.db:
+            for db_name in templ.db.split("+"):
+                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+        else:
+            result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()))
 
     return result_data
 
