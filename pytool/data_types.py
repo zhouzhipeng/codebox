@@ -60,6 +60,8 @@ def exec_query(sql: str, file_path=":memory:", custom_functions: dict = None, se
 def is_show_sql():
     return os.getenv("SHOW_SQL", "1") == "1"
 
+def is_table_exist(db_path, table_name)->bool:
+    return len(exec_query(f"select name from sqlite_master where type='table' and name='{table_name}'", file_path=db_path))>0
 
 def exec_write(sql: str, file_path=":memory:", custom_functions: dict = None, placeholder_params: list = None) -> int:
     conn = sqlite3.connect(file_path, isolation_level=None)
@@ -210,14 +212,23 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
         result_data = []
         if "|" in templ.db:
             for db_name in templ.db.split("|"):
+                # if the table is not exist ,skip.
+                the_db = os.path.join(DB_PARENT_PATH, db_name.strip())
+                if not is_table_exist(the_db,templ.table_name ):
+                    print(f"tables query warning >>>  table : {templ.table_name} not exist in db : {the_db}")
+                    continue
 
-                r = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+                r = exec_query(sql=sql, file_path=the_db)
                 if r:
                     result_data = r
                     break
         elif "+" in templ.db:
             for db_name in templ.db.split("+"):
-                result_data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+                the_db = os.path.join(DB_PARENT_PATH, db_name.strip())
+                if not is_table_exist(the_db,templ.table_name ):
+                    print(f"tables query warning >>> table : {templ.table_name} not exist in db : {the_db}")
+                    continue
+                result_data.extend(exec_query(sql=sql, file_path=the_db))
         else:
             result_data = exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()))
 
@@ -226,14 +237,25 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
         result_data = 0
         if "|" in templ.db:
             for db_name in templ.db.split("|"):
-                r = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+                # if the table is not exist ,skip.
+                the_db = os.path.join(DB_PARENT_PATH, db_name.strip())
+                if not is_table_exist(the_db,templ.table_name ):
+                    print(f"tables query warning >>>  table : {templ.table_name} not exist in db : {the_db}")
+                    continue
+                r = exec_write(sql=sql, file_path=the_db)
                 if r:
                     result_data = r
                     break
 
         elif "+" in templ.db:
             for db_name in templ.db.split("+"):
-                result_data += exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip()))
+                # if the table is not exist ,skip.
+                the_db = os.path.join(DB_PARENT_PATH, db_name.strip())
+                if not is_table_exist(the_db,templ.table_name ):
+                    print(f"tables query warning >>>  table : {templ.table_name} not exist in db : {the_db}")
+                    continue
+
+                result_data += exec_write(sql=sql, file_path=the_db)
         else:
             result_data = exec_write(sql=sql, file_path=os.path.join(DB_PARENT_PATH, templ.db.strip()))
 
