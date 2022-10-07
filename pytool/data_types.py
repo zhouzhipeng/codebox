@@ -60,8 +60,14 @@ def exec_query(sql: str, file_path=":memory:", custom_functions: dict = None, se
 def is_show_sql():
     return os.getenv("SHOW_SQL", "1") == "1"
 
+__table_exist_cache = {}
 def is_table_exist(db_path, table_name)->bool:
-    return len(exec_query(f"select name from sqlite_master where type='table' and name='{table_name}'", file_path=db_path))>0
+    k = db_path+table_name
+    if not k in __table_exist_cache:
+        __table_exist_cache[k] = len(exec_query(f"select name from sqlite_master where type='table' and name='{table_name}'", file_path=db_path))>0
+
+    return __table_exist_cache[k]
+
 
 def exec_write(sql: str, file_path=":memory:", custom_functions: dict = None, placeholder_params: list = None) -> int:
     conn = sqlite3.connect(file_path, isolation_level=None)
