@@ -101,7 +101,7 @@ class Logger:
 
 if __name__ == '__main__':
     # read env from config server.
-    for line in requests.get('http://127.0.0.1:28888/getenv').text.split("\n"):
+    for line in requests.get('http://127.0.0.1:28888/config/getenv').text.split("\n"):
         # k, v = line.split(sep="=", maxsplit=2)
         i = line.index('=')
         k = line[:i]

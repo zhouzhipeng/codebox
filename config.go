@@ -110,7 +110,7 @@ func StartConfigServer() {
 	go func() {
 		http.ListenAndServe(":28888", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 
-			if request.URL.Path == "/" {
+			if request.URL.Path == "/config" {
 
 				td := Todo{envTxt, "Let's test a template to see the magic."}
 
@@ -123,7 +123,7 @@ func StartConfigServer() {
 					panic(err)
 				}
 
-			} else if request.URL.Path == "/save" {
+			} else if request.URL.Path == "/config/save" {
 				s := request.FormValue("s")
 				envTxt = s
 				err := os.WriteFile(envTxtPath, []byte(s), 0777)
@@ -132,7 +132,7 @@ func StartConfigServer() {
 				} else {
 					io.WriteString(w, "Save Ok.")
 				}
-			} else if request.URL.Path == "/getenv" {
+			} else if request.URL.Path == "/config/getenv" {
 				io.WriteString(w, strings.Join(os.Environ(), "\n"))
 			} else {
 				io.WriteString(w, "404 not found.")

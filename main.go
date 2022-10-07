@@ -80,6 +80,39 @@ func cachedProxyPy(uri string, writer http.ResponseWriter) {
 
 }
 
+func proxyConfig(writer http.ResponseWriter, request *http.Request) {
+
+	proxy := httputil.ReverseProxy{
+		Director: func(request *http.Request) {
+			//rewrite url
+			request.URL.Scheme = "http"
+			request.URL.Host = "127.0.0.1:28888"
+
+			//request.URL.Path = request.URL.Path[len("/py"):]
+
+			// Delete any ETag headers that may have been set
+			for _, v := range etagHeaders {
+				if request.Header.Get(v) != "" {
+					request.Header.Del(v)
+				}
+			}
+		},
+		Transport: NewTimingRoundtripper(http.DefaultTransport),
+		ModifyResponse: func(r *http.Response) error {
+
+			// Set our NoCache headers
+			for k, v := range noCacheHeaders {
+				r.Header.Set(k, v)
+			}
+
+			return nil
+
+		},
+	}
+
+	proxy.ServeHTTP(writer, request)
+}
+
 func proxyPy(writer http.ResponseWriter, request *http.Request) {
 
 	proxy := httputil.ReverseProxy{

@@ -40,7 +40,7 @@ func onReady() {
 			case <-mUrl.ClickedCh:
 				open.Run("http://127.0.0.1:" + GetMainPort())
 			case <-configUrl.ClickedCh:
-				open.Run("http://127.0.0.1:28888")
+				open.Run("http://127.0.0.1:28888/config")
 			case <-hk.Keydown():
 				log.Printf("hotkey: %v is down\n", hk)
 				//open ui
@@ -79,7 +79,7 @@ func LoadUI() {
 }
 
 func LoadConfigUI() {
-	go open.Run("http://127.0.0.1:28888")
+	go open.Run("http://127.0.0.1:28888/config")
 }
 
 func fn() {

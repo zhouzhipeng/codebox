@@ -247,6 +247,8 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 	//log.Println("request in >>  url : ", r.URL.Path)
 	if r.URL.Path == "/" {
 		handleIndexPage(w)
+	} else if strings.HasPrefix(r.URL.Path, "/config") {
+		proxyConfig(w, r)
 	} else if r.URL.Path == "/files/message.txt" {
 		dat, _ := os.ReadFile(path.Join(BASE_DIR, "message.txt"))
 		w.Write(dat)
