@@ -131,6 +131,6 @@ if __name__ == '__main__':
         run(host='127.0.0.1', port=8086, reloader=False, server="cheroot")
 
 
-    except Exception:
+    except:
         err = traceback.format_exc()
         print("Python Err >>>>>>", err)
