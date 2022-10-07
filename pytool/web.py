@@ -117,12 +117,10 @@ if __name__ == '__main__':
 
         set_db_parent_path(os.getenv("BASE_DIR"))
 
-        try:
-            # init userdata.db
-            print(functions('SYS_INIT_USERDATA_DB'))
-        except Exception:
-            err = traceback.format_exc()
-            print("SYS_INIT_USERDATA_DB Err >>>>>>", err)
+
+        # init userdata.db
+        print(functions('SYS_INIT_USERDATA_DB'))
+
 
         # print(os.environ)
 
