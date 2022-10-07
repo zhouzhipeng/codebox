@@ -67,7 +67,7 @@ func handleTemplates(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data["path"] = MEDIA_PATH
-		link := "http://" + getLocalIPInternal() + ":" + GetMainPort() + "/media/index"
+		link := "/media/index"
 		data["link"] = link
 		data["showlink"] = true
 
