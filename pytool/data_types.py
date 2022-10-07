@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import traceback
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -185,7 +186,12 @@ def get_table_row(keyword):
     sql = render_tpl(_join_key(root_tmpl.table_name, root_tmpl.operation), root_tmpl.sql_tmpl, keyword=keyword)
     data = []
     for db_name in root_tmpl.db.split("+"):
-        data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+        try:
+            data.extend(exec_query(sql=sql, file_path=os.path.join(DB_PARENT_PATH, db_name.strip())))
+        except:
+            err = traceback.format_exc()
+            print("get_table_row Err >>>>>>", err)
+
     print("get_table_row >>", data)
     row = data[0]
     _tables_query_cache[keyword] = row
