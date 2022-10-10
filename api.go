@@ -126,7 +126,12 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		w.Write(bb)
 	case "/api/clear-static-cache":
 		uri := r.FormValue("uri")
-		delete(staticCache, uri)
+		for k := range staticCache {
+			if strings.HasPrefix(k, uri) {
+				delete(staticCache, k)
+			}
+		}
+
 		// pre-warm
 		go doGet("http://127.0.0.1:" + GetMainPort() + uri)
 		w.Write([]byte("Ok."))

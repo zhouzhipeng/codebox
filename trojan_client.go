@@ -247,7 +247,7 @@ func sendToTrojanServer(conn net.Conn, ipOrDomain string, port int, needWriteLin
 	trojanConn, err := tls.Dial("tcp", vpnServer[0], conf)
 	defer trojanConn.Close()
 	if err != nil {
-		log.Println("Trojan Client Err : ", err)
+		log.Println("Trojan Client Err : ", err, ", server: ", vpnServer)
 		return
 	}
 
