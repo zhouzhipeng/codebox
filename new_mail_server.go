@@ -3,7 +3,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/hex"
 	"errors"
 	"github.com/emersion/go-smtp"
 	"github.com/emirpasic/gods/lists/arraylist"
@@ -136,11 +135,11 @@ func (s *Session) Data(r io.Reader) error {
 		}
 
 		//save a backup for raw body bytes
-		list.Add(BodyPart{
-			IsFile:        true,
-			ContentType:   m.Header.Get("Content-Type"),
-			ContentOrPath: hex.EncodeToString(bodyBytes),
-		})
+		//list.Add(BodyPart{
+		//	IsFile:        true,
+		//	ContentType:   m.Header.Get("Content-Type"),
+		//	ContentOrPath: hex.EncodeToString(bodyBytes),
+		//})
 
 		//save to db
 		params := url.Values{}
