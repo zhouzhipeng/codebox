@@ -1,8 +1,17 @@
 # gogo
 This a tool box for programmers. 
 
+
 ## debian install
-[script](bin/debian)
+Currently support Debian buster (10)
+```bash
+curl -sSL https://raw.githubusercontent.com/zhouzhipeng/public/main/install_gogo.sh | sh
+```
+
+## docker image
+```bash
+docker pull zhouzhipeng/gogo:latest
+```
 
 ## fetch
 ```javascript
