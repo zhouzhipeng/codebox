@@ -1,6 +1,9 @@
 # gogo
 This a tool box for programmers. 
 
+## debian install
+[script](bin/debian)
+
 ## fetch
 ```javascript
 let data = new URLSearchParams();

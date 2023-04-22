@@ -187,7 +187,8 @@ func getFixedTempPath() string {
 	baseDir = filepath.Join(configDir, "gogo_files")
 	if err != nil {
 		log.Println("getFixedTempPath err", err)
-		panic(err)
+		log.Println("using /tmp")
+		configDir = "/tmp"
 	}
 	log.Println("baseDir >>>", baseDir)
 	err = os.MkdirAll(baseDir, 0777)
