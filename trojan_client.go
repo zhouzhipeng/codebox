@@ -35,8 +35,7 @@ func StartTrojanClient() {
 		panic(err)
 	}
 	defer l.Close()
-
-	logInfo("Listening 11088")
+	log.Printf("[INFO] %s\n", "Listening 11088")
 
 	for {
 		c, err := l.Accept()
