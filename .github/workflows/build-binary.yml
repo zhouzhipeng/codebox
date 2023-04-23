@@ -136,3 +136,23 @@ jobs:
           asset_path: ./gogo_debian.zip
           asset_name: gogo_debian.zip
           asset_content_type: application/zip
+      - name: Upload Release Asset Web
+        id: upload-release-asset-web
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./web
+          asset_name: web
+          asset_content_type: application/x-binary
+      - name: Upload Release Asset Gogo
+        id: upload-release-asset-gogo
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./gogo
+          asset_name: gogo
+          asset_content_type: application/x-binary                
