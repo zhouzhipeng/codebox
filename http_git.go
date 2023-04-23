@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -15,9 +16,14 @@ func ServeGitHTTP(response http.ResponseWriter, request *http.Request) {
 	projectPath := os.Getenv("GIT_REPO_ROOT")
 
 	if projectPath == "" {
-		response.WriteHeader(500)
-		response.Write([]byte("please specify GIT_REPO_ROOT firstly."))
-		return
+		projectPath = filepath.Join(BASE_DIR, "git_repo")
+		err := os.MkdirAll(projectPath, 0777)
+		if err != nil {
+			log.Println("create git repo err", err)
+			response.WriteHeader(500)
+			response.Write([]byte("create git repo err."))
+			return
+		}
 	}
 
 	log.Println("git repo root path : ", projectPath)
