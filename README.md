@@ -5,7 +5,7 @@ This a tool box for programmers.
 ## debian install
 Currently support Debian buster (10)
 ```bash
-curl -sSL https://raw.githubusercontent.com/zhouzhipeng/public/main/install_gogo.sh | sh
+curl -sSL https://raw.githubusercontent.com/zhouzhipeng/gogo/master/scripts/install_gogo_on_debian10.sh | sudo bash
 ```
 
 ## docker image

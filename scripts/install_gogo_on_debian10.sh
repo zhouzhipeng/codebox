@@ -1,14 +1,13 @@
 #!/bin/sh
 
-## run me : curl -sSL https://raw.githubusercontent.com/zhouzhipeng/public/main/install_gogo.sh | sudo bash
+## run me : curl -sSL https://raw.githubusercontent.com/zhouzhipeng/gogo/master/scripts/install_gogo_on_debian10.sh | sudo bash
 
 set -eux 
 
 cd /root
 
-curl -sSL  https://github.com/zhouzhipeng/gogo/releases/download/latest/gogo_debian.zip --output gogo_debian.zip
-curl -sSL https://github.com/zhouzhipeng/public/releases/download/1.0/gogo --output gogo
-curl -sSL https://github.com/zhouzhipeng/public/releases/download/1.0/web --output web
+curl -sSL https://github.com/zhouzhipeng/gogo/releases/download/latest/gogo --output gogo
+curl -sSL https://github.com/zhouzhipeng/gogo/releases/download/latest/web --output web
 
 chmod +x gogo web
 

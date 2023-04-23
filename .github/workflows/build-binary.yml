@@ -125,7 +125,7 @@ jobs:
         id: zip_files
         shell: bash
         run: |
-          cd ${{ steps.extract.outputs.destination }} && zip -r9 ../gogo_debian.zip .
+          cd ${{ steps.extract.outputs.destination }} && zip -r9 ../gogo_debian.zip . && cp web ../web && cp gogo ../gogo
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
