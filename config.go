@@ -50,7 +50,10 @@ func configureLogPath(parentPath string) {
 }
 
 func StartConfigServer() {
-	BASE_DIR = getFixedTempPath()
+	BASE_DIR = os.Getenv("BASE_DIR")
+	if BASE_DIR == "" {
+		BASE_DIR = getFixedTempPath()
+	}
 
 	os.Setenv("BASE_DIR", BASE_DIR)
 

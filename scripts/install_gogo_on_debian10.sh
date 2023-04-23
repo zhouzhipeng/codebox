@@ -2,6 +2,8 @@
 
 ## run me : curl -sSL https://raw.githubusercontent.com/zhouzhipeng/gogo/master/scripts/install_gogo_on_debian10.sh | sudo bash
 
+systemctl stop gogo
+
 set -eux 
 
 cd /root
