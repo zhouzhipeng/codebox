@@ -8,6 +8,7 @@ set -eux
 
 cd /root
 
+rm -rf gogo web
 curl -sSL https://github.com/zhouzhipeng/gogo/releases/download/latest/gogo --output gogo
 curl -sSL https://github.com/zhouzhipeng/gogo/releases/download/latest/web --output web
 
