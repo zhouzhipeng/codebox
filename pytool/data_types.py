@@ -203,7 +203,7 @@ def get_table_row(keyword):
             break
 
     print("get_table_row >>", data)
-    row = data[0]
+    row = data[0] if data else []
     _tables_query_cache[keyword] = row
     return row
 

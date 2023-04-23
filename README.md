@@ -1,6 +1,8 @@
 # gogo
 This a tool box for programmers. 
 
+## features
+[features](doc/features.md)
 
 ## debian install
 Currently support Debian buster (10)
