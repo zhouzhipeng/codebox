@@ -16,4 +16,5 @@ pyinstaller --clean  --noconfirm --collect-datas coincurve   --noconsole   \
   --hidden-import=pyminizip   \
   --hidden-import=dns.resolver   \
   --hidden-import=bit   \
+  --hidden-import=openai   \
  --log-level "DEBUG"  -F  web.py

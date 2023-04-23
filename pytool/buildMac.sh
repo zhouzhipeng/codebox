@@ -18,4 +18,5 @@ pyinstaller  --noconfirm  --console   --log-level "DEBUG"  \
    --hidden-import=pyminizip   \
    --hidden-import=dns.resolver   \
    --hidden-import=bit   \
+   --hidden-import=openai   \
    -c -F    web.py
