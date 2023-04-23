@@ -203,7 +203,7 @@ def get_table_row(keyword):
             break
 
     print("get_table_row >>", data)
-    row = data[0] if data else []
+    row = data[0] if data else None
     _tables_query_cache[keyword] = row
     return row
 
@@ -213,6 +213,8 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
     keyword = _join_key(__table_name_or_uri, __operation) if __operation else __table_name_or_uri
 
     templ = _tables_query_cache[keyword] if keyword in _tables_query_cache else get_table_row(keyword)
+    if templ is None:
+        return []
 
     sql = render_tpl(templ.table_name + "." + templ.operation, templ.sql_tmpl, **kwargs)
 
