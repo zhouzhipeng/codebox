@@ -146,7 +146,7 @@ func proxyPy(writer http.ResponseWriter, request *http.Request) {
 	proxy.ServeHTTP(writer, request)
 }
 
-func commonReverseProxy(writer http.ResponseWriter, request *http.Request, server string) {
+func commonProxyPass(writer http.ResponseWriter, request *http.Request, server string) {
 
 	proxy := httputil.ReverseProxy{
 		Director: func(request *http.Request) {

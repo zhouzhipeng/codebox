@@ -175,7 +175,7 @@ func router(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//common reverse proxy.
+	//common  proxy pass.
 	if govalidator.IsDNSName(r.Host) {
 		//query txt
 
@@ -211,7 +211,7 @@ func router(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if toServer != "" {
-			commonReverseProxy(w, r, toServer)
+			commonProxyPass(w, r, toServer)
 			return
 		}
 	}

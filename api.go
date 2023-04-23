@@ -360,7 +360,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 		os.Exit(0)
 	case "/api/version":
-		fmt.Fprintf(w, "go: "+"2022.10.07 \n"+"py: 2022.10.07")
+		fmt.Fprintf(w, "go: "+"2023.4.23 \n"+"py: 2023.4.23")
 	case "/api/aes-encrypt":
 		text := r.FormValue("text")
 		AesKey := []byte(r.FormValue("key")) //秘钥长度为16的倍数
