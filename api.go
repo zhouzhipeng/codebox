@@ -529,7 +529,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, result)
 	case "/api/run-shell":
 		script := r.FormValue("script")
-		cwd := r.FormValue("cwd")
+		//cwd := r.FormValue("cwd")
 		log.Println("run shell input >> ", script)
 		if script==""{
 			w.WriteHeader(500)
