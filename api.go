@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	_ "embed"
 	"encoding/hex"
@@ -13,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -360,7 +362,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 		os.Exit(0)
 	case "/api/version":
-		fmt.Fprintf(w, "go: "+"2023.4.23 \n"+"py: 2023.4.23")
+		fmt.Fprintf(w, "go: "+"2023.4.25 \n"+"py: 2023.4.23")
 	case "/api/aes-encrypt":
 		text := r.FormValue("text")
 		AesKey := []byte(r.FormValue("key")) //秘钥长度为16的倍数
@@ -525,18 +527,55 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprintf(w, result)
-	//case "/api/run-shell":
-	//	shell := r.FormValue("shell")
-	//	log.Println(shell)
-	//	out, err := exec.Command("bash", "-c", shell).Output()
-	//	result := "no result"
-	//	if err == nil {
-	//		result = string(out)
-	//	} else {
-	//		log.Println(err)
-	//		result = err.Error()
-	//	}
-	//	fmt.Fprintf(w, result)
+	case "/api/run-shell":
+		script := r.FormValue("script")
+		cwd := r.FormValue("cwd")
+		log.Println("run shell input >> ", script)
+		if script==""{
+			w.WriteHeader(500)
+			w.Write([]byte("script is empty!"))
+			return
+		}
+		
+		cmd := exec.Command("sh", "-c", script)
+		
+		stdout, err := cmd.StdoutPipe()
+		
+		//cmd.Dir = cwd
+
+		cmd.Stderr = cmd.Stdout
+		
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		err = cmd.Start()
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		// Create a scanner to read from the standard output pipe
+		go func() {
+			scanner := bufio.NewScanner(stdout)
+			for scanner.Scan() {
+				// Write any updates back to the client's response writer
+				w.Write([]byte(scanner.Text()+"\n"))
+				//w.(http.Flusher).Flush()
+				
+			}
+		}()
+		// Wait for the script to finish executing
+		err = cmd.Wait()
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	default:
 		w.WriteHeader(404)
 	}

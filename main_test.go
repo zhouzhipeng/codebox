@@ -2,36 +2,16 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/sys/windows"
 	"io"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
-	"syscall"
 	"testing"
 )
-
-func runMeElevated() {
-	verb := "runas"
-	exe, _ := os.Executable()
-	cwd, _ := os.Getwd()
-	args := strings.Join(os.Args[1:], " ")
-
-	verbPtr, _ := syscall.UTF16PtrFromString(verb)
-	exePtr, _ := syscall.UTF16PtrFromString(exe)
-	cwdPtr, _ := syscall.UTF16PtrFromString(cwd)
-	argPtr, _ := syscall.UTF16PtrFromString(args)
-
-	var showCmd int32 = 1 //SW_NORMAL
-
-	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
 
 func amAdmin() bool {
 	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
@@ -43,8 +23,9 @@ func amAdmin() bool {
 	return true
 }
 func TestModifyHosts(t *testing.T) {
-	log.Println(strings.Contains("www.youtube.com:443", "youtube"))
-
+	//log.Println(strings.Contains("www.youtube.com:443", "youtube"))
+	cmd := exec.Command("ls -l")
+	println(cmd.out)
 }
 
 // with go modules enabled (GO111MODULE=on or outside GOPATH)
