@@ -25,7 +25,6 @@ After=network.target
 [Service]
 Environment="MAIN_PORT=80"
 Environment="HTTPS_PORT=443"
-Environment="IN_DOCKER=true"
 Environment="BASE_DIR=/tmp"
 Environment="TROJAN_PASSWORD=123456"
 Environment="AUTO_REDIRECT_TO_HTTPS=true"

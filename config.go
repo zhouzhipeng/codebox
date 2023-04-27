@@ -49,6 +49,8 @@ func configureLogPath(parentPath string) {
 
 }
 
+var envMap =make(map[string]string);
+
 func StartConfigServer() {
 	BASE_DIR = os.Getenv("BASE_DIR")
 	if BASE_DIR == "" {
@@ -91,9 +93,13 @@ func StartConfigServer() {
 			//priority : global env > env.txt
 			key := strings.TrimSpace(cols[0])
 			val := strings.TrimSpace(cols[1])
+			
 			if os.Getenv(key) == "" {
 				err := os.Setenv(key, val)
+				envMap[key] =val
 				log.Println("set env : key = ", key, ", val=", val, ", err= ", err)
+			}else{
+				envMap[key] =os.Getenv(key)
 			}
 
 		}
@@ -147,32 +153,39 @@ func StartConfigServer() {
 	LoadConfigUI()
 }
 
+func getFromEnvMap(key string) string {
+	if val, ok := envMap[key]; ok {
+		return val
+	}
+	return ""
+}
+
 func ShouldStart443Server() bool {
-	return os.Getenv("START_443_SERVER") == "true"
+	return getFromEnvMap("START_443_SERVER") == "true"
 }
 
 func ShouldStartMailServer() bool {
-	return os.Getenv("START_MAIL_SERVER") == "true"
+	return getFromEnvMap("START_MAIL_SERVER") == "true"
 }
 
 func ShouldStartLocalProxyServer() bool {
-	return os.Getenv("START_TROJAN_PROXY") == "true"
+	return getFromEnvMap("START_TROJAN_PROXY") == "true"
 }
 
 func getWhitelistRootDomains() []string {
-	return strings.Split(os.Getenv("WHITELIST_ROOT_DOMAINS"), ",")
+	return strings.Split(getFromEnvMap("WHITELIST_ROOT_DOMAINS"), ",")
 }
 
 func GetMainPort() string {
-	return os.Getenv("MAIN_PORT")
+	return getFromEnvMap("MAIN_PORT")
 }
 
 func GetTrojanPassword() string {
-	return os.Getenv("TROJAN_PASSWORD")
+	return getFromEnvMap("TROJAN_PASSWORD")
 }
 
 func GetHTTPSPort() string {
-	return os.Getenv("HTTPS_PORT")
+	return getFromEnvMap("HTTPS_PORT")
 }
 
 func getCertCacheDir() string {
@@ -180,7 +193,15 @@ func getCertCacheDir() string {
 }
 
 func getAutoRedirectHTTPS() bool {
-	return os.Getenv("AUTO_REDIRECT_TO_HTTPS") == "true"
+	return getFromEnvMap("AUTO_REDIRECT_TO_HTTPS") == "true"
+}
+
+func isEnableProxyPassTxt() bool {
+	return getFromEnvMap("ENABLE_PROXY_PASS_TXT") == "true"
+}
+
+func isEnableNATProxy() bool {
+	return getFromEnvMap("ENABLE_NAT_PROXY") == "true"
 }
 
 func getFixedTempPath() string {

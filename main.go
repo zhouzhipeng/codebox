@@ -545,7 +545,7 @@ func main() {
 	}
 
 	if ShouldStartLocalProxyServer() {
-		//listen 25 (mail server)
+		//listen 11088  (like clash client does)
 		log.Println("starting trojan client proxy  server...")
 		go StartLocalProxyServer()
 	}

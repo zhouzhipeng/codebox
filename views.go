@@ -176,7 +176,8 @@ func router(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//common  proxy pass.
-	if govalidator.IsDNSName(r.Host) {
+	if isEnableProxyPassTxt(){
+		if govalidator.IsDNSName(r.Host) {
 		//query txt
 
 		toServer, has := dnsTxtCache[r.Host]
@@ -215,12 +216,15 @@ func router(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
+	}
+	
 	//handle NAT for *.proxy.*  domains.
-	if handleNAT(w, r) {
+	if isEnableNATProxy(){
+		if handleNAT(w, r) {
 		return
 	}
-
+	}
+	
 	//normal http handling.
 	handleNormalHTTP(w, r)
 }
