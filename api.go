@@ -538,6 +538,9 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		cmd := exec.Command("sh", "-c", script)
+		if runtime.GOOS == "windows" {
+			cmd = exec.Command("cmd", "/k", script)
+		}
 		
 		stdout, err := cmd.StdoutPipe()
 		
