@@ -8,3 +8,4 @@ __pycache__/
 dist/
 env/
 target/
+gogo-ui-windows.exe.WebView2/
