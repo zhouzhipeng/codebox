@@ -7,3 +7,4 @@ web.spec
 __pycache__/
 dist/
 env/
+target/
