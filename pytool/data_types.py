@@ -4,6 +4,8 @@ import sqlite3
 
 class AttributeDict(dict):
     def __getattr__(self, attr):
+        if attr not in self:
+            return None
         return self[attr]
 
     def __setattr__(self, attr, value):
@@ -295,6 +297,7 @@ def pages(_p_name_or_uri, **kwargs):
     page = tables('pages', 'get_by_name_or_uri', keyword=_p_name_or_uri)[0]
     final_content = page['html']
     if page['use_template']:
+        kwargs['_'] = AttributeDict(kwargs)
         final_content = render_tpl(page['name'], page['html'], **kwargs)
 
     return final_content
