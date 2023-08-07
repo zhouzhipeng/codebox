@@ -215,7 +215,7 @@ def tables(__table_name_or_uri, __operation=None, **kwargs):
     templ = _tables_query_cache[keyword] if keyword in _tables_query_cache else get_table_row(keyword)
     if templ is None:
         return []
-
+    kwargs['_'] = AttributeDict(kwargs)
     sql = render_tpl(templ.table_name + "." + templ.operation, templ.sql_tmpl, **kwargs)
 
     result_data = None
