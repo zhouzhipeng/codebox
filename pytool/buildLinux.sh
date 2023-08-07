@@ -19,4 +19,5 @@ pyinstaller  --noconfirm  --console    --log-level "DEBUG"  \
    --hidden-import=dns.resolver   \
    --hidden-import=bit   \
    --hidden-import=openai   \
+   --hidden-import=curlparser   \
    -c -F    web.py

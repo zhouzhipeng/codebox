@@ -13,3 +13,4 @@ pyminizip
 dnspython
 bit
 openai
+curlparser
