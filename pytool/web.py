@@ -14,6 +14,10 @@ from data_types import functions, set_db_parent_path
 
 f = functions
 
+def _exit_hook():
+    raise Exception("exit error!")
+
+sys.exit=_exit_hook
 
 @get('/')
 def index():
@@ -37,7 +41,7 @@ def operate_table(uri):
         return _err_handle()
 
 
-@route('/functions/<func_uri:path>', method=['GET', 'POST', 'PUT', 'DELETE'])
+@route('/functions/<func_uri:path>', method=['GET', 'POST'])
 def call_function(func_uri):
     try:
         return f('call_function', func_uri=func_uri)

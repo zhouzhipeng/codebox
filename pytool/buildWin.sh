@@ -17,5 +17,5 @@ pyinstaller --clean  --noconfirm --collect-datas coincurve   --noconsole   \
   --hidden-import=dns.resolver   \
   --hidden-import=bit   \
   --hidden-import=openai   \
-  --hidden-import=curlparser   \
+  --hidden-import=uncurl   \
  --log-level "DEBUG"  -F  web.py

@@ -2,6 +2,6 @@ HTTP/1.1 400 Bad Request
 Content-Type: text/text
 Content-Length: 12
 Connection: close
-Server: GoGo
+Server: Codebox
 
 Bad Request.

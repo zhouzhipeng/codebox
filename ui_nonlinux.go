@@ -3,9 +3,9 @@
 package main
 
 import (
+	"codebox/icons"
+	"codebox/systray"
 	"github.com/skratchdot/open-golang/open"
-	"gogo/icons"
-	"gogo/systray"
 	"golang.design/x/hotkey"
 	"log"
 	"net/http"
@@ -23,7 +23,7 @@ func onReady() {
 	// We can manipulate the systray in other goroutines
 	go func() {
 		systray.SetTemplateIcon(icons.Data, icons.Data)
-		systray.SetTitle("GoGo!")
+		systray.SetTitle("codebox!")
 		systray.SetTooltip("A great tool for developers.")
 
 		mUrl := systray.AddMenuItem("Open UI(Ctrl+Shift+W)", "my home")

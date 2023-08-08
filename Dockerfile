@@ -29,8 +29,8 @@ EXPOSE ${MAIN_PORT} ${HTTPS_PORT}
 
 WORKDIR /app
 
-COPY --from=BuildGolangImage /app/dist/gogo gogo
+COPY --from=BuildGolangImage /app/dist/codebox codebox
 COPY --from=BuildPythonImage /app/dist/web  web
 
 
-ENTRYPOINT /app/gogo
+ENTRYPOINT /app/codebox

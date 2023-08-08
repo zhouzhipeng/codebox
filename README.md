@@ -1,5 +1,5 @@
-# gogo
-This a tool box for programmers. 
+# codebox
+This is a tool box for programmers. 
 
 ## features
 [features](doc/features.md)
@@ -7,12 +7,12 @@ This a tool box for programmers.
 ## debian install
 Currently support Debian buster (10)
 ```bash
-curl -sSL https://raw.githubusercontent.com/zhouzhipeng/gogo/master/scripts/install_gogo_on_debian10.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/zhouzhipeng/codebox/master/scripts/install_codebox_on_debian10.sh | sudo bash
 ```
 
 ## docker image
 ```bash
-docker pull zhouzhipeng/gogo:latest
+docker pull zhouzhipeng/codebox:latest
 ```
 
 ## fetch
@@ -35,7 +35,7 @@ https://trojan-gfw.github.io/trojan/protocol.html
 
 
 ## local dev
-start golang module: go build gogo, then start web.py  (pip install -r requirements.txt)
+start golang module: go build codebox, then start web.py  (pip install -r requirements.txt)
 
 ## mail server (receive only)
 [see doc](https://notes.eatonphil.com/handling-email-from-gmail-smtp-protocol-basics.html)

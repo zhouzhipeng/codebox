@@ -28,4 +28,4 @@ jobs:
         with:
           context: .
           push: true
-          tags:  zhouzhipeng/gogo:latest
+          tags:  zhouzhipeng/codebox:latest

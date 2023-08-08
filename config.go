@@ -36,7 +36,7 @@ func configureLogPath(parentPath string) {
 	//mw := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(logFile)
 
-	log.SetPrefix("[gogo]")
+	log.SetPrefix("[codebox]")
 	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
 
 	accessLogFilePath := filepath.Join(parentPath, "access_log.txt")
@@ -45,11 +45,11 @@ func configureLogPath(parentPath string) {
 		log.Println(err)
 		return
 	}
-	accessLogger = log.New(accesslogFile, "[gogo]", log.LstdFlags|log.Lshortfile|log.LUTC)
+	accessLogger = log.New(accesslogFile, "[codebox]", log.LstdFlags|log.Lshortfile|log.LUTC)
 
 }
 
-var envMap =make(map[string]string);
+var envMap = make(map[string]string)
 
 func StartConfigServer() {
 	BASE_DIR = os.Getenv("BASE_DIR")
@@ -93,13 +93,13 @@ func StartConfigServer() {
 			//priority : global env > env.txt
 			key := strings.TrimSpace(cols[0])
 			val := strings.TrimSpace(cols[1])
-			
+
 			if os.Getenv(key) == "" {
 				err := os.Setenv(key, val)
-				envMap[key] =val
+				envMap[key] = val
 				log.Println("set env : key = ", key, ", val=", val, ", err= ", err)
-			}else{
-				envMap[key] =os.Getenv(key)
+			} else {
+				envMap[key] = os.Getenv(key)
 			}
 
 		}

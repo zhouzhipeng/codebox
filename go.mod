@@ -1,4 +1,4 @@
-module gogo
+module codebox
 
 go 1.18
 
