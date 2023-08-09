@@ -16,10 +16,10 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
-	"runtime"
 )
 
 func fileUpload(w http.ResponseWriter, r *http.Request) {
@@ -119,6 +119,20 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.URL.Path)
 
 	switch r.URL.Path {
+	case "/api/send-ws-msg":
+		userId := r.FormValue("UserId")
+		data := r.FormValue("Data")
+
+		err := wsConnMap[userId].WriteJSON(WSMessage{
+			UserId: userId,
+			Data:   data,
+		})
+		if err != nil {
+			w.Write([]byte("Err:" + err.Error()))
+			return
+		}
+
+		w.Write([]byte("ok."))
 	case "/api/dump-static-cache":
 		keys := make([]string, 0, len(staticCache))
 		for k := range staticCache {
@@ -532,23 +546,23 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 		script := r.FormValue("script")
 		//cwd := r.FormValue("cwd")
 		log.Println("run shell input >> ", script)
-		if script==""{
+		if script == "" {
 			w.WriteHeader(500)
 			w.Write([]byte("script is empty!"))
 			return
 		}
-		
+
 		cmd := exec.Command("sh", "-c", script)
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("cmd", "/k", script)
 		}
-		
+
 		stdout, err := cmd.StdoutPipe()
-		
+
 		//cmd.Dir = cwd
 
 		cmd.Stderr = cmd.Stdout
-		
+
 		if err != nil {
 			log.Println(err)
 			w.WriteHeader(500)
@@ -567,9 +581,9 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 			scanner := bufio.NewScanner(stdout)
 			for scanner.Scan() {
 				// Write any updates back to the client's response writer
-				w.Write([]byte(scanner.Text()+"\n"))
+				w.Write([]byte(scanner.Text() + "\n"))
 				//w.(http.Flusher).Flush()
-				
+
 			}
 		}()
 		// Wait for the script to finish executing
@@ -603,6 +617,13 @@ type Resp struct {
 func CallPyFuncRaw(funcName string, body string) (Resp, error) {
 	return doRequest("http://127.0.0.1:8086/py/functions/"+funcName, "POST", body, map[string]string{
 		"Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+	})
+}
+
+func CallPyFuncWithJSON(funcName string, body interface{}) (Resp, error) {
+	result, _ := json.Marshal(body)
+	return doRequest("http://127.0.0.1:8086/py/functions/"+funcName, "POST", string(result), map[string]string{
+		"Content-Type": "application/json; charset=utf-8",
 	})
 }
 

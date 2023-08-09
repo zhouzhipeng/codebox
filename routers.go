@@ -7,6 +7,7 @@ import (
 	"github.com/skip2/go-qrcode"
 	"path"
 
+	"github.com/gorilla/websocket"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -34,6 +35,12 @@ type TodoPageData struct {
 //var views embed.FS
 
 var MEDIA_PATH = ""
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin:     func(r *http.Request) bool { return true },
+}
 
 func handleTemplates(w http.ResponseWriter, r *http.Request) {
 
@@ -176,55 +183,55 @@ func router(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//common  proxy pass.
-	if isEnableProxyPassTxt(){
+	if isEnableProxyPassTxt() {
 		if govalidator.IsDNSName(r.Host) {
-		//query txt
+			//query txt
 
-		toServer, has := dnsTxtCache[r.Host]
+			toServer, has := dnsTxtCache[r.Host]
 
-		if !has {
-			resp, _ := CallPyFuncRaw("parse_dns_txt", "domain="+r.Host)
-			log.Println("parse-dns-txt response: ", resp)
+			if !has {
+				resp, _ := CallPyFuncRaw("parse_dns_txt", "domain="+r.Host)
+				log.Println("parse-dns-txt response: ", resp)
 
-			if resp.Status == 200 {
-				log.Println("txt record for : ", r.Host, ", txt :  ", resp.Body)
+				if resp.Status == 200 {
+					log.Println("txt record for : ", r.Host, ", txt :  ", resp.Body)
 
-				toServer = resp.Body
+					toServer = resp.Body
 
-				toServer = strings.TrimSpace(toServer)
+					toServer = strings.TrimSpace(toServer)
 
-				if toServer != "" {
+					if toServer != "" {
 
-					//check valid config
-					conn, err := net.DialTimeout("tcp", toServer, time.Millisecond*time.Duration(1000))
+						//check valid config
+						conn, err := net.DialTimeout("tcp", toServer, time.Millisecond*time.Duration(1000))
 
-					if err != nil {
-						log.Println("to server dial error ", toServer, " --> ", err)
-						toServer = ""
-					} else {
-						conn.Close()
+						if err != nil {
+							log.Println("to server dial error ", toServer, " --> ", err)
+							toServer = ""
+						} else {
+							conn.Close()
+						}
+
 					}
 
+					dnsTxtCache[r.Host] = toServer
 				}
+			}
 
-				dnsTxtCache[r.Host] = toServer
+			if toServer != "" {
+				commonProxyPass(w, r, toServer)
+				return
 			}
 		}
+	}
 
-		if toServer != "" {
-			commonProxyPass(w, r, toServer)
+	//handle NAT for *.proxy.*  domains.
+	if isEnableNATProxy() {
+		if handleNAT(w, r) {
 			return
 		}
 	}
-	}
-	
-	//handle NAT for *.proxy.*  domains.
-	if isEnableNATProxy(){
-		if handleNAT(w, r) {
-		return
-	}
-	}
-	
+
 	//normal http handling.
 	handleNormalHTTP(w, r)
 }
@@ -247,10 +254,74 @@ func handle301(w http.ResponseWriter, r *http.Request) bool {
 	return false
 }
 
+type WSMessage struct {
+	UserId string
+	Token  string
+	Data   string
+}
+
+var wsConnMap = make(map[string]*websocket.Conn)
+
+func handleWebsocket(w http.ResponseWriter, r *http.Request) {
+	// upgrade this connection to a WebSocket
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Println("Client Connected")
+
+	msg := WSMessage{}
+	err = conn.ReadJSON(&msg)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if msg.UserId == "" {
+		log.Println("ws: UserId is empty , cant go on.")
+		return
+	}
+
+	err = conn.WriteJSON(WSMessage{UserId: "", Token: "", Data: "Hi Client!"})
+	if err != nil {
+		log.Println(err)
+	}
+
+	wsConnMap[msg.UserId] = conn
+
+	conn.SetCloseHandler(func(code int, text string) error {
+		log.Println("ws close : code = ", code, "text=", text)
+		delete(wsConnMap, msg.UserId)
+		return conn.Close()
+	})
+	for {
+		// read in a message
+		msg := WSMessage{}
+		err := conn.ReadJSON(&msg)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		resp, err := CallPyFuncWithJSON("sys_receive_ws_msg", msg)
+		log.Println("sys_receive_ws_msg : ", resp, " , err: ", err)
+
+		if err := conn.WriteJSON(msg); err != nil {
+			log.Println(err)
+			return
+		}
+
+	}
+}
+
 func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 	//log.Println("request in >>  url : ", r.URL.Path)
 	if r.URL.Path == "/" {
 		handleIndexPage(w)
+	} else if r.URL.Path == "/ws" {
+		handleWebsocket(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/config") {
 		proxyConfig(w, r)
 	} else if r.URL.Path == "/files/message.txt" {
