@@ -308,11 +308,6 @@ func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 		resp, err := CallPyFuncWithJSON("sys_receive_ws_msg", msg)
 		log.Println("sys_receive_ws_msg : ", resp, " , err: ", err)
 
-		if err := conn.WriteJSON(msg); err != nil {
-			log.Println(err)
-			return
-		}
-
 	}
 }
 
