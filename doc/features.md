@@ -4,7 +4,8 @@ will reverse proxy for local services, domain should like 'xx.proxy.xx'
 ## Trojan server / client
 will use port 443 
 
-## Http/s Server (with autocert)
+## Http/s Server (with autocert) 
+also support websocket using path /ws
 
 ## Mail receiving server
 listen for port 25 and insert emails into table 'email_inbox' (userdata.db)
