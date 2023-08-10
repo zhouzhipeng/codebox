@@ -255,14 +255,14 @@ func handle301(w http.ResponseWriter, r *http.Request) bool {
 }
 
 type WSMessage struct {
-	UserId string
-	Token  string
-	Data   string
+	From string
+	To   string
+	Data string
 }
 
 var wsConnMap = make(map[string]*websocket.Conn)
 
-func handleWebsocket(w http.ResponseWriter, r *http.Request) {
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// upgrade this connection to a WebSocket
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -271,6 +271,11 @@ func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Client Connected")
+	err = conn.WriteJSON(WSMessage{From: "{your unique id}", To: "{msg to whom,keep empty if broadcast}", Data: "{use the whole json template to send or receive messages}"})
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	msg := WSMessage{}
 	err = conn.ReadJSON(&msg)
@@ -279,21 +284,16 @@ func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if msg.UserId == "" {
-		log.Println("ws: UserId is empty , cant go on.")
+	if msg.From == "" {
+		log.Println("ws: From is empty , cant go on.")
 		return
 	}
 
-	err = conn.WriteJSON(WSMessage{UserId: "", Token: "", Data: "Hi Client!"})
-	if err != nil {
-		log.Println(err)
-	}
-
-	wsConnMap[msg.UserId] = conn
+	wsConnMap[msg.From] = conn
 
 	conn.SetCloseHandler(func(code int, text string) error {
 		log.Println("ws close : code = ", code, "text=", text)
-		delete(wsConnMap, msg.UserId)
+		delete(wsConnMap, msg.From)
 		return conn.Close()
 	})
 	for {
@@ -302,11 +302,36 @@ func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 		err := conn.ReadJSON(&msg)
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 
-		resp, err := CallPyFuncWithJSON("sys_receive_ws_msg", msg)
-		log.Println("sys_receive_ws_msg : ", resp, " , err: ", err)
+		//resp, err := CallPyFuncWithJSON("sys_receive_ws_msg", msg)
+		//log.Println("sys_receive_ws_msg : ", resp, " , err: ", err)
+
+		if msg.To == "" {
+			//broadcast msg
+			for _, c := range wsConnMap {
+				err := c.WriteJSON(msg)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+			}
+
+		} else {
+			//forward msg to 'To'
+			c, ok := wsConnMap[msg.To]
+			if ok {
+				err := c.WriteJSON(msg)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+			} else {
+				log.Println("msg.To not found:" + msg.To)
+			}
+
+		}
 
 	}
 }
@@ -316,7 +341,7 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		handleIndexPage(w)
 	} else if r.URL.Path == "/ws" {
-		handleWebsocket(w, r)
+		handleWebSocket(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/config") {
 		proxyConfig(w, r)
 	} else if r.URL.Path == "/files/message.txt" {

@@ -120,16 +120,32 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 
 	switch r.URL.Path {
 	case "/api/send-ws-msg":
-		userId := r.FormValue("UserId")
+		userId := r.FormValue("From")
+		To := r.FormValue("To")
 		data := r.FormValue("Data")
 
-		err := wsConnMap[userId].WriteJSON(WSMessage{
-			UserId: userId,
-			Data:   data,
-		})
-		if err != nil {
-			w.Write([]byte("Err:" + err.Error()))
-			return
+		conn, ok := wsConnMap[To]
+		msg := WSMessage{
+			From: userId,
+			To:   To,
+			Data: data,
+		}
+		if ok {
+			err := conn.WriteJSON(msg)
+			if err != nil {
+				w.Write([]byte("Err:" + err.Error()))
+				return
+			}
+		} else {
+			//broadcast
+			for _, c := range wsConnMap {
+				err := c.WriteJSON(msg)
+				if err != nil {
+					log.Println(err)
+					w.Write([]byte("Err:" + err.Error()))
+					return
+				}
+			}
 		}
 
 		w.Write([]byte("ok."))
