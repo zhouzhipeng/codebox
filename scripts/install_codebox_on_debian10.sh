@@ -23,17 +23,6 @@ Description=codebox Service
 After=network.target
 
 [Service]
-Environment="MAIN_PORT=80"
-Environment="HTTPS_PORT=443"
-Environment="BASE_DIR=/tmp"
-Environment="TROJAN_PASSWORD=123456"
-Environment="AUTO_REDIRECT_TO_HTTPS=true"
-Environment="WHITELIST_ROOT_DOMAINS=zhouzhipeng.com"
-Environment="START_MAIL_SERVER=false"
-Environment="ENABLE_AUTH=true"
-Environment="START_TROJAN_PROXY=false"
-Environment="START_443_SERVER=true"
-
 Type=simple
 Restart=always
 RestartSec=10
