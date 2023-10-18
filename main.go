@@ -494,7 +494,6 @@ func listen443() {
 
 }
 
-
 func main() {
 	log.Println("home>>>", os.Getenv("HOME"))
 
@@ -552,6 +551,55 @@ func main() {
 
 	log.Println("main server started.")
 
+	//port forwarding
+	log.Println("begin port forwarding.")
+	PortForwarding()
+
 	postInit()
+
+}
+
+func PortForwarding() {
+	for i := 9000; i <= 9100; i++ {
+		port := i
+		go func() {
+			// listen on port 8080
+			listener, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// accept incoming connections
+			for {
+				conn, err := listener.Accept()
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+
+				// forward traffic to port 9090
+				go func() {
+					remoteConn, err := net.Dial("tcp", "127.0.0.1:443")
+					if err != nil {
+						log.Println(err)
+						return
+					}
+					defer remoteConn.Close()
+
+					// copy data between connections
+					go func() {
+						_, err := io.Copy(remoteConn, conn)
+						if err != nil {
+							log.Println(err)
+						}
+					}()
+					_, err = io.Copy(conn, remoteConn)
+					if err != nil {
+						log.Println(err)
+					}
+				}()
+			}
+		}()
+	}
 
 }

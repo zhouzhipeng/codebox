@@ -17,7 +17,7 @@ import (
 	"strings"
 )
 
-type conn struct {
+type Conn struct {
 	rwc net.Conn
 	brc *bufio.Reader
 }
@@ -45,7 +45,7 @@ func StartTrojanClient() {
 			continue
 		}
 
-		go handleProxyConn(conn{rwc: c, brc: bufio.NewReader(c)})
+		go handleProxyConn(Conn{rwc: c, brc: bufio.NewReader(c)})
 	}
 }
 
@@ -59,7 +59,7 @@ func parseRequestLine(line string) (method, requestURI, proto string, ok bool) {
 	return line[:s1], line[s1+1 : s2], line[s2+1:], true
 }
 
-func handleProxyConn(c conn) {
+func handleProxyConn(c Conn) {
 	defer c.rwc.Close()
 
 	needWriteLine := false
@@ -124,7 +124,7 @@ func handleProxyConn(c conn) {
 }
 
 // getClientInfo parse client request header to get some information:
-func (c *conn) getTunnelInfo() (rawReqHeader bytes.Buffer, host, credential string, isHttps bool, err error) {
+func (c *Conn) getTunnelInfo() (rawReqHeader bytes.Buffer, host, credential string, isHttps bool, err error) {
 	tp := textproto.NewReader(c.brc)
 
 	// First line: GET /index.html HTTP/1.0
@@ -223,7 +223,7 @@ func getVpnServerConfig() []string {
 	return nil
 }
 
-//整形转换成字节
+// 整形转换成字节
 func IntToBytes(n int16) []byte {
 	x := n
 
