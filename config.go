@@ -203,6 +203,13 @@ func isEnableProxyPassTxt() bool {
 func isEnableNATProxy() bool {
 	return getFromEnvMap("ENABLE_NAT_PROXY") == "true"
 }
+func isEnablePortForwarding() bool {
+	return getFromEnvMap("PORT_FORWARDING_ENABLE") == "true"
+}
+
+func GetPortForwardingRangePorts() string {
+	return getFromEnvMap("PORT_FORWARDING_RANGE")
+}
 
 func getFixedTempPath() string {
 

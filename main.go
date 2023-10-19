@@ -552,15 +552,22 @@ func main() {
 	log.Println("main server started.")
 
 	//port forwarding
-	log.Println("begin port forwarding.")
-	PortForwarding()
+	if isEnablePortForwarding() {
+		log.Println("begin port forwarding.")
+		PortForwarding()
+	}
 
+	//should be in the last position always
 	postInit()
 
 }
 
 func PortForwarding() {
-	for i := 9000; i <= 9100; i++ {
+	//eg. 9000-9100
+	ports := strings.Split(GetPortForwardingRangePorts(), "-")
+	fromPort, _ := strconv.Atoi(ports[0])
+	toPort, _ := strconv.Atoi(ports[1])
+	for i := fromPort; i <= toPort; i++ {
 		port := i
 		go func() {
 			// listen on port 8080
