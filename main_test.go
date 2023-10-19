@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -23,9 +23,8 @@ func amAdmin() bool {
 	return true
 }
 func TestModifyHosts(t *testing.T) {
-	//log.Println(strings.Contains("www.youtube.com:443", "youtube"))
-	cmd := exec.Command("ls -l")
-	println(cmd.out)
+	toPort, _ := strconv.Atoi("9090")
+	fmt.Println(toPort)
 }
 
 // with go modules enabled (GO111MODULE=on or outside GOPATH)

@@ -27,7 +27,7 @@ func onReady() {
 		systray.SetTooltip("A great tool for developers.")
 
 		mUrl := systray.AddMenuItem("Open UI(Ctrl+Shift+W)", "my home")
-		configUrl := systray.AddMenuItem("Open Config UI", "config manager")
+		//configUrl := systray.AddMenuItem("Open Config UI", "config manager")
 
 		mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 
@@ -39,8 +39,8 @@ func onReady() {
 				log.Println("Finished quitting")
 			case <-mUrl.ClickedCh:
 				open.Run("http://127.0.0.1:" + GetMainPort())
-			case <-configUrl.ClickedCh:
-				open.Run("http://127.0.0.1:28888/config")
+			//case <-configUrl.ClickedCh:
+			//	open.Run("http://127.0.0.1:28888/config")
 			case <-hk.Keydown():
 				log.Printf("hotkey: %v is down\n", hk)
 				//open ui
