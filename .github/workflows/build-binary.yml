@@ -49,6 +49,13 @@ jobs:
           #     mv dist/codebox_mac.zip dist/codebox_mac_old.zip
           #   OUT_FILE_NAME: codebox_mac_old.zip
           #   ASSET_MIME: application/zip
+          - os: ubuntu-latest
+            TARGET: ubuntu
+            CMD_BUILD: >
+              cd pytool && bash buildLinux.sh  && cd ..  &&
+              bash build-linux.sh
+            OUT_FILE_NAME: codebox_linux.zip
+            ASSET_MIME: application/zip
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
