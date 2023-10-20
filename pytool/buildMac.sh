@@ -1,7 +1,7 @@
 set -eux
 
-pip install -r requirements.txt
-pip install pyinstaller
+pip3.11 install -r requirements.txt --break-system-packages
+pip3.11 install pyinstaller --break-system-packages
 rm -rf web.spec build dist/web
 
 #   --hidden-import=pandas   \
