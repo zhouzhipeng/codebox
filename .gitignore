@@ -10,3 +10,4 @@ env/
 target/
 codebox-ui-windows.exe.WebView2/
 codebox
+.DS_store
