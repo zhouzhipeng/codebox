@@ -6,14 +6,14 @@ COPY . .
 RUN ./build-linux.sh
 
 
-FROM python:3.11-buster AS BuildPythonImage
+FROM python:3.11-bullseye AS BuildPythonImage
 WORKDIR /app
 COPY pytool .
 
 RUN ./buildLinux.sh
 
 
-FROM debian:buster AS RuntimeImage
+FROM debian:bullseye AS RuntimeImage
 
 ENV MAIN_PORT=80\
     HTTPS_PORT=443 \
