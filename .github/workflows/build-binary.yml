@@ -45,7 +45,7 @@ jobs:
 #            TARGET: ubuntu
 #            CMD_BUILD: >
 #              cd pytool && bash buildLinux.sh  && cd ..  &&
-#              bash build-linux.sh &&
+#              bash build-golang-linux.sh &&
 #              cp pytool/dist/web dist/web &&
 #              cd dist && zip -r9 codebox_ubuntu.zip .
 #            OUT_FILE_NAME: codebox_ubuntu.zip

@@ -5,9 +5,9 @@ This is a tool box for programmers.
 [features](doc/features.md)
 
 ## debian install
-Currently support Debian buster (10)
+Currently support Debian bullseye (11)
 ```bash
-curl -sSL https://raw.githubusercontent.com/zhouzhipeng/codebox/master/scripts/install_codebox_on_debian10.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/zhouzhipeng/codebox/master/scripts/install_codebox_on_debian11.sh | sudo bash
 ```
 
 ## docker image

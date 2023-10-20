@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./build-linux.sh
+RUN ./build-golang-linux.sh
 
 
 FROM python:3.11-bullseye AS BuildPythonImage
