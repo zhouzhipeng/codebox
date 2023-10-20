@@ -126,34 +126,15 @@ jobs:
         id: zip_files
         shell: bash
         run: |
-          cd ${{ steps.extract.outputs.destination }} && zip -r9 ../codebox_debian.zip . && cp web ../web && cp codebox ../codebox
-      - name: Upload Release Asset
-        id: upload-release-asset
+          cd ${{ steps.extract.outputs.destination }} &&
+          tar -czvf  ../codebox_debian.tar.gz codebox web
+      - name: Upload Release Asset tar
+        id: upload-release-asset-tar
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./codebox_debian.zip
-          asset_name: codebox_debian.zip
-          asset_content_type: application/zip
-      - name: Upload Release Asset Web
-        id: upload-release-asset-web
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./web
-          asset_name: web
-          asset_content_type: application/x-binary
-      - name: Upload Release Asset codebox
-        id: upload-release-asset-codebox
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./codebox
-          asset_name: codebox
-          asset_content_type: application/x-binary                
+          asset_path: ./codebox_debian.tar.gz
+          asset_name: codebox_debian.tar.gz
+          asset_content_type: application/tar+gzip
