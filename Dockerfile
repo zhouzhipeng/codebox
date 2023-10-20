@@ -1,4 +1,4 @@
-FROM golang:1.18-stretch AS BuildGolangImage
+FROM golang:1.21 AS BuildGolangImage
 WORKDIR /app
 
 COPY . .
@@ -6,7 +6,7 @@ COPY . .
 RUN ./build-linux.sh
 
 
-FROM python:3.10-buster AS BuildPythonImage
+FROM python:3.11-buster AS BuildPythonImage
 WORKDIR /app
 COPY pytool .
 
