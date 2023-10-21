@@ -50,6 +50,7 @@ func configureLogPath(parentPath string) {
 }
 
 var envMap = make(map[string]string)
+var envTxtPath string
 
 func StartConfigServer() {
 	BASE_DIR = os.Getenv("BASE_DIR")
@@ -62,7 +63,7 @@ func StartConfigServer() {
 	configureLogPath(BASE_DIR)
 
 	//check if existed env.txt
-	envTxtPath := filepath.Join(BASE_DIR, "env.txt")
+	envTxtPath = filepath.Join(BASE_DIR, "env.txt")
 
 	if _, err := os.Stat(envTxtPath); err == nil {
 		log.Println("env.txt File exists ,use it.")
@@ -117,7 +118,7 @@ func StartConfigServer() {
 	}
 
 	go func() {
-		http.ListenAndServe(":28888", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+		http.ListenAndServe("127.0.0.1:28888", http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 
 			if request.URL.Path == "/config" {
 
@@ -133,6 +134,11 @@ func StartConfigServer() {
 				}
 
 			} else if request.URL.Path == "/config/save" {
+				//check permission
+				if checkPermission(w, request) {
+					return
+				}
+
 				s := request.FormValue("s")
 				envTxt = s
 				err := os.WriteFile(envTxtPath, []byte(s), 0777)

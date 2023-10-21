@@ -79,7 +79,7 @@ func LoadUI() {
 }
 
 func LoadConfigUI() {
-	go open.Run("http://127.0.0.1:28888/config")
+	//go open.Run("http://127.0.0.1:28888/config")
 }
 
 func fn() {

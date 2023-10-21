@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/skip2/go-qrcode"
+	"net/url"
 	"path"
 
 	"github.com/gorilla/websocket"
@@ -351,6 +352,11 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 		dat2, _ := os.ReadFile(path.Join(BASE_DIR, "python.txt"))
 		w.Write(dat2)
 	} else if strings.HasPrefix(r.URL.Path, "/api/") {
+		//check permission
+		if checkPermission(w, r) {
+			return
+		}
+
 		handleAPI(w, r)
 	} else if strings.HasPrefix(r.URL.Path, "/views/") {
 		handleTemplates(w, r)
@@ -404,6 +410,26 @@ func handleNormalHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("404 Not Found. path : " + r.URL.Path))
 
 	}
+}
+
+func checkPermission(w http.ResponseWriter, r *http.Request) bool {
+	token := ""
+	cookie, err := r.Cookie("token")
+	if err == nil {
+		token = cookie.Value
+	}
+
+	params := url.Values{}
+	params.Add("token", token)
+	resp, err := CallPyFunc("check_login_token", params)
+	log.Println("check_login_token result : ", resp, " , err: ", err)
+	hasPermission, _ := strconv.ParseBool(resp.Body)
+	if !hasPermission {
+		w.WriteHeader(403)
+		w.Write([]byte("you have no permissions."))
+		return true
+	}
+	return false
 }
 
 func handleNAT(w http.ResponseWriter, r *http.Request) bool {

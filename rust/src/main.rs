@@ -5,7 +5,6 @@ windows_subsystem = "windows"
 
 use image::ImageFormat;
 use wry::application::dpi::{LogicalSize, Size};
-use wry::application::platform::windows::WindowBuilderExtWindows;
 use wry::application::window::Icon;
 
 fn main() -> wry::Result<()> {
@@ -29,10 +28,10 @@ fn main() -> wry::Result<()> {
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
-        .with_title("GoGo")
+        .with_title("Codebox")
         .with_inner_size(LogicalSize::new(1000, 600))
         .with_window_icon(Some(icon.clone()))
-        .with_taskbar_icon(Some(icon))
+//         .with_taskbar_icon(Some(icon))
         .build(&event_loop)?;
     let _webview = WebViewBuilder::new(window)?
         .with_url("http://127.0.0.1")?
