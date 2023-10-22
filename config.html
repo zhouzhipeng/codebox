@@ -18,8 +18,9 @@
 <body>
 <textarea id="envTxt">{{ .Name}}</textarea>
 <button onclick="save()">Save</button>
+<p style="color: green" id="saveResult"></p>
 <span style="color: white">After save, you need to restart app manually.</span>
-<p style="color: white" id="saveResult"></p>
+
 <script>
     async function save(){
         let data = new URLSearchParams();
