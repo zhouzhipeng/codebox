@@ -568,7 +568,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		cmd := exec.Command("bash", "-c", script)
+		cmd := exec.Command("bash", "-c", script+" --color=force")
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("cmd", "/k", script)
 		}
