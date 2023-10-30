@@ -1,6 +1,19 @@
 # codebox
 This is a tool box for programmers. 
 
+![img.png](doc/imgs/main_screen.png)
+![img.png](doc/imgs/main_screen2.png)
+
+currently tools:
+* sqlite db browser
+* functions editor
+* tables editor
+* pages editor
+* string template 
+* sql runner
+
+
+
 ## features
 [features](doc/features.md)
 
