@@ -3,6 +3,7 @@ support write python functions and sql opereations and pages on the fly.
 
 ## NAT (Reverse Proxy)
 will reverse proxy for local services, domain should like 'xx.proxy.xx'
+![img.png](imgs/simple_nat.png)
 
 ## Trojan server / client
 will use port 443 
