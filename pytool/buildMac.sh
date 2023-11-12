@@ -20,4 +20,5 @@ pyinstaller  --noconfirm  --console   --log-level "DEBUG"  \
    --hidden-import=bit   \
    --hidden-import=openai   \
    --hidden-import=uncurl   \
+   --hidden-import=sqlparse   \
    -c -F    web.py
