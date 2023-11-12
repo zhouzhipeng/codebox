@@ -18,4 +18,5 @@ pyinstaller --clean  --noconfirm --collect-datas coincurve   --noconsole   \
   --hidden-import=bit   \
   --hidden-import=openai   \
   --hidden-import=uncurl   \
+  --hidden-import=sqlparse   \
  --log-level "DEBUG"  -F  web.py
